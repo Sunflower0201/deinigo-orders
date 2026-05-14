@@ -13,8 +13,8 @@
 <meta name="theme-color" content="#110805"/>
 <meta name="description" content="De' Iñigo Order Management Dashboard for staff"/>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.json"/>
+<!-- PWA Manifest (inline via data URI so a separate file isn't needed) -->
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22De%27%20I%C3%B1igo%20Orders%22%2C%22short_name%22%3A%22De%27%20I%C3%B1igo%22%2C%22description%22%3A%22Order%20management%20dashboard%20for%20staff%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a0705%22%2C%22theme_color%22%3A%22%23110805%22%2C%22orientation%22%3A%22any%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%200%20512%20512'%253E%253Crect%2520width%3D'512'%2520height%3D'512'%2520rx%3D'80'%2520fill%3D'%23110805'%2F%253E%253Ccircle%2520cx%3D'256'%2520cy%3D'230'%2520r%3D'120'%2520fill%3D'none'%2520stroke%3D'%23c8410a'%2520stroke-width%3D'28'%2F%253E%253Cpath%2520d%3D'M256%2520110%2520v240%2520M136%2520230%2520h240'%2520stroke%3D'%23e8a030'%2520stroke-width%3D'20'%2520stroke-linecap%3D'round'%2F%253E%253Ctext%2520x%3D'256'%2520y%3D'430'%2520font-size%3D'60'%2520text-anchor%3D'middle'%2520fill%3D'%23e8a030'%2520font-family%3D'serif'%2520font-style%3D'italic'%253EDI%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D"/>
 
 <!-- Apple touch icon (inline SVG → base64) -->
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%23110805'/%3E%3Ccircle cx='256' cy='230' r='120' fill='none' stroke='%23c8410a' stroke-width='28'/%3E%3Ctext x='256' y='270' font-size='110' text-anchor='middle' fill='%23e8a030' font-family='serif' font-style='italic'%3EDI%3C/text%3E%3Ctext x='256' y='430' font-size='52' text-anchor='middle' fill='%23e8a030' font-family='sans-serif'%3EOrders%3C/text%3E%3C/svg%3E"/>
@@ -261,12 +261,91 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
 .ios-install-hint{font-size:.75rem;color:var(--gold);line-height:1.5;border-top:1px solid rgba(232,160,48,.15);padding-top:.5rem;display:none;}
 .ios-install-hint.show{display:block;}
 
+/* ── RECEIPT BUTTON ── */
+.action-btn.receipt-btn{background:rgba(232,160,48,.08);color:var(--gold);border-color:rgba(232,160,48,.35);}
+.action-btn.receipt-btn:hover{background:rgba(232,160,48,.2);border-color:var(--gold);}
+
+/* ── RECEIPT PRINT AREA ── */
+#receiptPrintArea{display:none;}
+
 /* print */
 @media print{
-  .topbar,.tab-bar,.stats-bar,.filter-bar,.oc-actions,.tab-btn:not(.active),.notif-btn,.refresh-btn,.notif-bar,.flash-toast,.sync-pill,.install-banner{display:none!important;}
-  body{background:#fff;color:#000;}
-  .order-card{border:1px solid #ccc;break-inside:avoid;margin-bottom:1rem;}
+  body *{visibility:hidden!important;}
+  #receiptPrintArea,#receiptPrintArea *{visibility:visible!important;}
+  #receiptPrintArea{
+    display:block!important;position:fixed!important;inset:0!important;
+    width:100%!important;max-width:400px!important;margin:0 auto!important;
+    background:#fff!important;color:#000!important;padding:2rem 1.5rem!important;
+    font-family:'DM Sans',Arial,sans-serif!important;font-size:13px!important;
+    box-shadow:none!important;border:none!important;z-index:99999!important;
+  }
 }
+
+/* ── MAXIM RIDER WIDGET ── */
+.maxim-fab{position:fixed;bottom:5.5rem;right:1.2rem;z-index:7500;background:linear-gradient(135deg,#f5a623,#e8841a);color:#fff;border:none;border-radius:50px;padding:.65rem 1.2rem;font-size:.88rem;font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(245,166,35,.45);display:flex;align-items:center;gap:.5rem;letter-spacing:.04em;transition:all .2s;}
+.maxim-fab:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(245,166,35,.55);}
+.maxim-fab .fab-icon{font-size:1.1rem;}
+
+.maxim-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:8500;display:none;align-items:flex-end;justify-content:center;}
+.maxim-modal.open{display:flex;}
+.maxim-panel{background:#1a1008;border:1px solid rgba(245,166,35,.4);border-radius:16px 16px 0 0;width:100%;max-width:480px;display:flex;flex-direction:column;animation:slideUp .3s ease;overflow:hidden;}
+.maxim-panel.minimized{max-height:56px;overflow:hidden;}
+.maxim-panel-head{background:linear-gradient(135deg,#f5a623,#c8760a);padding:.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-shrink:0;cursor:pointer;}
+.maxim-panel-title{font-weight:800;font-size:.95rem;color:#fff;display:flex;align-items:center;gap:.5rem;}
+.maxim-head-btns{display:flex;gap:.4rem;}
+.maxim-head-btn{background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.maxim-head-btn:hover{background:rgba(255,255,255,.35);}
+.maxim-body{padding:0;flex:1;display:flex;flex-direction:column;height:520px;}
+.maxim-notice{padding:.75rem 1rem;background:rgba(245,166,35,.08);border-bottom:1px solid rgba(245,166,35,.15);font-size:.78rem;color:rgba(245,237,224,.7);text-align:center;}
+.maxim-frame-wrap{flex:1;position:relative;background:#111;}
+.maxim-frame-wrap iframe{width:100%;height:100%;border:none;display:block;}
+.maxim-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;padding:2rem;text-align:center;}
+.maxim-fallback .mf-icon{font-size:3rem;}
+.maxim-fallback p{font-size:.88rem;color:var(--smoke);line-height:1.6;}
+.maxim-open-btn{background:linear-gradient(135deg,#f5a623,#c8760a);color:#fff;border:none;padding:.75rem 1.8rem;border-radius:8px;font-weight:800;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;margin:0 auto;}
+.maxim-open-btn:hover{opacity:.9;}
+
+/* ── RECEIPT PAPER SIZE MODAL ── */
+.paper-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9500;display:none;align-items:center;justify-content:center;padding:1rem;}
+.paper-modal.open{display:flex;}
+.paper-box{background:#1a0e08;border:1px solid rgba(232,160,48,.35);border-radius:10px;width:100%;max-width:380px;overflow:hidden;animation:fadeup .25s ease;}
+.paper-box-head{padding:1rem 1.2rem;border-bottom:1px solid rgba(200,65,10,.15);display:flex;align-items:center;justify-content:space-between;}
+.paper-box-head h3{font-size:1rem;font-weight:800;color:var(--cream);}
+.paper-close{background:none;border:none;color:var(--cream);font-size:1.4rem;cursor:pointer;}
+.paper-body{padding:1.2rem;}
+.paper-label{font-size:.78rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);text-transform:uppercase;margin-bottom:.6rem;}
+.paper-options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;}
+.paper-opt{background:#0e0a07;border:2px solid rgba(200,65,10,.2);border-radius:8px;padding:.85rem .7rem;cursor:pointer;text-align:center;transition:all .2s;}
+.paper-opt.selected{border-color:var(--gold);background:rgba(232,160,48,.08);}
+.paper-opt:hover:not(.selected){border-color:rgba(200,65,10,.4);}
+.paper-opt-name{font-size:.88rem;font-weight:700;color:var(--cream);}
+.paper-opt-desc{font-size:.7rem;color:var(--smoke);margin-top:.2rem;}
+.paper-print-btn{width:100%;padding:.75rem;background:var(--ember);color:#fff;border:none;border-radius:var(--radius);font-weight:800;font-size:.95rem;cursor:pointer;}
+.paper-print-btn:hover{background:#a83408;}
+
+/* ── MENU MANAGER TAB ── */
+.menu-section{margin-bottom:1.5rem;}
+.menu-section-title{font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--smoke);padding:.6rem 0;border-bottom:1px solid rgba(200,65,10,.15);margin-bottom:.8rem;}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.6rem;}
+.menu-item-row{background:#130b04;border:1px solid rgba(200,65,10,.12);border-radius:var(--radius);padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;transition:border-color .2s;}
+.menu-item-row.unavailable{opacity:.5;border-color:rgba(168,32,32,.2);}
+.menu-item-row:hover{border-color:rgba(200,65,10,.3);}
+.mir-info{flex:1;min-width:0;}
+.mir-name{font-size:.9rem;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mir-price{font-size:.78rem;color:var(--gold);margin-top:.1rem;}
+.mir-toggle{position:relative;flex-shrink:0;}
+.mir-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.mir-toggle label{display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.75rem;font-weight:700;}
+.toggle-track{width:40px;height:22px;background:#3a2e25;border-radius:11px;position:relative;transition:background .2s;flex-shrink:0;}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;}
+.mir-toggle input:checked + label .toggle-track{background:var(--green);}
+.mir-toggle input:checked + label .toggle-track::after{transform:translateX(18px);}
+.toggle-text{color:var(--smoke);}
+.mir-toggle input:checked + label .toggle-text{color:#5aca6e;}
+.menu-save-bar{position:sticky;bottom:0;background:#0a0705;padding:.8rem 0;border-top:1px solid rgba(200,65,10,.15);display:flex;gap:.5rem;align-items:center;}
+.menu-save-btn{padding:.65rem 1.8rem;background:var(--ember);color:#fff;border:none;border-radius:var(--radius);font-weight:800;font-size:.9rem;cursor:pointer;}
+.menu-save-btn:hover{background:#a83408;}
+.menu-sync-note{font-size:.78rem;color:var(--smoke);}
 
 /* Responsive */
 @media(max-width:600px){
@@ -274,6 +353,8 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
   .topbar{padding:.8rem 1rem;}
   .main{padding:1rem;}
   .res-details{grid-template-columns:1fr 1fr;}
+  .menu-grid{grid-template-columns:1fr;}
+  .maxim-body{height:420px;}
 }
 </style>
 </head>
@@ -312,6 +393,7 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
   <button class="tab-btn" onclick="switchTab('messages')">💬 Messages<div class="tab-badge" id="tabBadgeMsgs"></div></button>
   <button class="tab-btn" onclick="switchTab('reservations')">📅 Reservations</button>
   <button class="tab-btn" onclick="switchTab('sales')">📊 Sales Report</button>
+  <button class="tab-btn" onclick="switchTab('menu')">🍳 Menu Manager</button>
 </div>
 
 <div class="main">
@@ -383,6 +465,22 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
     <div id="salesContent"></div>
   </div>
 
+  <!-- ── MENU MANAGER ── -->
+  <div class="tab-panel" id="panel-menu">
+    <div class="filter-bar">
+      <span style="font-size:.88rem;color:var(--cream);font-weight:700;">🍳 Food Availability Manager</span>
+      <span style="font-size:.78rem;color:var(--smoke);margin-left:.5rem;">Toggle items on/off — syncs to the order page instantly</span>
+      <button class="refresh-btn" onclick="loadMenuManager()">↺ Refresh</button>
+    </div>
+    <div id="menuManagerContent">
+      <div class="empty-state"><div class="ei">🍳</div><p>Loading menu…</p></div>
+    </div>
+    <div class="menu-save-bar">
+      <button class="menu-save-btn" onclick="saveMenuAvailability()">💾 Save & Sync to Order Page</button>
+      <span class="menu-sync-note" id="menuSyncNote"></span>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══════════════ REPLY MODAL ══════════════ -->
@@ -401,6 +499,79 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
         <input class="reply-inp" id="replyInput" type="text" placeholder="Type reply to customer…" onkeydown="if(event.key==='Enter')sendReply()"/>
         <button class="reply-send-btn" onclick="sendReply()">Send</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT PRINT AREA (hidden; populated by printOrderReceipt()) -->
+<div id="receiptPrintArea"></div>
+
+<!-- 🏍️ MAXIM RIDER FAB -->
+<button class="maxim-fab" onclick="openMaximModal()" id="maximFab">
+  <span class="fab-icon">🏍️</span> Book a Rider
+</button>
+
+<!-- MAXIM RIDER MODAL -->
+<div class="maxim-modal" id="maximModal">
+  <div class="maxim-panel" id="maximPanel">
+    <div class="maxim-panel-head" onclick="toggleMaximMinimize()">
+      <div class="maxim-panel-title">🏍️ Maxim — Book a Rider</div>
+      <div class="maxim-head-btns" onclick="event.stopPropagation()">
+        <button class="maxim-head-btn" onclick="toggleMaximMinimize()" title="Minimize">—</button>
+        <button class="maxim-head-btn" onclick="closeMaximModal()" title="Close">✕</button>
+      </div>
+    </div>
+    <div class="maxim-body" id="maximBody">
+      <div class="maxim-notice">📍 Book a Maxim rider directly below. After booking, tap ✕ to return to the dashboard.</div>
+      <div class="maxim-frame-wrap" id="maximFrameWrap">
+        <!-- Maxim web app embedded -->
+        <div class="maxim-fallback" id="maximFallback">
+          <div class="mf-icon">🏍️</div>
+          <p>Tap the button below to open Maxim and book a rider.<br><span style="font-size:.75rem;color:var(--smoke);">On mobile, this will open the Maxim app if installed, or the website.</span></p>
+          <button class="maxim-open-btn" onclick="launchMaxim()">
+            🚀 Open Maxim Now
+          </button>
+          <div style="margin-top:1.2rem;width:100%;border-top:1px solid rgba(200,65,10,.15);padding-top:1rem;">
+            <div style="font-size:.72rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);text-align:center;margin-bottom:.6rem;">OR OPEN MAXIM WEBSITE IN-FRAME</div>
+            <button class="maxim-open-btn" style="background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.4);color:var(--gold);" onclick="loadMaximFrame()">
+              🌐 Load Maxim Web
+            </button>
+          </div>
+        </div>
+        <iframe id="maximIframe" src="" style="display:none;width:100%;height:100%;border:none;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🧾 PAPER SIZE MODAL -->
+<div class="paper-modal" id="paperModal">
+  <div class="paper-box">
+    <div class="paper-box-head">
+      <h3>🧾 Choose Receipt Paper Size</h3>
+      <button class="paper-close" onclick="closePaperModal()">✕</button>
+    </div>
+    <div class="paper-body">
+      <div class="paper-label">Select paper size</div>
+      <div class="paper-options">
+        <div class="paper-opt selected" onclick="selectPaper('58mm',this)">
+          <div class="paper-opt-name">58 mm</div>
+          <div class="paper-opt-desc">Small thermal<br>pocket printer</div>
+        </div>
+        <div class="paper-opt" onclick="selectPaper('80mm',this)">
+          <div class="paper-opt-name">80 mm</div>
+          <div class="paper-opt-desc">Standard POS<br>thermal printer</div>
+        </div>
+        <div class="paper-opt" onclick="selectPaper('a5',this)">
+          <div class="paper-opt-name">A5</div>
+          <div class="paper-opt-desc">Half sheet<br>inkjet / laser</div>
+        </div>
+        <div class="paper-opt" onclick="selectPaper('a4',this)">
+          <div class="paper-opt-name">A4 / Letter</div>
+          <div class="paper-opt-desc">Full page<br>inkjet / laser</div>
+        </div>
+      </div>
+      <button class="paper-print-btn" onclick="executePrint()">🖨️ Print Receipt</button>
     </div>
   </div>
 </div>
@@ -749,11 +920,13 @@ function renderOrderCard(o){
         💬 Msg${orderMsgs.length?' ('+orderMsgs.length+')':''}
         <div class="msg-unread-dot ${unreadCount>0?'show':''}"></div>
       </button>
+      <button class="action-btn receipt-btn" onclick="openPaperModal('${o.id}')">🧾 Receipt</button>
       <button class="action-btn danger" onclick="updateOrderStatus('${o.id}','Cancelled')">Cancel</button>
       <button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️</button>
     </div>` : `
     <div class="oc-actions">
       <button class="action-btn msg" onclick="openReplyModal('${o.id}','${escAttr(o.customer||'')}')">💬 Msg${orderMsgs.length?' ('+orderMsgs.length+')':''}</button>
+      <button class="action-btn receipt-btn" onclick="openPaperModal('${o.id}')">🧾 Receipt</button>
       <button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️ Remove</button>
     </div>`;
 
@@ -1309,6 +1482,284 @@ function escAttr(str){
 document.getElementById('replyModal').addEventListener('click', e => {
   if(e.target === document.getElementById('replyModal')) closeReplyModal();
 });
+
+// ═══════════════════════════════════════════
+//  PAPER SIZE MODAL + RECEIPT PRINTING
+// ═══════════════════════════════════════════
+let pendingReceiptOrderId = null;
+let selectedPaperSize = '58mm';
+
+const PAPER_CONFIG = {
+  '58mm': { width:'58mm', fontSize:'11px', padding:'8px 6px', headerSize:'1.1rem', totalSize:'1rem'  },
+  '80mm': { width:'80mm', fontSize:'13px', padding:'10px 10px', headerSize:'1.3rem', totalSize:'1.1rem' },
+  'a5':   { width:'148mm', fontSize:'14px', padding:'18px 20px', headerSize:'1.5rem', totalSize:'1.2rem' },
+  'a4':   { width:'210mm', fontSize:'15px', padding:'24px 28px', headerSize:'1.7rem', totalSize:'1.3rem' }
+};
+
+function openPaperModal(orderId){
+  pendingReceiptOrderId = orderId;
+  document.getElementById('paperModal').classList.add('open');
+}
+function closePaperModal(){
+  document.getElementById('paperModal').classList.remove('open');
+}
+function selectPaper(size, el){
+  selectedPaperSize = size;
+  document.querySelectorAll('.paper-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function executePrint(){
+  closePaperModal();
+  if(pendingReceiptOrderId) printOrderReceipt(pendingReceiptOrderId, selectedPaperSize);
+}
+
+function printOrderReceipt(orderId, paperSize){
+  paperSize = paperSize || selectedPaperSize || '58mm';
+  const cfg = PAPER_CONFIG[paperSize] || PAPER_CONFIG['58mm'];
+  const order = getOrdersCached().find(o => o.id === orderId);
+  if(!order){ showFlash('⚠️ Order not found.'); return; }
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'});
+  const timeStr = now.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+
+  const orderType = order.orderType === 'takeout' ? 'Take-Out' : 'Dine-In';
+  const payMethod = order.payment === 'gcash' ? 'GCash' : 'Cash';
+  const payStatus = order.paymentStatus === 'Paid' || order.payment !== 'gcash' ? 'Paid' : (order.paymentStatus || 'Pending');
+  const subtotal  = order.subtotal || order.total || 0;
+  const boxFee    = order.boxFee   || 0;
+  const total     = order.total    || 0;
+
+  const itemsHtml = (order.items || []).map(it => `
+    <tr>
+      <td style="padding:.3rem 0;vertical-align:top;color:#111;font-size:${cfg.fontSize};">
+        ${escHtml(it.name)}${it.variant ? `<br><span style="font-size:.85em;color:#666;">(${escHtml(it.variant)})</span>` : ''}
+      </td>
+      <td style="text-align:center;padding:.3rem .5rem;vertical-align:top;color:#444;font-size:${cfg.fontSize};">×${it.qty}</td>
+      <td style="text-align:right;padding:.3rem 0;vertical-align:top;font-weight:700;color:#111;font-size:${cfg.fontSize};">
+        ${it.isFree ? '<span style="color:#2d7a3a;">FREE</span>' : '₱' + (it.price * it.qty).toLocaleString('en-PH', {minimumFractionDigits:2})}
+      </td>
+    </tr>`).join('');
+
+  const receiptHtml = `
+    <div style="text-align:center;padding-bottom:.8rem;border-bottom:2px solid #111;margin-bottom:.8rem;">
+      <div style="font-size:1.5rem;line-height:1;">🔥</div>
+      <div style="font-size:${cfg.headerSize};font-weight:900;font-family:serif;letter-spacing:.02em;margin:.2rem 0;">De' Iñigo</div>
+      <div style="font-size:calc(${cfg.fontSize} * 0.95);color:#555;font-style:italic;">One Stop Sizzling at Pulutan</div>
+      <div style="font-size:calc(${cfg.fontSize} * 0.9);color:#777;margin-top:.15rem;">📞 0991 451 7715</div>
+    </div>
+    <div style="font-size:calc(${cfg.fontSize} * 0.9);color:#555;display:flex;justify-content:space-between;margin-bottom:.2rem;">
+      <span>${dateStr}</span><span>${timeStr}</span>
+    </div>
+    <div style="font-size:${cfg.fontSize};margin-bottom:.12rem;"><b>Order #:</b> ${escHtml(order.id)}</div>
+    <div style="font-size:${cfg.fontSize};margin-bottom:.12rem;"><b>Customer:</b> ${escHtml(order.customer || 'Guest')}</div>
+    <div style="font-size:${cfg.fontSize};margin-bottom:.12rem;"><b>Type:</b> ${orderType}</div>
+    ${order.contact ? `<div style="font-size:${cfg.fontSize};margin-bottom:.12rem;"><b>Contact:</b> ${escHtml(order.contact)}</div>` : ''}
+    ${order.address ? `<div style="font-size:${cfg.fontSize};margin-bottom:.12rem;"><b>Address:</b> ${escHtml(order.address)}</div>` : ''}
+    <div style="border-top:1px dashed #aaa;margin:.6rem 0;"></div>
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid #ccc;">
+          <th style="text-align:left;padding:.25rem 0;font-size:calc(${cfg.fontSize} * 0.85);letter-spacing:.08em;text-transform:uppercase;color:#777;">Item</th>
+          <th style="text-align:center;padding:.25rem .5rem;font-size:calc(${cfg.fontSize} * 0.85);letter-spacing:.08em;text-transform:uppercase;color:#777;">Qty</th>
+          <th style="text-align:right;padding:.25rem 0;font-size:calc(${cfg.fontSize} * 0.85);letter-spacing:.08em;text-transform:uppercase;color:#777;">Amt</th>
+        </tr>
+      </thead>
+      <tbody>${itemsHtml}</tbody>
+    </table>
+    <div style="border-top:1px dashed #aaa;margin:.6rem 0;"></div>
+    <div>
+      <div style="display:flex;justify-content:space-between;padding:.15rem 0;color:#555;font-size:${cfg.fontSize};">
+        <span>Subtotal</span><span>₱${subtotal.toLocaleString('en-PH',{minimumFractionDigits:2})}</span>
+      </div>
+      ${boxFee > 0 ? `<div style="display:flex;justify-content:space-between;padding:.15rem 0;color:#555;font-size:${cfg.fontSize};"><span>Boxes</span><span>₱${boxFee.toLocaleString('en-PH',{minimumFractionDigits:2})}</span></div>` : ''}
+      <div style="display:flex;justify-content:space-between;padding:.4rem 0;font-size:${cfg.totalSize};font-weight:900;border-top:2px solid #111;margin-top:.3rem;">
+        <span>TOTAL</span><span>₱${total.toLocaleString('en-PH',{minimumFractionDigits:2})}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:.15rem 0;font-size:calc(${cfg.fontSize} * 0.9);color:#555;">
+        <span>Payment</span><span><b>${payMethod}</b> — ${payStatus}</span>
+      </div>
+    </div>
+    ${order.specialRequest ? `<div style="margin-top:.6rem;padding:.5rem;background:#f9f6f0;border:1px solid #ddd;border-radius:3px;font-size:calc(${cfg.fontSize} * 0.9);color:#555;"><b>📝 Note:</b> ${escHtml(order.specialRequest)}</div>` : ''}
+    <div style="text-align:center;margin-top:1.2rem;padding-top:.8rem;border-top:1px dashed #ccc;font-size:calc(${cfg.fontSize} * 0.9);color:#777;">
+      <div style="font-size:1rem;margin-bottom:.2rem;">🙏</div>
+      <div>Thank you for dining with us!</div>
+      <div style="font-style:italic;margin-top:.15rem;">— De' Iñigo Family</div>
+    </div>
+  `;
+
+  // Inject paper-size-aware print styles
+  let styleEl = document.getElementById('receiptPrintStyle');
+  if(!styleEl){ styleEl = document.createElement('style'); styleEl.id='receiptPrintStyle'; document.head.appendChild(styleEl); }
+  styleEl.textContent = `@media print{body *{visibility:hidden!important;}#receiptPrintArea,#receiptPrintArea *{visibility:visible!important;}#receiptPrintArea{display:block!important;position:fixed!important;inset:0!important;width:${cfg.width}!important;margin:0 auto!important;background:#fff!important;color:#000!important;padding:${cfg.padding}!important;font-family:'DM Sans',Arial,sans-serif!important;font-size:${cfg.fontSize}!important;box-shadow:none!important;border:none!important;z-index:99999!important;}}`;
+
+  const area = document.getElementById('receiptPrintArea');
+  area.innerHTML = receiptHtml;
+  window.print();
+}
+
+// ═══════════════════════════════════════════
+//  MAXIM RIDER WIDGET
+// ═══════════════════════════════════════════
+function openMaximModal(){
+  document.getElementById('maximModal').classList.add('open');
+  document.getElementById('maximPanel').classList.remove('minimized');
+}
+function closeMaximModal(){
+  document.getElementById('maximModal').classList.remove('open');
+  // clear iframe to stop any loading
+  const fr = document.getElementById('maximIframe');
+  fr.src = '';
+  fr.style.display = 'none';
+  document.getElementById('maximFallback').style.display = 'flex';
+}
+function toggleMaximMinimize(){
+  document.getElementById('maximPanel').classList.toggle('minimized');
+}
+function launchMaxim(){
+  // Try deep link to Maxim app first, fallback to web
+  const appLink = 'maximapp://';
+  const webLink = 'https://taximaxim.com/en-PH/city/9621';
+  // Attempt app deep link
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = appLink;
+  document.body.appendChild(iframe);
+  setTimeout(() => { document.body.removeChild(iframe); }, 1500);
+  // After short delay, open web fallback if app didn't open
+  setTimeout(() => { window.open(webLink, '_blank'); }, 500);
+  showFlash('🏍️ Opening Maxim…');
+}
+function loadMaximFrame(){
+  const fr = document.getElementById('maximIframe');
+  const fb = document.getElementById('maximFallback');
+  fr.src = 'https://taximaxim.com/en-PH/city/9621';
+  fr.style.display = 'block';
+  fb.style.display = 'none';
+  showFlash('Loading Maxim web…');
+}
+
+// ═══════════════════════════════════════════
+//  MENU MANAGER
+// ═══════════════════════════════════════════
+
+// Default menu items — staff can toggle availability
+// This mirrors the main ordering page menu structure
+const MENU_DATA = [
+  { section:'🔥 Sizzling', items:[
+    {id:'siz-01',name:'Sizzling Sisig',price:149},
+    {id:'siz-02',name:'Sizzling Bangus',price:159},
+    {id:'siz-03',name:'Sizzling Tofu',price:119},
+    {id:'siz-04',name:'Sizzling Pork Liempo',price:169},
+    {id:'siz-05',name:'Sizzling Squid',price:169},
+    {id:'siz-06',name:'Sizzling Chicken',price:159},
+  ]},
+  { section:'🍖 Pulutan', items:[
+    {id:'pul-01',name:'Crispy Pata',price:399},
+    {id:'pul-02',name:'Lechon Kawali',price:299},
+    {id:'pul-03',name:'Chicharon Bulaklak',price:189},
+    {id:'pul-04',name:'Isaw',price:89},
+    {id:'pul-05',name:'Betamax',price:89},
+    {id:'pul-06',name:'Kwek-kwek',price:79},
+  ]},
+  { section:'🍚 Rice & Extras', items:[
+    {id:'ext-01',name:'Steamed Rice',price:30},
+    {id:'ext-02',name:'Garlic Rice',price:40},
+    {id:'ext-03',name:'Extra Sauce',price:20},
+    {id:'ext-04',name:'Egg (Fried)',price:25},
+  ]},
+  { section:'🥤 Drinks', items:[
+    {id:'drk-01',name:'Softdrinks (Canned)',price:45},
+    {id:'drk-02',name:'Bottled Water',price:25},
+    {id:'drk-03',name:'Iced Tea',price:55},
+    {id:'drk-04',name:'Sago\'t Gulaman',price:55},
+    {id:'drk-05',name:'Juice (Bottled)',price:45},
+  ]},
+];
+
+let menuAvailability = {}; // { itemId: true/false }
+
+function loadMenuAvailability(){
+  // Try Firebase first, then localStorage
+  if(db && isFirebaseConnected){
+    db.ref('menu_availability').once('value').then(snap => {
+      menuAvailability = snap.val() || {};
+      renderMenuManager();
+    });
+  } else {
+    menuAvailability = JSON.parse(localStorage.getItem('deinigo_menu_availability') || '{}');
+    renderMenuManager();
+  }
+}
+
+function loadMenuManager(){
+  loadMenuAvailability();
+}
+
+function renderMenuManager(){
+  const el = document.getElementById('menuManagerContent');
+  if(!el) return;
+
+  let html = '';
+  MENU_DATA.forEach(section => {
+    html += `<div class="menu-section">
+      <div class="menu-section-title">${section.section}</div>
+      <div class="menu-grid">`;
+    section.items.forEach(item => {
+      const avail = menuAvailability[item.id] !== false; // default available
+      html += `
+        <div class="menu-item-row ${avail?'':'unavailable'}" id="mir-${item.id}">
+          <div class="mir-info">
+            <div class="mir-name">${escHtml(item.name)}</div>
+            <div class="mir-price">₱${item.price.toLocaleString()}</div>
+          </div>
+          <div class="mir-toggle">
+            <input type="checkbox" id="tog-${item.id}" ${avail?'checked':''} onchange="toggleMenuItem('${item.id}',this.checked)">
+            <label for="tog-${item.id}">
+              <div class="toggle-track"></div>
+              <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
+            </label>
+          </div>
+        </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  el.innerHTML = html;
+  document.getElementById('menuSyncNote').textContent = '';
+}
+
+function toggleMenuItem(itemId, isAvailable){
+  menuAvailability[itemId] = isAvailable;
+  const row = document.getElementById('mir-'+itemId);
+  if(row){
+    row.classList.toggle('unavailable', !isAvailable);
+    const lbl = row.querySelector('.toggle-text');
+    if(lbl) lbl.textContent = isAvailable ? 'Available' : 'Unavailable';
+  }
+}
+
+function saveMenuAvailability(){
+  const note = document.getElementById('menuSyncNote');
+  note.textContent = '⏳ Saving…';
+
+  if(db && isFirebaseConnected){
+    db.ref('menu_availability').set(menuAvailability).then(() => {
+      note.textContent = '✅ Synced to Firebase — order page updated!';
+      showFlash('✅ Menu availability saved & synced!');
+      setTimeout(()=>{ note.textContent=''; }, 4000);
+    }).catch(() => {
+      localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
+      note.textContent = '⚠️ Saved locally (offline)';
+      showFlash('💾 Menu saved locally.');
+    });
+  } else {
+    localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
+    note.textContent = '💾 Saved locally — will sync when online';
+    showFlash('💾 Menu availability saved!');
+    setTimeout(()=>{ note.textContent=''; }, 4000);
+  }
+}
 
 // ═══════════════════════════════════════════
 //  INIT
