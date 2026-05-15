@@ -705,6 +705,11 @@ function subscribeToLiveData(){
     if(activeTab === 'reservations') renderReservations();
     updateStats();
   });
+
+  db.ref('menu_availability').on('value', snap => {
+    menuAvailability = snap.val() || {};
+    if(activeTab === 'menu') renderMenuManager();
+  });
 }
 
 function getOrdersCached(){
@@ -1355,6 +1360,7 @@ function switchTab(tab){
   document.getElementById('panel-'+tab).classList.add('active');
   if(tab==='sales') renderSales();
   if(tab==='messages'){ renderMessages(); }
+  if(tab==='menu'){ loadMenuManager(); }
 }
 
 function setFilter(f, btn){
@@ -1403,6 +1409,7 @@ function renderAll(){
   updateStats();
   updateBadges();
   if(activeTab === 'sales') renderSales();
+  if(activeTab === 'menu') loadMenuManager();
 }
 
 function refreshAll(){
@@ -1643,51 +1650,123 @@ function loadMaximFrame(){
 //  MENU MANAGER
 // ═══════════════════════════════════════════
 
-// Default menu items — staff can toggle availability
-// This mirrors the main ordering page menu structure
+// Full menu matching DE_IÑIGO-Order_Page.html exactly
 const MENU_DATA = [
-  { section:'🔥 Sizzling', items:[
-    {id:'siz-01',name:'Sizzling Sisig',price:149},
-    {id:'siz-02',name:'Sizzling Bangus',price:159},
-    {id:'siz-03',name:'Sizzling Tofu',price:119},
-    {id:'siz-04',name:'Sizzling Pork Liempo',price:169},
-    {id:'siz-05',name:'Sizzling Squid',price:169},
-    {id:'siz-06',name:'Sizzling Chicken',price:159},
+  { section:'🐷 Pork', items:[
+    {id:'pork-01',name:'Pork Chop',price:149},
+    {id:'pork-02',name:'Sisig',price:109},
+    {id:'pork-03',name:'Kare-Kare',price:149},
+    {id:'pork-04',name:'Sinuglaw',price:199},
+    {id:'pork-05',name:'Pork Bistek',price:159},
+    {id:'pork-06',name:'Crispy Pata',price:700},
+    {id:'pork-07',name:'Liempo (w/ Atsara)',price:159},
+    {id:'pork-08',name:'Lechon Kawali (w/ Atsara)',price:159},
+    {id:'pork-09',name:'Chicharong Bulaklak',price:199},
+    {id:'pork-10',name:'Pork Adobo',price:249},
   ]},
-  { section:'🍖 Pulutan', items:[
-    {id:'pul-01',name:'Crispy Pata',price:399},
-    {id:'pul-02',name:'Lechon Kawali',price:299},
-    {id:'pul-03',name:'Chicharon Bulaklak',price:189},
-    {id:'pul-04',name:'Isaw',price:89},
-    {id:'pul-05',name:'Betamax',price:89},
-    {id:'pul-06',name:'Kwek-kwek',price:79},
+  { section:'🐄 Beef', items:[
+    {id:'beef-01',name:'T-Bone / Prime Rib Steak',price:299},
+    {id:'beef-02',name:'Beef Broccoli',price:159},
+    {id:'beef-03',name:'Beef Kare-Kare',price:159},
+    {id:'beef-04',name:'Beef Steak',price:149},
+    {id:'beef-05',name:'Beef Stroganoff',price:159},
+    {id:'beef-06',name:'Garlic Pepper Beef',price:159},
+    {id:'beef-07',name:'Burger Steak',price:159},
   ]},
-  { section:'🍚 Rice & Extras', items:[
-    {id:'ext-01',name:'Steamed Rice',price:30},
-    {id:'ext-02',name:'Garlic Rice',price:40},
-    {id:'ext-03',name:'Extra Sauce',price:20},
-    {id:'ext-04',name:'Egg (Fried)',price:25},
+  { section:'🦐 Seafoods', items:[
+    {id:'sea-01',name:'Tuna Kinilaw',price:199},
+    {id:'sea-02',name:'Garlic Tuna Belly',price:160},
+    {id:'sea-03',name:'Adobong Pusit',price:269},
+    {id:'sea-04',name:'Sizzling Squid',price:269},
+    {id:'sea-05',name:'Garlic Buttered Shrimp',price:219},
+    {id:'sea-06',name:'Calamares (w/ Garlic Mayo)',price:269},
+    {id:'sea-07',name:'Deep Fried Tilapia',price:199},
+  ]},
+  { section:'🍗 Chicken', items:[
+    {id:'chk-01',name:"North's Chicken",price:250},
+    {id:'chk-02',name:"De' Iñigo's Inasal",price:160},
+    {id:'chk-03',name:'Garlic Chicken',price:140},
+    {id:'chk-04',name:'Parmesan Buttered Chicken',price:140},
+    {id:'chk-05',name:'Chicken in Spicy BBQ',price:140},
+    {id:'chk-06',name:'Chicken Adobo',price:279},
+  ]},
+  { section:'🍵 Soup', items:[
+    {id:'sop-01',name:'Pork Sinigang',price:259},
+    {id:'sop-02',name:'Shrimp Sinigang',price:259},
+    {id:'sop-03',name:'Tuna Belly Sinigang',price:299},
+    {id:'sop-04',name:'Egg Drop Soup',price:79},
+    {id:'sop-05',name:'Mushroom Soup',price:79},
+    {id:'sop-06',name:'Tinolang Manok',price:259},
+    {id:'sop-07',name:'Tuna Tinola',price:299},
+    {id:'sop-08',name:'Pork Nilaga',price:299},
+  ]},
+  { section:'🥬 Veggies', items:[
+    {id:'veg-01',name:'Kangkong w/ Oyster Sauce',price:79},
+    {id:'veg-02',name:'Ensaladang Talong',price:79},
+    {id:'veg-03',name:'Buttered Veggies',price:179},
+    {id:'veg-04',name:'Pancit Canton',price:250},
+    {id:'veg-05',name:'Sotanghon Guisado',price:250},
+  ]},
+  { section:'🍟 Snacks', items:[
+    {id:'snk-01',name:'Mangga w/ Bagoong',price:79},
+    {id:'snk-02',name:'Burger w/ Fries',price:99},
+    {id:'snk-03',name:'Lasagna',price:149},
+    {id:'snk-04',name:'Nachos',price:149},
+    {id:'snk-05',name:'Sizzling Potato',price:139},
+    {id:'snk-06',name:'Cheesy Fries',price:129},
   ]},
   { section:'🥤 Drinks', items:[
-    {id:'drk-01',name:'Softdrinks (Canned)',price:45},
-    {id:'drk-02',name:'Bottled Water',price:25},
-    {id:'drk-03',name:'Iced Tea',price:55},
-    {id:'drk-04',name:'Sago\'t Gulaman',price:55},
-    {id:'drk-05',name:'Juice (Bottled)',price:45},
+    {id:'drk-01',name:'Coke Mismo',price:30},
+    {id:'drk-02',name:'Iced Tea Pitcher',price:90},
+    {id:'drk-03',name:'Blue Lemonade Pitcher',price:90},
+    {id:'drk-04',name:'Cucumber Lemonade Pitcher',price:90},
+    {id:'drk-05',name:'Four Seasons (Can)',price:60},
+    {id:'drk-06',name:'Pineapple (Can)',price:60},
+    {id:'drk-07',name:'Coke Zero',price:60},
+    {id:'drk-08',name:'San Mig Light',price:75},
+  ]},
+  { section:'🥤 Milkshakes', items:[
+    {id:'mlk-01',name:'Rocky Road',price:90},
+    {id:'mlk-02',name:'Cookies & Cream',price:90},
+    {id:'mlk-03',name:'Caramel Macchiato',price:90},
+    {id:'mlk-04',name:'Black Forest',price:90},
+  ]},
+  { section:'🍮 Desserts', items:[
+    {id:'des-01',name:'Mango Float',price:99},
+    {id:'des-02',name:'Leche Flan',price:99},
+  ]},
+  { section:'🧂 Extras', items:[
+    {id:'ext-01',name:'Rice (Solo)',price:20},
+    {id:'ext-02',name:'Rice (Full)',price:120},
+    {id:'ext-03',name:'Bagoong',price:10},
+    {id:'ext-04',name:'Mang Tomas',price:10},
+    {id:'ext-05',name:'Garlic Mayo',price:10},
+    {id:'ext-06',name:'Garlic Sauce',price:10},
+    {id:'ext-07',name:'Banana Ketchup',price:10},
+    {id:'ext-08',name:'Hot Sauce',price:10},
+    {id:'ext-09',name:'Suka',price:5},
   ]},
 ];
 
-let menuAvailability = {}; // { itemId: true/false }
+// Steak doneness options — only for T-Bone / Prime Rib Steak
+const DONENESS_OPTIONS = ['Rare','Medium Rare','Medium','Medium Well','Well Done'];
+const STEAK_WITH_DONENESS = ['T-Bone / Prime Rib Steak']; // beef-01 only
+
+let menuAvailability = {};
+let donenessAvailability = {}; // { 'Rare': true/false, ... }
 
 function loadMenuAvailability(){
-  // Try Firebase first, then localStorage
   if(db && isFirebaseConnected){
     db.ref('menu_availability').once('value').then(snap => {
       menuAvailability = snap.val() || {};
-      renderMenuManager();
+      db.ref('doneness_availability').once('value').then(snap2 => {
+        donenessAvailability = snap2.val() || {};
+        renderMenuManager();
+      });
     });
   } else {
     menuAvailability = JSON.parse(localStorage.getItem('deinigo_menu_availability') || '{}');
+    donenessAvailability = JSON.parse(localStorage.getItem('deinigo_doneness_availability') || '{}');
     renderMenuManager();
   }
 }
@@ -1701,20 +1780,47 @@ function renderMenuManager(){
   if(!el) return;
 
   let html = '';
+
+  // ── T-Bone Doneness Availability ──
+  html += `<div class="menu-section">
+    <div class="menu-section-title">🥩 T-Bone / Prime Rib Steak — Doneness Options</div>
+    <div style="font-size:.75rem;color:var(--smoke);margin-bottom:.7rem;">Toggle which cook levels are available. Unavailable options are hidden from customers.</div>
+    <div class="menu-grid">`;
+  DONENESS_OPTIONS.forEach(d => {
+    const avail = donenessAvailability[d] !== false;
+    const did = 'don-'+d.replace(/\s/g,'-').toLowerCase();
+    html += `
+      <div class="menu-item-row ${avail?'':'unavailable'}" id="drow-${did}">
+        <div class="mir-info">
+          <div class="mir-name">🥩 ${d}</div>
+          <div class="mir-price">Cook level</div>
+        </div>
+        <div class="mir-toggle">
+          <input type="checkbox" id="dtog-${did}" ${avail?'checked':''} onchange="toggleDonenessItem('${d}',this.checked)">
+          <label for="dtog-${did}">
+            <div class="toggle-track"></div>
+            <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
+          </label>
+        </div>
+      </div>`;
+  });
+  html += `</div></div>`;
+
+  // ── All Menu Items ──
   MENU_DATA.forEach(section => {
     html += `<div class="menu-section">
       <div class="menu-section-title">${section.section}</div>
       <div class="menu-grid">`;
     section.items.forEach(item => {
-      const avail = menuAvailability[item.id] !== false; // default available
+      const avail = menuAvailability[item.name] !== false;
       html += `
         <div class="menu-item-row ${avail?'':'unavailable'}" id="mir-${item.id}">
           <div class="mir-info">
             <div class="mir-name">${escHtml(item.name)}</div>
-            <div class="mir-price">₱${item.price.toLocaleString()}</div>
+            <div class="mir-price">from ₱${item.price.toLocaleString()}</div>
           </div>
           <div class="mir-toggle">
-            <input type="checkbox" id="tog-${item.id}" ${avail?'checked':''} onchange="toggleMenuItem('${item.id}',this.checked)">
+            <input type="checkbox" id="tog-${item.id}" ${avail?'checked':''} onchange="toggleMenuItem('${escHtml(item.name).replace(/'/g,"\\'")}',this.checked)">
             <label for="tog-${item.id}">
               <div class="toggle-track"></div>
               <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
@@ -1729,9 +1835,24 @@ function renderMenuManager(){
   document.getElementById('menuSyncNote').textContent = '';
 }
 
-function toggleMenuItem(itemId, isAvailable){
-  menuAvailability[itemId] = isAvailable;
-  const row = document.getElementById('mir-'+itemId);
+function toggleMenuItem(itemName, isAvailable){
+  menuAvailability[itemName] = isAvailable;
+  MENU_DATA.forEach(sec => sec.items.forEach(item => {
+    if(item.name === itemName){
+      const row = document.getElementById('mir-'+item.id);
+      if(row){
+        row.classList.toggle('unavailable', !isAvailable);
+        const lbl = row.querySelector('.toggle-text');
+        if(lbl) lbl.textContent = isAvailable ? 'Available' : 'Unavailable';
+      }
+    }
+  }));
+}
+
+function toggleDonenessItem(doneness, isAvailable){
+  donenessAvailability[doneness] = isAvailable;
+  const did = 'don-'+doneness.replace(/\s/g,'-').toLowerCase();
+  const row = document.getElementById('drow-'+did);
   if(row){
     row.classList.toggle('unavailable', !isAvailable);
     const lbl = row.querySelector('.toggle-text');
@@ -1744,17 +1865,22 @@ function saveMenuAvailability(){
   note.textContent = '⏳ Saving…';
 
   if(db && isFirebaseConnected){
-    db.ref('menu_availability').set(menuAvailability).then(() => {
+    Promise.all([
+      db.ref('menu_availability').set(menuAvailability),
+      db.ref('doneness_availability').set(donenessAvailability)
+    ]).then(() => {
       note.textContent = '✅ Synced to Firebase — order page updated!';
-      showFlash('✅ Menu availability saved & synced!');
+      showFlash('✅ Menu & doneness availability synced!');
       setTimeout(()=>{ note.textContent=''; }, 4000);
     }).catch(() => {
       localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
+      localStorage.setItem('deinigo_doneness_availability', JSON.stringify(donenessAvailability));
       note.textContent = '⚠️ Saved locally (offline)';
       showFlash('💾 Menu saved locally.');
     });
   } else {
     localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
+    localStorage.setItem('deinigo_doneness_availability', JSON.stringify(donenessAvailability));
     note.textContent = '💾 Saved locally — will sync when online';
     showFlash('💾 Menu availability saved!');
     setTimeout(()=>{ note.textContent=''; }, 4000);
