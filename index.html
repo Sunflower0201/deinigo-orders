@@ -21,8 +21,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
 <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
 /* ═══════════════════════════════════
    ROOT VARIABLES
@@ -631,19 +631,45 @@ function initFirebase(){
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
+
     db.ref('.info/connected').on('value', snap => {
+      const wasConnected = isFirebaseConnected;
       isFirebaseConnected = snap.val() === true;
       const dot = document.getElementById('syncDot');
       const lbl = document.getElementById('syncLabel');
       if(isFirebaseConnected){
+        clearTimeout(window._fbConnectTimeout);
         dot.classList.remove('offline');
         lbl.textContent = 'Live Sync ✓';
-        subscribeToLiveData();
+        if(!wasConnected){
+          subscribeToLiveData();
+        }
       } else {
         dot.classList.add('offline');
         lbl.textContent = 'Offline – Local';
       }
     });
+
+    // If not connected within 8 seconds, force a reconnect attempt
+    window._fbConnectTimeout = setTimeout(() => {
+      if(!isFirebaseConnected){
+        const lbl = document.getElementById('syncLabel');
+        lbl.textContent = 'Reconnecting…';
+        firebase.database().goOffline();
+        setTimeout(() => firebase.database().goOnline(), 500);
+      }
+    }, 8000);
+
+    // Further fallback: if still not connected after 20s, switch to local polling
+    setTimeout(() => {
+      if(!isFirebaseConnected){
+        document.getElementById('syncDot').classList.add('offline');
+        document.getElementById('syncLabel').textContent = 'Local Mode';
+        startLocalPolling();
+        console.warn('Firebase connection timed out. Using localStorage fallback.');
+      }
+    }, 20000);
+
   } catch(e){
     document.getElementById('syncDot').classList.add('offline');
     document.getElementById('syncLabel').textContent = 'Local Mode';
@@ -1490,6 +1516,7 @@ function showFlash(msg){
 // ═══════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════
+function escAttr(str){ return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function escHtml(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1709,8 +1736,8 @@ const MENU_DATA = [
     {id:'Deep Fried Tilapia',name:'Deep Fried Tilapia',price:'₱199'},
   ]},
   { section:'🍗 Chicken', items:[
-    {id:'North's Chicken',name:'North's Chicken',price:'₱250 / ₱420'},
-    {id:'De' Iñigo's Inasal',name:'De' Iñigo's Inasal',price:'₱160 / ₱250 / ₱420'},
+    {id:"North's Chicken",name:"North's Chicken",price:'₱250 / ₱420'},
+    {id:"De' Iñigo's Inasal",name:"De' Iñigo's Inasal",price:'₱160 / ₱250 / ₱420'},
     {id:'Garlic Chicken',name:'Garlic Chicken',price:'₱140 / ₱230 / ₱420'},
     {id:'Parmesan Buttered Chicken',name:'Parmesan Buttered Chicken',price:'₱140 / ₱230 / ₱420'},
     {id:'Chicken in Spicy BBQ',name:'Chicken in Spicy BBQ',price:'₱140 / ₱230 / ₱420'},
@@ -1792,7 +1819,7 @@ const MENU_DATA = [
     {id:'Garlic Parmesan',name:'Garlic Parmesan (Tray)',price:'S₱500/M₱900/L₱1800'},
     {id:'Chicken Curry',name:'Chicken Curry (Tray)',price:'S₱500/M₱900/L₱1800'},
     {id:'Chicken Adobo Tray',name:'Chicken Adobo (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'North's Chicken Tray',name:"North's Chicken (Tray)",price:'S₱500/M₱900/L₱1800'},
+    {id:"North's Chicken Tray",name:"North's Chicken (Tray)",price:'S₱500/M₱900/L₱1800'},
   ]},
   { section:'🥘 Food Trays — Noodles & Veggies', items:[
     {id:'Mixed Veggies',name:'Mixed Veggies (Tray)',price:'S₱400/M₱800/L₱1500'},
@@ -1851,7 +1878,7 @@ function renderMenuManager(){
             <div class="mir-price">${escHtml(item.price)}</div>
           </div>
           <div class="mir-toggle">
-            <input type="checkbox" id="tog-${safeId}" ${avail?'checked':''} onchange="toggleMenuItem('${item.id.replace(/'/g,\"\'\").replace(/"/g,\"&quot;\")}',this.checked)">
+            <input type="checkbox" id="tog-${safeId}" data-itemid="${escAttr(item.id)}" ${avail?'checked':''} onchange="toggleMenuItem(this.dataset.itemid,this.checked)">
             <label for="tog-${safeId}">
               <div class="toggle-track"></div>
               <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
@@ -1869,7 +1896,7 @@ function renderMenuManager(){
           const dSafeId = (item.id + '__' + d).replace(/[^a-zA-Z0-9]/g,'_');
           const dAvail = menuAvailability[dKey] !== false;
           html += `<div style="display:flex;align-items:center;gap:.3rem;background:#130b04;border:1px solid rgba(200,65,10,${dAvail?'.2':'.08'});border-radius:var(--radius);padding:.3rem .6rem;">
-            <input type="checkbox" id="dtog-${dSafeId}" ${dAvail?'checked':''} onchange="toggleMenuItem('${dKey.replace(/'/g,\"\'\").replace(/"/g,\"&quot;\")}',this.checked)" style="width:14px;height:14px;accent-color:var(--ember);cursor:pointer;">
+            <input type="checkbox" id="dtog-${dSafeId}" data-itemid="${escAttr(dKey)}" ${dAvail?'checked':''} onchange="toggleMenuItem(this.dataset.itemid,this.checked)" style="width:14px;height:14px;accent-color:var(--ember);cursor:pointer;">
             <label for="dtog-${dSafeId}" style="font-size:.78rem;font-weight:600;color:${dAvail?'var(--cream)':'var(--smoke)'};cursor:pointer;">${d}</label>
           </div>`;
         });
