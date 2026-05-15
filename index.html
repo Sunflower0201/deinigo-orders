@@ -322,6 +322,10 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
 .paper-opt-desc{font-size:.7rem;color:var(--smoke);margin-top:.2rem;}
 .paper-print-btn{width:100%;padding:.75rem;background:var(--ember);color:#fff;border:none;border-radius:var(--radius);font-weight:800;font-size:.95rem;cursor:pointer;}
 .paper-print-btn:hover{background:#a83408;}
+.paper-copy-btn{flex:1;padding:.55rem .3rem;background:#0e0a07;border:2px solid rgba(200,65,10,.2);border-radius:var(--radius);color:var(--cream);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.paper-copy-btn.active{border-color:var(--gold);background:rgba(232,160,48,.1);color:var(--gold);}
+.paper-copy-btn:hover:not(.active){border-color:rgba(200,65,10,.4);}
+.paper-print-btn:hover{background:#a83408;}
 
 /* ── MENU MANAGER TAB ── */
 .menu-section{margin-bottom:1.5rem;}
@@ -548,7 +552,7 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
 <div class="paper-modal" id="paperModal">
   <div class="paper-box">
     <div class="paper-box-head">
-      <h3>🧾 Choose Receipt Paper Size</h3>
+      <h3>🧾 Receipt Settings</h3>
       <button class="paper-close" onclick="closePaperModal()">✕</button>
     </div>
     <div class="paper-body">
@@ -570,6 +574,14 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
           <div class="paper-opt-name">A4 / Letter</div>
           <div class="paper-opt-desc">Full page<br>inkjet / laser</div>
         </div>
+      </div>
+      <div class="paper-label" style="margin-top:.9rem;">Number of copies (max 5)</div>
+      <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+        <button class="paper-copy-btn active" onclick="selectCopies(1,this)">1</button>
+        <button class="paper-copy-btn" onclick="selectCopies(2,this)">2</button>
+        <button class="paper-copy-btn" onclick="selectCopies(3,this)">3</button>
+        <button class="paper-copy-btn" onclick="selectCopies(4,this)">4</button>
+        <button class="paper-copy-btn" onclick="selectCopies(5,this)">5</button>
       </div>
       <button class="paper-print-btn" onclick="executePrint()">🖨️ Print Receipt</button>
     </div>
@@ -1495,6 +1507,13 @@ document.getElementById('replyModal').addEventListener('click', e => {
 // ═══════════════════════════════════════════
 let pendingReceiptOrderId = null;
 let selectedPaperSize = '58mm';
+let selectedReceiptCopies = 1;
+
+function selectCopies(n, el){
+  selectedReceiptCopies = n;
+  document.querySelectorAll('.paper-copy-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
 
 const PAPER_CONFIG = {
   '58mm': { width:'58mm', fontSize:'11px', padding:'8px 6px', headerSize:'1.1rem', totalSize:'1rem'  },
@@ -1517,7 +1536,13 @@ function selectPaper(size, el){
 }
 function executePrint(){
   closePaperModal();
-  if(pendingReceiptOrderId) printOrderReceipt(pendingReceiptOrderId, selectedPaperSize);
+  if(!pendingReceiptOrderId) return;
+  // Print the requested number of copies
+  for(let i = 0; i < selectedReceiptCopies; i++){
+    // Small delay between copies so print dialogs don't stack
+    setTimeout(() => printOrderReceipt(pendingReceiptOrderId, selectedPaperSize), i * 600);
+  }
+  showFlash('🖨️ Printing ' + selectedReceiptCopies + ' cop' + (selectedReceiptCopies===1?'y':'ies') + '…');
 }
 
 function printOrderReceipt(orderId, paperSize){
@@ -1650,123 +1675,155 @@ function loadMaximFrame(){
 //  MENU MANAGER
 // ═══════════════════════════════════════════
 
-// Full menu matching DE_IÑIGO-Order_Page.html exactly
+// Full menu synced from order page — staff toggles availability per item
+// Item keys match the item names used in the main order page for real-time sync
 const MENU_DATA = [
   { section:'🐷 Pork', items:[
-    {id:'pork-01',name:'Pork Chop',price:149},
-    {id:'pork-02',name:'Sisig',price:109},
-    {id:'pork-03',name:'Kare-Kare',price:149},
-    {id:'pork-04',name:'Sinuglaw',price:199},
-    {id:'pork-05',name:'Pork Bistek',price:159},
-    {id:'pork-06',name:'Crispy Pata',price:700},
-    {id:'pork-07',name:'Liempo (w/ Atsara)',price:159},
-    {id:'pork-08',name:'Lechon Kawali (w/ Atsara)',price:159},
-    {id:'pork-09',name:'Chicharong Bulaklak',price:199},
-    {id:'pork-10',name:'Pork Adobo',price:249},
+    {id:'Pork Chop',name:'Pork Chop',price:'₱149'},
+    {id:'Sisig',name:'Sisig',price:'₱109 / ₱249'},
+    {id:'Kare-Kara',name:'Kare-Kara (Pork)',price:'₱149 / ₱249'},
+    {id:'Sinuglaw',name:'Sinuglaw',price:'₱199'},
+    {id:'Pork Bistek',name:'Pork Bistek',price:'₱159 / ₱249'},
+    {id:'Crispy Pata',name:'Crispy Pata',price:'₱700'},
+    {id:'Liempo (w/ Atsara)',name:'Liempo (w/ Atsara)',price:'₱159 / ₱289'},
+    {id:'Lechon Kawali (w/ Atsara)',name:'Lechon Kawali (w/ Atsara)',price:'₱159 / ₱289'},
+    {id:'Chicharong Bulaklak',name:'Chicharong Bulaklak',price:'₱199'},
+    {id:'Pork Adobo',name:'Pork Adobo',price:'₱249'},
   ]},
   { section:'🐄 Beef', items:[
-    {id:'beef-01',name:'T-Bone / Prime Rib Steak',price:299},
-    {id:'beef-02',name:'Beef Broccoli',price:159},
-    {id:'beef-03',name:'Beef Kare-Kare',price:159},
-    {id:'beef-04',name:'Beef Steak',price:149},
-    {id:'beef-05',name:'Beef Stroganoff',price:159},
-    {id:'beef-06',name:'Garlic Pepper Beef',price:159},
-    {id:'beef-07',name:'Burger Steak',price:159},
+    {id:'T-Bone / Prime Rib Steak',name:'T-Bone / Prime Rib Steak',price:'₱299 / ₱319', hasDoneness:true},
+    {id:'Beef Broccoli',name:'Beef Broccoli',price:'₱159 / ₱299'},
+    {id:'Beef Kare-Kare',name:'Beef Kare-Kare',price:'₱159 / ₱299'},
+    {id:'Beef Steak',name:'Beef Steak',price:'₱149 / ₱289'},
+    {id:'Beef Stroganoff',name:'Beef Stroganoff',price:'₱159 / ₱299'},
+    {id:'Garlic Pepper Beef',name:'Garlic Pepper Beef',price:'₱159 / ₱299'},
+    {id:'Burger Steak',name:'Burger Steak',price:'₱159'},
   ]},
   { section:'🦐 Seafoods', items:[
-    {id:'sea-01',name:'Tuna Kinilaw',price:199},
-    {id:'sea-02',name:'Garlic Tuna Belly',price:160},
-    {id:'sea-03',name:'Adobong Pusit',price:269},
-    {id:'sea-04',name:'Sizzling Squid',price:269},
-    {id:'sea-05',name:'Garlic Buttered Shrimp',price:219},
-    {id:'sea-06',name:'Calamares (w/ Garlic Mayo)',price:269},
-    {id:'sea-07',name:'Deep Fried Tilapia',price:199},
+    {id:'Tuna Kinilaw',name:'Tuna Kinilaw',price:'₱199'},
+    {id:'Garlic Tuna Belly',name:'Garlic Tuna Belly',price:'₱160 / ₱299'},
+    {id:'Adobong Pusit',name:'Adobong Pusit',price:'₱269'},
+    {id:'Sizzling Squid',name:'Sizzling Squid',price:'₱269'},
+    {id:'Garlic Buttered Shrimp',name:'Garlic Buttered Shrimp',price:'₱219'},
+    {id:'Calamares (w/ Garlic Mayo)',name:'Calamares (w/ Garlic Mayo)',price:'₱269'},
+    {id:'Deep Fried Tilapia',name:'Deep Fried Tilapia',price:'₱199'},
   ]},
   { section:'🍗 Chicken', items:[
-    {id:'chk-01',name:"North's Chicken",price:250},
-    {id:'chk-02',name:"De' Iñigo's Inasal",price:160},
-    {id:'chk-03',name:'Garlic Chicken',price:140},
-    {id:'chk-04',name:'Parmesan Buttered Chicken',price:140},
-    {id:'chk-05',name:'Chicken in Spicy BBQ',price:140},
-    {id:'chk-06',name:'Chicken Adobo',price:279},
+    {id:'North's Chicken',name:'North's Chicken',price:'₱250 / ₱420'},
+    {id:'De' Iñigo's Inasal',name:'De' Iñigo's Inasal',price:'₱160 / ₱250 / ₱420'},
+    {id:'Garlic Chicken',name:'Garlic Chicken',price:'₱140 / ₱230 / ₱420'},
+    {id:'Parmesan Buttered Chicken',name:'Parmesan Buttered Chicken',price:'₱140 / ₱230 / ₱420'},
+    {id:'Chicken in Spicy BBQ',name:'Chicken in Spicy BBQ',price:'₱140 / ₱230 / ₱420'},
+    {id:'Chicken Adobo',name:'Chicken Adobo',price:'₱279 / ₱429'},
   ]},
   { section:'🍵 Soup', items:[
-    {id:'sop-01',name:'Pork Sinigang',price:259},
-    {id:'sop-02',name:'Shrimp Sinigang',price:259},
-    {id:'sop-03',name:'Tuna Belly Sinigang',price:299},
-    {id:'sop-04',name:'Egg Drop Soup',price:79},
-    {id:'sop-05',name:'Mushroom Soup',price:79},
-    {id:'sop-06',name:'Tinolang Manok',price:259},
-    {id:'sop-07',name:'Tuna Tinola',price:299},
-    {id:'sop-08',name:'Pork Nilaga',price:299},
+    {id:'Pork Sinigang',name:'Pork Sinigang',price:'₱259'},
+    {id:'Shrimp Sinigang',name:'Shrimp Sinigang',price:'₱259'},
+    {id:'Tuna Belly Sinigang',name:'Tuna Belly Sinigang',price:'₱299'},
+    {id:'Egg Drop Soup',name:'Egg Drop Soup',price:'₱79'},
+    {id:'Mushroom Soup',name:'Mushroom Soup',price:'₱79'},
+    {id:'Tinolang Manok',name:'Tinolang Manok',price:'₱259'},
+    {id:'Tuna Tinola',name:'Tuna Tinola',price:'₱299'},
+    {id:'Pork Nilaga',name:'Pork Nilaga',price:'₱299'},
   ]},
   { section:'🥬 Veggies', items:[
-    {id:'veg-01',name:'Kangkong w/ Oyster Sauce',price:79},
-    {id:'veg-02',name:'Ensaladang Talong',price:79},
-    {id:'veg-03',name:'Buttered Veggies',price:179},
-    {id:'veg-04',name:'Pancit Canton',price:250},
-    {id:'veg-05',name:'Sotanghon Guisado',price:250},
+    {id:'Kangkong w/ Oyster Sauce',name:'Kangkong w/ Oyster Sauce',price:'₱79'},
+    {id:'Ensaladang Talong',name:'Ensaladang Talong',price:'₱79'},
+    {id:'Buttered Veggies',name:'Buttered Veggies',price:'₱179'},
+    {id:'Pancit Canton',name:'Pancit Canton',price:'₱250'},
+    {id:'Sotanghon Guisado',name:'Sotanghon Guisado',price:'₱250'},
   ]},
   { section:'🍟 Snacks', items:[
-    {id:'snk-01',name:'Mangga w/ Bagoong',price:79},
-    {id:'snk-02',name:'Burger w/ Fries',price:99},
-    {id:'snk-03',name:'Lasagna',price:149},
-    {id:'snk-04',name:'Nachos',price:149},
-    {id:'snk-05',name:'Sizzling Potato',price:139},
-    {id:'snk-06',name:'Cheesy Fries',price:129},
+    {id:'Mangga w/ Bagoong',name:'Mangga w/ Bagoong',price:'₱79'},
+    {id:'Burger w/ Fries',name:'Burger w/ Fries',price:'₱99'},
+    {id:'Lasagna',name:'Lasagna',price:'₱149'},
+    {id:'Nachos',name:'Nachos',price:'₱149'},
+    {id:'Sizzling Potato',name:'Sizzling Potato',price:'₱139'},
+    {id:'Cheesy Fries',name:'Cheesy Fries',price:'₱129'},
   ]},
   { section:'🥤 Drinks', items:[
-    {id:'drk-01',name:'Coke Mismo',price:30},
-    {id:'drk-02',name:'Iced Tea Pitcher',price:90},
-    {id:'drk-03',name:'Blue Lemonade Pitcher',price:90},
-    {id:'drk-04',name:'Cucumber Lemonade Pitcher',price:90},
-    {id:'drk-05',name:'Four Seasons (Can)',price:60},
-    {id:'drk-06',name:'Pineapple (Can)',price:60},
-    {id:'drk-07',name:'Coke Zero',price:60},
-    {id:'drk-08',name:'San Mig Light',price:75},
+    {id:'Coke Mismo',name:'Coke Mismo',price:'₱30'},
+    {id:'Iced Tea Pitcher',name:'Iced Tea Pitcher',price:'₱90'},
+    {id:'Blue Lemonade Pitcher',name:'Blue Lemonade Pitcher',price:'₱90'},
+    {id:'Cucumber Lemonade Pitcher',name:'Cucumber Lemonade Pitcher',price:'₱90'},
+    {id:'Four Seasons (Can)',name:'Four Seasons (Can)',price:'₱60'},
+    {id:'Pineapple (Can)',name:'Pineapple (Can)',price:'₱60'},
+    {id:'Coke Zero',name:'Coke Zero',price:'₱60'},
+    {id:'San Mig Light',name:'San Mig Light',price:'₱75 / ₱450'},
   ]},
   { section:'🥤 Milkshakes', items:[
-    {id:'mlk-01',name:'Rocky Road',price:90},
-    {id:'mlk-02',name:'Cookies & Cream',price:90},
-    {id:'mlk-03',name:'Caramel Macchiato',price:90},
-    {id:'mlk-04',name:'Black Forest',price:90},
+    {id:'Rocky Road',name:'Rocky Road',price:'₱90'},
+    {id:'Cookies & Cream',name:'Cookies & Cream',price:'₱90'},
+    {id:'Caramel Macchiato',name:'Caramel Macchiato',price:'₱90'},
+    {id:'Black Forest',name:'Black Forest',price:'₱90'},
   ]},
   { section:'🍮 Desserts', items:[
-    {id:'des-01',name:'Mango Float',price:99},
-    {id:'des-02',name:'Leche Flan',price:99},
+    {id:'Mango Float',name:'Mango Float',price:'₱99'},
+    {id:'Leche Flan',name:'Leche Flan',price:'₱99'},
   ]},
   { section:'🧂 Extras', items:[
-    {id:'ext-01',name:'Rice (Solo)',price:20},
-    {id:'ext-02',name:'Rice (Full)',price:120},
-    {id:'ext-03',name:'Bagoong',price:10},
-    {id:'ext-04',name:'Mang Tomas',price:10},
-    {id:'ext-05',name:'Garlic Mayo',price:10},
-    {id:'ext-06',name:'Garlic Sauce',price:10},
-    {id:'ext-07',name:'Banana Ketchup',price:10},
-    {id:'ext-08',name:'Hot Sauce',price:10},
-    {id:'ext-09',name:'Suka',price:5},
+    {id:'Rice (Solo)',name:'Rice (Solo)',price:'₱20'},
+    {id:'Rice (Full)',name:'Rice (Full)',price:'₱120'},
+    {id:'Bagoong',name:'Bagoong',price:'₱10'},
+    {id:'Mang Tomas',name:'Mang Tomas',price:'₱10'},
+    {id:'Garlic Mayo',name:'Garlic Mayo',price:'₱10'},
+    {id:'Garlic Sauce',name:'Garlic Sauce',price:'₱10'},
+    {id:'Banana Ketchup',name:'Banana Ketchup',price:'₱10'},
+    {id:'Hot Sauce',name:'Hot Sauce',price:'₱10'},
+    {id:'Suka',name:'Suka',price:'₱5'},
+  ]},
+  { section:'🥘 Food Trays — Pork', items:[
+    {id:'Humba',name:'Humba (Tray)',price:'S₱550/M₱1000/L₱1900'},
+    {id:'Caldereta',name:'Caldereta (Tray)',price:'S₱650/M₱1100/L₱2000'},
+    {id:'Sisig Tray',name:'Sisig (Tray)',price:'S₱550/M₱1000/L₱1900'},
+    {id:'Menudo',name:'Menudo (Tray)',price:'S₱550/M₱1000/L₱1900'},
+    {id:'Liempo Tray',name:'Liempo (Tray)',price:'S₱550/M₱1000/L₱1900'},
+    {id:'Bicol Express',name:'Bicol Express (Tray)',price:'S₱550/M₱1100/L₱1900'},
+    {id:'Pork Kare-Kare',name:'Pork Kare-Kare (Tray)',price:'S₱550/M₱1000/L₱1900'},
+    {id:'Crispy Pata Tray',name:'Crispy Pata (Tray)',price:'S₱550/M₱1000/L₱2000'},
+  ]},
+  { section:'🥘 Food Trays — Beef', items:[
+    {id:'Caldereta Beef',name:'Caldereta Beef (Tray)',price:'S₱600/M₱1100/L₱2000'},
+    {id:'Beef Steak Tray',name:'Beef Steak (Tray)',price:'S₱600/M₱1100/L₱2000'},
+    {id:'Beef w/ Broccoli',name:'Beef w/ Broccoli (Tray)',price:'S₱600/M₱1100/L₱2000'},
+    {id:'Garlic Pepper Beef Tray',name:'Garlic Pepper Beef (Tray)',price:'S₱600/M₱1100/L₱2000'},
+  ]},
+  { section:'🥘 Food Trays — Chicken', items:[
+    {id:'Garlic Parmesan',name:'Garlic Parmesan (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'Chicken Curry',name:'Chicken Curry (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'Chicken Adobo Tray',name:'Chicken Adobo (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'North's Chicken Tray',name:"North's Chicken (Tray)",price:'S₱500/M₱900/L₱1800'},
+  ]},
+  { section:'🥘 Food Trays — Noodles & Veggies', items:[
+    {id:'Mixed Veggies',name:'Mixed Veggies (Tray)',price:'S₱400/M₱800/L₱1500'},
+    {id:'Chopsuey',name:'Chopsuey (Tray)',price:'S₱400/M₱800/L₱1500'},
+    {id:'Sotanghon Guisado Tray',name:'Sotanghon Guisado (Tray)',price:'S₱400/M₱800/L₱1500'},
+    {id:'Pancit Canton Tray',name:'Pancit Canton (Tray)',price:'S₱400/M₱800/L₱1500'},
+    {id:'Spaghetti',name:'Spaghetti (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'Carbonara',name:'Carbonara (Tray)',price:'S₱500/M₱900/L₱1800'},
+  ]},
+  { section:'🥘 Food Trays — Seafoods', items:[
+    {id:'Garlic Buttered Shrimp Tray',name:'Garlic Buttered Shrimp (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'Tuna Kinilaw Tray',name:'Tuna Kinilaw (Tray)',price:'S₱400/M₱800/L₱1600'},
+    {id:'Sinuglaw Tray',name:'Sinuglaw (Tray)',price:'S₱500/M₱900/L₱1800'},
+    {id:'Mixed Seafoods',name:'Mixed Seafoods (Tray)',price:'S₱600/M₱1000/L₱2000'},
   ]},
 ];
 
-// Steak doneness options — only for T-Bone / Prime Rib Steak
-const DONENESS_OPTIONS = ['Rare','Medium Rare','Medium','Medium Well','Well Done'];
-const STEAK_WITH_DONENESS = ['T-Bone / Prime Rib Steak']; // beef-01 only
+// T-Bone steak doneness options for availability management
+const STEAK_DONENESS_OPTIONS = ['Rare','Medium Rare','Medium','Medium Well','Well Done'];
 
-let menuAvailability = {};
-let donenessAvailability = {}; // { 'Rare': true/false, ... }
+let menuAvailability = {}; // { itemId: true/false }
 
 function loadMenuAvailability(){
+  // Try Firebase first, then localStorage
   if(db && isFirebaseConnected){
     db.ref('menu_availability').once('value').then(snap => {
       menuAvailability = snap.val() || {};
-      db.ref('doneness_availability').once('value').then(snap2 => {
-        donenessAvailability = snap2.val() || {};
-        renderMenuManager();
-      });
+      renderMenuManager();
     });
   } else {
     menuAvailability = JSON.parse(localStorage.getItem('deinigo_menu_availability') || '{}');
-    donenessAvailability = JSON.parse(localStorage.getItem('deinigo_doneness_availability') || '{}');
     renderMenuManager();
   }
 }
@@ -1780,53 +1837,44 @@ function renderMenuManager(){
   if(!el) return;
 
   let html = '';
-
-  // ── T-Bone Doneness Availability ──
-  html += `<div class="menu-section">
-    <div class="menu-section-title">🥩 T-Bone / Prime Rib Steak — Doneness Options</div>
-    <div style="font-size:.75rem;color:var(--smoke);margin-bottom:.7rem;">Toggle which cook levels are available. Unavailable options are hidden from customers.</div>
-    <div class="menu-grid">`;
-  DONENESS_OPTIONS.forEach(d => {
-    const avail = donenessAvailability[d] !== false;
-    const did = 'don-'+d.replace(/\s/g,'-').toLowerCase();
-    html += `
-      <div class="menu-item-row ${avail?'':'unavailable'}" id="drow-${did}">
-        <div class="mir-info">
-          <div class="mir-name">🥩 ${d}</div>
-          <div class="mir-price">Cook level</div>
-        </div>
-        <div class="mir-toggle">
-          <input type="checkbox" id="dtog-${did}" ${avail?'checked':''} onchange="toggleDonenessItem('${d}',this.checked)">
-          <label for="dtog-${did}">
-            <div class="toggle-track"></div>
-            <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
-          </label>
-        </div>
-      </div>`;
-  });
-  html += `</div></div>`;
-
-  // ── All Menu Items ──
   MENU_DATA.forEach(section => {
     html += `<div class="menu-section">
       <div class="menu-section-title">${section.section}</div>
       <div class="menu-grid">`;
     section.items.forEach(item => {
-      const avail = menuAvailability[item.name] !== false;
+      const safeId = item.id.replace(/[^a-zA-Z0-9]/g,'_');
+      const avail = menuAvailability[item.id] !== false; // default available
       html += `
-        <div class="menu-item-row ${avail?'':'unavailable'}" id="mir-${item.id}">
+        <div class="menu-item-row ${avail?'':'unavailable'}" id="mir-${safeId}">
           <div class="mir-info">
             <div class="mir-name">${escHtml(item.name)}</div>
-            <div class="mir-price">from ₱${item.price.toLocaleString()}</div>
+            <div class="mir-price">${escHtml(item.price)}</div>
           </div>
           <div class="mir-toggle">
-            <input type="checkbox" id="tog-${item.id}" ${avail?'checked':''} onchange="toggleMenuItem('${escHtml(item.name).replace(/'/g,"\\'")}',this.checked)">
-            <label for="tog-${item.id}">
+            <input type="checkbox" id="tog-${safeId}" ${avail?'checked':''} onchange="toggleMenuItem('${item.id.replace(/'/g,\"\'\").replace(/"/g,\"&quot;\")}',this.checked)">
+            <label for="tog-${safeId}">
               <div class="toggle-track"></div>
               <span class="toggle-text">${avail?'Available':'Unavailable'}</span>
             </label>
           </div>
         </div>`;
+      // T-Bone steak: show doneness availability sub-options
+      if(item.hasDoneness){
+        html += `<div class="menu-item-row" style="grid-column:1/-1;background:rgba(200,65,10,.04);padding:.5rem 1rem .7rem;">
+          <div class="mir-info" style="width:100%;">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);margin-bottom:.5rem;">DONENESS OPTIONS (T-Bone / Prime Rib Steak)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;">`;
+        STEAK_DONENESS_OPTIONS.forEach(d => {
+          const dKey = item.id + '::' + d;
+          const dSafeId = (item.id + '__' + d).replace(/[^a-zA-Z0-9]/g,'_');
+          const dAvail = menuAvailability[dKey] !== false;
+          html += `<div style="display:flex;align-items:center;gap:.3rem;background:#130b04;border:1px solid rgba(200,65,10,${dAvail?'.2':'.08'});border-radius:var(--radius);padding:.3rem .6rem;">
+            <input type="checkbox" id="dtog-${dSafeId}" ${dAvail?'checked':''} onchange="toggleMenuItem('${dKey.replace(/'/g,\"\'\").replace(/"/g,\"&quot;\")}',this.checked)" style="width:14px;height:14px;accent-color:var(--ember);cursor:pointer;">
+            <label for="dtog-${dSafeId}" style="font-size:.78rem;font-weight:600;color:${dAvail?'var(--cream)':'var(--smoke)'};cursor:pointer;">${d}</label>
+          </div>`;
+        });
+        html += `</div></div></div>`;
+      }
     });
     html += `</div></div>`;
   });
@@ -1835,24 +1883,9 @@ function renderMenuManager(){
   document.getElementById('menuSyncNote').textContent = '';
 }
 
-function toggleMenuItem(itemName, isAvailable){
-  menuAvailability[itemName] = isAvailable;
-  MENU_DATA.forEach(sec => sec.items.forEach(item => {
-    if(item.name === itemName){
-      const row = document.getElementById('mir-'+item.id);
-      if(row){
-        row.classList.toggle('unavailable', !isAvailable);
-        const lbl = row.querySelector('.toggle-text');
-        if(lbl) lbl.textContent = isAvailable ? 'Available' : 'Unavailable';
-      }
-    }
-  }));
-}
-
-function toggleDonenessItem(doneness, isAvailable){
-  donenessAvailability[doneness] = isAvailable;
-  const did = 'don-'+doneness.replace(/\s/g,'-').toLowerCase();
-  const row = document.getElementById('drow-'+did);
+function toggleMenuItem(itemId, isAvailable){
+  menuAvailability[itemId] = isAvailable;
+  const row = document.getElementById('mir-'+itemId);
   if(row){
     row.classList.toggle('unavailable', !isAvailable);
     const lbl = row.querySelector('.toggle-text');
@@ -1865,22 +1898,17 @@ function saveMenuAvailability(){
   note.textContent = '⏳ Saving…';
 
   if(db && isFirebaseConnected){
-    Promise.all([
-      db.ref('menu_availability').set(menuAvailability),
-      db.ref('doneness_availability').set(donenessAvailability)
-    ]).then(() => {
+    db.ref('menu_availability').set(menuAvailability).then(() => {
       note.textContent = '✅ Synced to Firebase — order page updated!';
-      showFlash('✅ Menu & doneness availability synced!');
+      showFlash('✅ Menu availability saved & synced!');
       setTimeout(()=>{ note.textContent=''; }, 4000);
     }).catch(() => {
       localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
-      localStorage.setItem('deinigo_doneness_availability', JSON.stringify(donenessAvailability));
       note.textContent = '⚠️ Saved locally (offline)';
       showFlash('💾 Menu saved locally.');
     });
   } else {
     localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
-    localStorage.setItem('deinigo_doneness_availability', JSON.stringify(donenessAvailability));
     note.textContent = '💾 Saved locally — will sync when online';
     showFlash('💾 Menu availability saved!');
     setTimeout(()=>{ note.textContent=''; }, 4000);
