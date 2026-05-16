@@ -1,0 +1,2608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<title>De' Iñigo — One Stop Sizzling at Pulutan</title>
+
+<!-- ══ PWA META TAGS ══ -->
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="De' Iñigo"/>
+<meta name="application-name" content="De' Iñigo"/>
+<meta name="theme-color" content="#110805"/>
+
+<!-- PWA Manifest (inline — no separate file needed) -->
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22De%27%20I%C3%B1igo%22%2C%22short_name%22%3A%22De%27%20I%C3%B1igo%22%2C%22description%22%3A%22One%20Stop%20Sizzling%20at%20Pulutan%20%E2%80%94%20Order%20online%20from%20your%20phone%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230e0a07%22%2C%22theme_color%22%3A%22%23110805%22%2C%22orientation%22%3A%22portrait%22%2C%22categories%22%3A%5B%22food%22%2C%22lifestyle%22%5D%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%200%20512%20512'%253E%253Crect%2520width%3D'512'%2520height%3D'512'%2520rx%3D'80'%2520fill%3D'%230e0a07'%2F%253E%253Cellipse%2520cx%3D'256'%2520cy%3D'200'%2520rx%3D'130'%2520ry%3D'110'%2520fill%3D'none'%2520stroke%3D'%23c8410a'%2520stroke-width%3D'22'%2F%253E%253Cpath%2520d%3D'M180%2520200%2520Q256%2520310%2520332%2520200'%2520fill%3D'none'%2520stroke%3D'%23e8a030'%2520stroke-width%3D'18'%2520stroke-linecap%3D'round'%2F%253E%253Ctext%2520x%3D'256'%2520y%3D'430'%2520font-size%3D'72'%2520text-anchor%3D'middle'%2520fill%3D'%23e8a030'%2520font-family%3D'Georgia%2Cserif'%2520font-style%3D'italic'%253EDI%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D"/>
+
+<!-- Apple Touch Icon -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%230e0a07'/%3E%3Cellipse cx='256' cy='200' rx='130' ry='110' fill='none' stroke='%23c8410a' stroke-width='22'/%3E%3Cpath d='M180 200 Q256 310 332 200' fill='none' stroke='%23e8a030' stroke-width='18' stroke-linecap='round'/%3E%3Ctext x='256' y='310' font-size='72' text-anchor='middle' fill='%23e8a030' font-family='Georgia,serif' font-style='italic'%3EDI%3C/text%3E%3Ctext x='256' y='430' font-size='52' text-anchor='middle' fill='%23e8a030' font-family='sans-serif'%3EOrder%3C/text%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+/* ═══════════════════════════════════
+   ROOT VARIABLES
+═══════════════════════════════════ */
+:root{
+  --coal:#0e0a07;--ember:#c8410a;--gold:#e8a030;--cream:#f5ede0;
+  --ash:#3a2e25;--smoke:#8a7060;--sizzle:#ff5c1a;--green:#2d7a3a;
+  --blue:#1e6bca;--gcash:#0070ba;
+  --radius:4px;
+  --fbase:17px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:var(--fbase);}
+body{background:var(--coal);color:var(--cream);font-family:'DM Sans',sans-serif;overflow-x:hidden;-webkit-text-size-adjust:100%;font-size:1rem;line-height:1.6;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;transition:background .3s,padding .3s;}
+nav.scrolled{background:rgba(14,10,7,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,65,10,.25);padding:.8rem 2rem;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--cream);text-decoration:none;}
+.nav-logo span{color:var(--ember);font-style:italic;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{font-size:1rem;font-weight:600;letter-spacing:.04em;color:rgba(245,237,224,.65);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-right{display:flex;gap:.5rem;align-items:center;}
+.cart-btn{position:relative;background:var(--ember);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;padding:.65rem 1.5rem;cursor:pointer;display:flex;align-items:center;gap:.5rem;transition:background .2s;border-radius:var(--radius);}
+.cart-btn:hover{background:#a83408;}
+.cart-count{background:#fff;color:var(--ember);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;}
+.nav-icon-btn{background:rgba(200,65,10,.15);border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.88rem;font-weight:700;padding:.55rem 1.1rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;border-radius:var(--radius);}
+.nav-icon-btn:hover{background:rgba(200,65,10,.3);border-color:var(--gold);color:var(--gold);}
+@media(max-width:768px){.nav-links{display:none;}nav{padding:1rem 1.2rem;}.nav-icon-btn span.lbl{display:none;}.nav-icon-btn{padding:.55rem .8rem;}}
+
+/* ── OPEN BANNER ── */
+.open-banner{background:var(--ember);padding:.8rem;text-align:center;font-size:.9rem;font-weight:700;letter-spacing:.15em;color:#fff;display:flex;align-items:center;justify-content:center;gap:.8rem;margin-top:62px;}
+.blink-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:blink 1.3s infinite;flex-shrink:0;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.15;}}
+
+/* ── HERO ── */
+.hero{min-height:92vh;display:grid;place-items:center;position:relative;overflow:hidden;padding:2rem;
+background:radial-gradient(ellipse 60% 50% at 50% 80%,rgba(200,65,10,.28) 0%,transparent 70%),
+linear-gradient(160deg,#1a0f07 0%,var(--coal) 60%);}
+.hero-content{text-align:center;position:relative;z-index:2;max-width:800px;}
+.hero-badge{display:inline-block;font-size:.82rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(232,160,48,.4);padding:.45rem 1.3rem;margin-bottom:2rem;border-radius:var(--radius);}
+.hero-sub-top{font-family:'Bebas Neue',sans-serif;font-size:clamp(1rem,2vw,1.4rem);letter-spacing:.4em;color:var(--smoke);margin-bottom:.6rem;}
+.hero-name{font-family:'Playfair Display',serif;font-size:clamp(3.5rem,10vw,7.5rem);font-weight:900;line-height:.92;margin-bottom:.4rem;}
+.hero-name span{color:var(--ember);font-style:italic;}
+.hero-tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.1rem,2.5vw,1.7rem);color:var(--gold);margin-bottom:2.5rem;}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-fire{background:var(--ember);color:#fff;font-size:1rem;font-weight:700;padding:.95rem 2.5rem;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s,transform .2s;border-radius:var(--radius);}
+.btn-fire:hover{background:#a83408;transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--cream);font-size:1rem;font-weight:600;padding:.95rem 2.5rem;border:1px solid rgba(245,237,224,.3);cursor:pointer;text-decoration:none;display:inline-block;transition:border-color .2s,color .2s,transform .2s;border-radius:var(--radius);}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+.embers{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.edot{position:absolute;border-radius:50%;background:var(--sizzle);box-shadow:0 0 6px var(--sizzle);animation:floatup linear infinite;opacity:0;}
+@keyframes floatup{0%{transform:translateY(0) translateX(0) scale(1);opacity:0;}15%{opacity:.9;}80%{opacity:.3;}100%{transform:translateY(-110vh) translateX(var(--drift)) scale(.2);opacity:0;}}
+
+/* ── ORDER STATUS BAR ── */
+.order-status-bar{display:none;background:rgba(14,10,7,.97);border-bottom:3px solid var(--gold);padding:.8rem 1.5rem;position:fixed;top:62px;left:0;right:0;z-index:190;animation:slideDown .4s ease;}
+.order-status-bar.visible{display:block;}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.osb-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.osb-label{font-size:.78rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);white-space:nowrap;}
+.osb-id{font-size:.82rem;font-weight:700;color:var(--gold);}
+.osb-steps{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;}
+.osb-step{display:flex;align-items:center;gap:.3rem;font-size:.82rem;font-weight:600;color:var(--smoke);}
+.osb-step.active{color:var(--gold);}
+.osb-step.done{color:#5aca6e;}
+.osb-step-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor;flex-shrink:0;}
+.osb-step.active .osb-step-dot{background:var(--gold);animation:pulse-dot 1.5s infinite;}
+.osb-step.done .osb-step-dot{background:#5aca6e;border-color:#5aca6e;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(232,160,48,.6);}50%{box-shadow:0 0 0 6px rgba(232,160,48,0);}}
+.osb-sep{color:rgba(255,255,255,.2);font-size:.8rem;}
+.osb-track-btn{margin-left:auto;font-size:.78rem;font-weight:700;padding:.35rem .9rem;background:rgba(232,160,48,.15);border:1px solid rgba(232,160,48,.4);color:var(--gold);cursor:pointer;border-radius:var(--radius);}
+
+/* ── SECTION COMMON ── */
+section{padding:5rem 1.5rem;}
+.sec-label{font-size:.78rem;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+h2.sec-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.05;margin-bottom:1.2rem;}
+h2.sec-title em{color:var(--ember);font-style:italic;}
+
+/* ── ABOUT ── */
+#about{background:linear-gradient(180deg,var(--coal),#160c05 50%,var(--coal));}
+.about-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:2.5rem;}}
+.about-text p{font-size:1.05rem;line-height:1.9;color:rgba(245,237,224,.75);margin-bottom:1.2rem;}
+.stats{display:flex;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;}
+.stat{border-left:2px solid var(--ember);padding-left:.9rem;}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gold);line-height:1;}
+.stat-l{font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--smoke);}
+.plate-wrap{display:flex;justify-content:center;}
+.plate-circle{width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#3a1a08,#1a0a03);border:1px solid rgba(200,65,10,.3);display:grid;place-items:center;font-size:6.5rem;box-shadow:0 0 80px rgba(200,65,10,.2),inset 0 0 40px rgba(0,0,0,.5);position:relative;}
+.plate-ring{position:absolute;border-radius:50%;border:1px solid rgba(232,160,48,.12);animation:spin linear infinite;}
+.plate-ring:nth-child(1){inset:-20px;animation-duration:22s;}
+.plate-ring:nth-child(2){inset:-40px;animation-duration:32s;animation-direction:reverse;border-style:dashed;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── MARQUEE ── */
+.marquee-wrap{background:var(--ash);padding:2rem 0;overflow:hidden;white-space:nowrap;}
+.marquee-track{display:inline-block;animation:marquee 18s linear infinite;}
+.marquee-track span{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.3em;color:var(--smoke);padding:0 1.8rem;}
+.marquee-track span.acc{color:var(--gold);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── MENU SECTION ── */
+#menu{background:linear-gradient(180deg,var(--coal),#130b04 50%,var(--coal));}
+.menu-wrap{max-width:1100px;margin:0 auto;}
+.menu-head{text-align:center;margin-bottom:3rem;}
+.order-type-bar{display:flex;justify-content:center;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.order-type-btn{font-size:.95rem;font-weight:700;letter-spacing:.06em;padding:.75rem 2rem;border:1px solid rgba(200,65,10,.35);background:transparent;color:var(--smoke);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem;border-radius:var(--radius);}
+.order-type-btn.active{background:var(--ember);color:#fff;border-color:var(--ember);}
+.type-switch{display:flex;justify-content:center;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.type-btn{font-size:.9rem;font-weight:700;letter-spacing:.1em;padding:.65rem 1.8rem;border:1px solid rgba(200,65,10,.3);background:transparent;color:var(--smoke);cursor:pointer;transition:all .2s;border-radius:var(--radius);}
+.type-btn.active{background:var(--ember);color:#fff;border-color:var(--ember);}
+.cat-tabs{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.cat-tab{font-size:.85rem;font-weight:700;letter-spacing:.06em;padding:.55rem 1.3rem;border:1px solid rgba(200,65,10,.2);background:transparent;color:var(--smoke);cursor:pointer;transition:all .2s;border-radius:var(--radius);}
+.cat-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(232,160,48,.08);}
+.menu-panel{display:none;}
+.menu-panel.active{display:block;animation:fadeup .35s ease both;}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:rgba(200,65,10,.08);}
+.menu-item{background:#100a06;padding:1.5rem 1.6rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;transition:background .2s;}
+.menu-item:hover{background:#1a0e08;}
+.mi-left{flex:1;}
+.mi-icon{font-size:1.6rem;margin-bottom:.4rem;}
+.mi-name{font-size:1.05rem;font-weight:700;color:var(--cream);margin-bottom:.3rem;}
+.mi-desc{font-size:.88rem;color:rgba(245,237,224,.5);line-height:1.55;}
+.mi-badge{display:inline-block;margin-top:.5rem;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(232,160,48,.3);padding:.15rem .5rem;border-radius:2px;}
+.mi-right{display:flex;flex-direction:column;align-items:flex-end;gap:.6rem;min-width:120px;}
+.mi-price{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--gold);white-space:nowrap;}
+.size-sel{font-size:.78rem;padding:.35rem .6rem;background:#1a0e08;border:1px solid rgba(200,65,10,.4);color:var(--cream);cursor:pointer;width:100%;border-radius:var(--radius);}
+.size-sel option{background:#1a0e08;}
+.qty-ctrl{display:flex;align-items:center;gap:.5rem;}
+.qty-btn{width:30px;height:30px;border:1px solid rgba(200,65,10,.5);background:transparent;color:var(--cream);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;border-radius:var(--radius);}
+.qty-btn:hover{background:var(--ember);}
+.qty-num{font-size:1rem;font-weight:700;min-width:24px;text-align:center;}
+.add-cart-btn{font-size:.8rem;font-weight:700;letter-spacing:.06em;padding:.4rem 1rem;background:var(--ember);color:#fff;border:none;cursor:pointer;transition:background .15s,transform .15s;white-space:nowrap;width:100%;border-radius:var(--radius);}
+.add-cart-btn:hover{background:#a83408;transform:scale(1.04);}
+.add-cart-btn:active{transform:scale(.97);}
+.tray-sel{font-size:.78rem;padding:.3rem .6rem;background:#1a0e08;border:1px solid rgba(200,65,10,.4);color:var(--cream);cursor:pointer;border-radius:var(--radius);}
+
+/* ── CART DRAWER ── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-drawer{position:fixed;right:0;top:0;bottom:0;width:min(480px,100vw);background:#130b04;border-left:1px solid rgba(200,65,10,.2);z-index:301;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+.cart-drawer.open{transform:translateX(0);}
+.cart-header{padding:1.3rem 1.6rem;border-bottom:1px solid rgba(200,65,10,.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.cart-header h3{font-family:'Playfair Display',serif;font-size:1.4rem;}
+.close-cart{background:none;border:none;color:var(--cream);font-size:1.6rem;cursor:pointer;line-height:1;}
+.cart-body{flex:1;overflow-y:auto;padding:1rem 1.5rem;-webkit-overflow-scrolling:touch;min-height:0;}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--smoke);font-size:1rem;}
+.cart-empty span{font-size:2.8rem;display:block;margin-bottom:.8rem;}
+.cart-line{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;border-bottom:1px solid rgba(255,255,255,.06);gap:.8rem;}
+.cl-info{flex:1;}
+.cl-name{font-size:.97rem;font-weight:600;}
+.cl-sub{font-size:.82rem;color:var(--smoke);}
+.cl-price{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--gold);white-space:nowrap;}
+.cl-remove{background:none;border:none;color:var(--smoke);cursor:pointer;font-size:1rem;padding:.2rem;}
+.cl-remove:hover{color:#e05;}
+.cart-footer{flex-shrink:0;padding:1.3rem 1.6rem;border-top:1px solid rgba(200,65,10,.15);overflow-y:auto;-webkit-overflow-scrolling:touch;max-height:55vh;}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;padding:.25rem 0;}
+.cart-total-row span:first-child{font-size:.88rem;color:var(--smoke);}
+.cart-total-row span:last-child{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--cream);}
+.cart-total-grand{display:flex;justify-content:space-between;align-items:center;margin:.7rem 0 1rem;border-top:1px solid rgba(200,65,10,.2);padding-top:.7rem;}
+.cart-total-grand span:first-child{font-size:.95rem;font-weight:700;}
+.cart-total-grand span:last-child{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);}
+.pay-label{font-size:.82rem;font-weight:700;letter-spacing:.1em;color:var(--smoke);margin-bottom:.5rem;margin-top:.7rem;}
+.pay-opts{display:flex;gap:.5rem;margin-bottom:.8rem;}
+.pay-opt{flex:1;padding:.7rem;border:1px solid rgba(200,65,10,.25);background:transparent;color:var(--smoke);font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;border-radius:var(--radius);}
+.pay-opt.active{border-color:var(--gold);color:var(--gold);background:rgba(232,160,48,.08);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;}
+.field-row.single{grid-template-columns:1fr;}
+.name-field{width:100%;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.95rem;padding:.7rem .9rem;outline:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;}
+.name-field::placeholder{color:var(--smoke);}
+.name-field:focus{border-color:var(--gold);}
+.takeout-fields{background:rgba(200,65,10,.05);border:1px solid rgba(200,65,10,.2);padding:.9rem;margin-bottom:.7rem;animation:fadeup .25s ease;border-radius:var(--radius);}
+.takeout-fields h4{font-size:.8rem;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-bottom:.7rem;}
+.place-order-btn{width:100%;padding:1.1rem;background:var(--ember);color:#fff;font-size:1.05rem;font-weight:700;border:none;cursor:pointer;transition:background .2s;letter-spacing:.06em;border-radius:var(--radius);margin-top:.5rem;}
+.place-order-btn:hover{background:#a83408;}
+.place-order-btn:disabled{background:#5a2a10;cursor:not-allowed;opacity:.6;}
+.gcash-pay-btn{width:100%;padding:1.1rem;background:var(--gcash);color:#fff;font-size:1.05rem;font-weight:700;border:none;cursor:pointer;transition:background .2s;letter-spacing:.06em;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:.6rem;margin-top:.5rem;}
+.gcash-pay-btn:hover{background:#005a99;}
+.gcash-info{background:rgba(0,112,186,.08);border:1px solid rgba(0,112,186,.3);padding:.85rem;margin:.6rem 0;border-radius:var(--radius);font-size:.88rem;line-height:1.7;}
+.special-req-area{width:100%;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.88rem;padding:.7rem .9rem;outline:none;resize:vertical;min-height:60px;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;border-radius:var(--radius);}
+.special-req-area::placeholder{color:var(--smoke);}
+.special-req-area:focus{border-color:var(--gold);}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:400;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#130b04;border:1px solid rgba(200,65,10,.25);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0;animation:fadeup .3s ease;border-radius:var(--radius);}
+
+/* ── ORDER REVIEW MODAL ── */
+.review-items{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.review-item-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem .8rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);font-size:.9rem;border-radius:var(--radius);}
+.review-item-name{flex:1;color:var(--cream);}
+.review-item-qty{color:var(--smoke);margin:0 .7rem;}
+.review-item-price{color:var(--gold);font-weight:700;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;}
+.review-totals{background:rgba(200,65,10,.06);border:1px solid rgba(200,65,10,.2);padding:.9rem 1rem;border-radius:var(--radius);margin-bottom:1rem;}
+.review-total-row{display:flex;justify-content:space-between;font-size:.9rem;padding:.2rem 0;color:var(--smoke);}
+.review-total-grand{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;color:var(--gold);border-top:1px solid rgba(200,65,10,.2);margin-top:.5rem;padding-top:.5rem;}
+.review-detail-row{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;padding:.8rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);font-size:.88rem;color:var(--cream);}
+.review-detail-label{font-size:.72rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);text-transform:uppercase;}
+
+/* ── RESERVATION FOOD MENU ── */
+.res-menu-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem;}
+.res-menu-tab{font-size:.78rem;font-weight:700;padding:.4rem .9rem;border:1px solid rgba(200,65,10,.25);background:transparent;color:var(--smoke);cursor:pointer;border-radius:var(--radius);transition:all .15s;}
+.res-menu-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(232,160,48,.08);}
+.res-menu-panel{display:none;}
+.res-menu-panel.active{display:block;}
+.res-menu-item{display:flex;justify-content:space-between;align-items:center;padding:.6rem .7rem;border-bottom:1px solid rgba(255,255,255,.05);gap:.5rem;}
+.res-menu-item:last-child{border-bottom:none;}
+.res-mi-info{flex:1;}
+.res-mi-name{font-size:.9rem;font-weight:600;color:var(--cream);}
+.res-mi-price{font-size:.78rem;color:var(--smoke);}
+.res-mi-controls{display:flex;align-items:center;gap:.4rem;flex-shrink:0;}
+.res-mi-sel{font-size:.75rem;padding:.25rem .4rem;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);border-radius:var(--radius);cursor:pointer;}
+.res-mi-qty{font-size:.88rem;font-weight:700;min-width:20px;text-align:center;}
+.res-mi-btn{width:26px;height:26px;border:1px solid rgba(200,65,10,.4);background:transparent;color:var(--cream);cursor:pointer;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .15s;}
+.res-mi-btn:hover{background:var(--ember);}
+.res-mi-add{font-size:.75rem;font-weight:700;padding:.28rem .7rem;background:var(--ember);color:#fff;border:none;cursor:pointer;border-radius:var(--radius);}
+.res-mi-add:hover{background:#a83408;}
+.res-adv-list{margin:.5rem 0;display:flex;flex-direction:column;gap:.3rem;}
+.res-adv-row{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;padding:.4rem .6rem;background:rgba(232,160,48,.07);border:1px solid rgba(232,160,48,.15);border-radius:var(--radius);}
+.res-adv-remove{background:none;border:none;color:var(--smoke);cursor:pointer;font-size:.9rem;padding:.1rem;}
+.res-adv-remove:hover{color:#e05;}
+.modal-head{padding:1.3rem 1.6rem;border-bottom:1px solid rgba(200,65,10,.15);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#130b04;z-index:1;}
+.modal-head h3{font-family:'Playfair Display',serif;font-size:1.3rem;}
+.modal-close{background:none;border:none;color:var(--cream);font-size:1.5rem;cursor:pointer;}
+.modal-body{padding:1.6rem;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.1em;color:var(--smoke);margin-bottom:.4rem;}
+.form-group input,.form-group textarea,.form-group select{width:100%;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.95rem;padding:.7rem .95rem;outline:none;font-family:'DM Sans',sans-serif;border-radius:var(--radius);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold);}
+.modal-submit{width:100%;padding:1rem;background:var(--ember);color:#fff;font-size:1rem;font-weight:700;border:none;cursor:pointer;transition:background .2s;margin-top:.5rem;letter-spacing:.05em;border-radius:var(--radius);}
+.modal-submit:hover{background:#a83408;}
+
+/* ── MESSAGE MODAL ── */
+.msg-thread{display:flex;flex-direction:column;gap:.8rem;margin-bottom:1rem;min-height:130px;max-height:260px;overflow-y:auto;padding:.5rem;}
+.msg-bubble{max-width:82%;padding:.7rem 1rem;font-size:.92rem;line-height:1.55;border-radius:var(--radius);}
+.msg-bubble.customer{background:rgba(200,65,10,.2);border:1px solid rgba(200,65,10,.3);align-self:flex-end;color:var(--cream);}
+.msg-bubble.restaurant{background:rgba(232,160,48,.1);border:1px solid rgba(232,160,48,.2);align-self:flex-start;color:var(--cream);}
+.msg-bubble .sender{font-size:.74rem;font-weight:700;letter-spacing:.1em;margin-bottom:.3rem;color:var(--gold);}
+.msg-bubble .msg-img{max-width:100%;border-radius:4px;margin-top:.4rem;display:block;}
+.msg-bubble .msg-file-link{color:var(--gold);font-size:.82rem;text-decoration:underline;display:block;margin-top:.3rem;}
+.msg-input-row{display:flex;gap:.4rem;align-items:flex-end;}
+.msg-input-row input{flex:1;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.9rem;padding:.65rem .9rem;outline:none;font-family:'DM Sans',sans-serif;border-radius:var(--radius);}
+.msg-input-row input:focus{border-color:var(--gold);}
+.msg-send{padding:.65rem 1.2rem;background:var(--ember);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:.9rem;border-radius:var(--radius);white-space:nowrap;}
+.msg-send:hover{background:#a83408;}
+.msg-attach-btn{padding:.65rem .8rem;background:rgba(200,65,10,.15);border:1px solid rgba(200,65,10,.3);color:var(--cream);cursor:pointer;font-size:1rem;border-radius:var(--radius);}
+.msg-attach-btn:hover{background:rgba(200,65,10,.3);}
+.msg-attach-input{display:none;}
+.msg-meta-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.msg-name-field{background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.85rem;padding:.45rem .7rem;outline:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;width:160px;}
+.msg-name-field::placeholder{color:var(--smoke);}
+
+/* ── THANK YOU PAGE (full overlay) ── */
+.ty-overlay{display:none;position:fixed;inset:0;background:#0a0704;z-index:500;overflow-y:auto;}
+.ty-overlay.visible{display:block;}
+.ty-inner{max-width:700px;margin:0 auto;padding:2.5rem 1.5rem;}
+.ty-header{text-align:center;padding:3rem 1rem 2rem;border-bottom:1px solid rgba(200,65,10,.15);margin-bottom:2rem;}
+.ty-checkmark{width:80px;height:80px;background:rgba(45,122,58,.2);border:2px solid #5aca6e;border-radius:50%;display:grid;place-items:center;font-size:2.2rem;margin:0 auto 1.2rem;animation:popIn .5s ease;}
+@keyframes popIn{0%{transform:scale(0);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+.ty-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;margin-bottom:.4rem;}
+.ty-title em{color:var(--ember);font-style:italic;}
+.ty-subtitle{font-size:1.05rem;color:rgba(245,237,224,.6);}
+.ty-order-id{display:inline-block;font-size:.82rem;font-weight:700;letter-spacing:.2em;color:var(--gold);border:1px solid rgba(232,160,48,.3);padding:.4rem 1.2rem;margin-top:.8rem;border-radius:var(--radius);}
+
+/* Status tracker in TY page */
+.ty-status-tracker{background:#130b04;border:1px solid rgba(200,65,10,.2);padding:1.6rem;margin-bottom:1.5rem;border-radius:var(--radius);}
+.tst-title{font-size:.78rem;font-weight:700;letter-spacing:.25em;color:var(--smoke);margin-bottom:1.2rem;}
+.tst-steps{display:flex;justify-content:space-between;position:relative;}
+.tst-steps::before{content:'';position:absolute;top:14px;left:0;right:0;height:2px;background:rgba(200,65,10,.2);z-index:0;}
+.tst-step{display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:1;position:relative;z-index:1;}
+.tst-step-circle{width:30px;height:30px;border-radius:50%;border:2px solid rgba(200,65,10,.3);background:#130b04;display:grid;place-items:center;font-size:.85rem;}
+.tst-step.done .tst-step-circle{background:#2d7a3a;border-color:#5aca6e;color:#fff;}
+.tst-step.active .tst-step-circle{background:rgba(232,160,48,.15);border-color:var(--gold);animation:pulse-gold 1.5s infinite;}
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 0 0 rgba(232,160,48,.4);}50%{box-shadow:0 0 0 8px rgba(232,160,48,0);}}
+.tst-step-label{font-size:.72rem;font-weight:700;text-align:center;color:var(--smoke);}
+.tst-step.active .tst-step-label{color:var(--gold);}
+.tst-step.done .tst-step-label{color:#5aca6e;}
+.tst-eta{font-size:.85rem;color:rgba(245,237,224,.6);margin-top:1rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.06);}
+
+/* Payment status in TY */
+.ty-payment-status{padding:.8rem 1.2rem;border-radius:var(--radius);margin-bottom:1.5rem;font-size:.92rem;font-weight:600;display:flex;align-items:center;gap:.7rem;}
+.ty-payment-status.pending{background:rgba(232,160,48,.1);border:1px solid rgba(232,160,48,.3);color:var(--gold);}
+.ty-payment-status.paid{background:rgba(45,122,58,.1);border:1px solid rgba(45,122,58,.3);color:#5aca6e;}
+.ty-payment-status .ps-dot{width:10px;height:10px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* TY message section */
+.ty-msg-section{background:#130b04;border:1px solid rgba(200,65,10,.2);padding:1.4rem;margin-bottom:1.5rem;border-radius:var(--radius);}
+.ty-msg-thread{display:flex;flex-direction:column;gap:.8rem;min-height:80px;max-height:220px;overflow-y:auto;margin-bottom:1rem;padding:.5rem;}
+.ty-msg-input-row{display:flex;gap:.4rem;align-items:flex-end;}
+.ty-msg-input{flex:1;background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);font-size:.92rem;padding:.65rem .9rem;outline:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;}
+.ty-msg-input:focus{border-color:var(--gold);}
+.ty-actions{display:flex;gap:.8rem;flex-wrap:wrap;}
+.ty-btn{flex:1;padding:.95rem;font-size:.95rem;font-weight:700;border:none;cursor:pointer;border-radius:var(--radius);transition:all .2s;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;}
+.ty-btn.home{background:var(--ember);color:#fff;}
+.ty-btn.home:hover{background:#a83408;}
+.ty-btn.track{background:rgba(232,160,48,.15);border:1px solid rgba(232,160,48,.3);color:var(--gold);}
+.ty-btn.track:hover{background:rgba(232,160,48,.25);}
+
+/* GCash flow */
+.gcash-payment-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:450;display:none;align-items:center;justify-content:center;padding:1rem;}
+.gcash-payment-overlay.visible{display:flex;}
+.gcash-box{background:#0a0f1e;border:2px solid var(--gcash);width:100%;max-width:420px;border-radius:12px;overflow:hidden;animation:fadeup .3s ease;}
+.gcash-header{background:var(--gcash);padding:1.5rem;text-align:center;color:#fff;}
+.gcash-header h3{font-size:1.3rem;font-weight:700;margin-bottom:.3rem;}
+.gcash-header p{font-size:.9rem;opacity:.85;}
+.gcash-body{padding:1.8rem;}
+.gcash-amount{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--gcash);text-align:center;margin-bottom.5rem;}
+.gcash-number{text-align:center;font-size:1.1rem;font-weight:700;color:var(--cream);margin-bottom:1.5rem;padding:.8rem;background:rgba(0,112,186,.1);border:1px solid rgba(0,112,186,.3);border-radius:8px;}
+.gcash-number small{display:block;font-size:.75rem;color:var(--smoke);font-weight:400;margin-bottom:.2rem;}
+.gcash-steps{font-size:.88rem;color:rgba(245,237,224,.7);line-height:2;}
+.gcash-steps li{list-style:none;padding-left:1.4rem;position:relative;}
+.gcash-steps li::before{content:'→';position:absolute;left:0;color:var(--gcash);}
+.gcash-open-btn{width:100%;padding:1.1rem;background:var(--gcash);color:#fff;font-size:1.05rem;font-weight:700;border:none;cursor:pointer;border-radius:var(--radius);margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:.6rem;}
+.gcash-open-btn:hover{background:#005a99;}
+.gcash-confirm-btn{width:100%;padding:.9rem;background:rgba(45,122,58,.25);color:#5aca6e;font-size:.95rem;font-weight:700;border:1px solid rgba(45,122,58,.4);cursor:pointer;border-radius:var(--radius);margin-top:.6rem;}
+.gcash-confirm-btn:hover{background:rgba(45,122,58,.4);}
+.gcash-cancel-link{display:block;text-align:center;font-size:.85rem;color:var(--smoke);margin-top:.8rem;cursor:pointer;text-decoration:underline;}
+
+/* ── GCASH IN-PAGE EMBEDDED PANEL ── */
+/* Backdrop dim when panel is fully open */
+.gcash-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:458;}
+.gcash-backdrop.show{display:block;}
+
+/* Minimized floating tab */
+.gcash-mini-tab{display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:461;
+  background:var(--gcash);color:#fff;font-size:.88rem;font-weight:800;
+  padding:.65rem 1.8rem;border-radius:12px 12px 0 0;cursor:pointer;
+  box-shadow:0 -4px 20px rgba(0,112,186,.5);
+  display:flex;align-items:center;gap:.6rem;white-space:nowrap;}
+.gcash-mini-tab{display:none;}
+.gcash-mini-tab.show{display:flex;}
+.gcash-mini-amt{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#fff;}
+
+/* Full panel */
+.gcash-panel-wrap{display:none;position:fixed;bottom:0;left:0;right:0;z-index:460;}
+.gcash-panel-wrap.open{display:block;animation:slideUp .35s cubic-bezier(.4,0,.2,1);}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.gcash-panel{background:#050d1a;border:2px solid var(--gcash);border-bottom:none;
+  border-radius:16px 16px 0 0;max-width:480px;margin:0 auto;
+  overflow:hidden;box-shadow:0 -8px 40px rgba(0,112,186,.4);}
+.gcash-panel-head{background:linear-gradient(135deg,#0070ba,#0058a0);
+  padding:.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.gcash-panel-title{font-weight:800;font-size:1rem;color:#fff;display:flex;align-items:center;gap:.5rem;}
+.gcash-panel-btns{display:flex;gap:.4rem;}
+.gcash-panel-btn{background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;
+  border-radius:50%;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;}
+.gcash-panel-btn:hover{background:rgba(255,255,255,.38);}
+.gcash-panel-body{padding:1.1rem 1.3rem 1.4rem;max-height:75vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.gcash-amt-display{text-align:center;margin-bottom:.85rem;}
+.gcash-amt-display .amt-label{font-size:.7rem;font-weight:700;letter-spacing:.22em;
+  color:rgba(255,255,255,.45);text-transform:uppercase;}
+.gcash-amt-display .amt-value{font-family:'Bebas Neue',sans-serif;font-size:3rem;
+  color:var(--gcash);line-height:1;text-shadow:0 0 24px rgba(0,112,186,.4);}
+.gcash-num-box{text-align:center;background:rgba(0,112,186,.15);border:1px solid rgba(0,112,186,.4);
+  border-radius:10px;padding:.8rem;margin-bottom:.9rem;}
+.gcash-num-box .num-lbl{font-size:.7rem;color:rgba(255,255,255,.45);margin-bottom:.15rem;letter-spacing:.1em;}
+.gcash-num-box .num-val{font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:.06em;}
+.gcash-num-box .num-name{font-size:.78rem;color:#5ab8ff;margin-top:.1rem;}
+.gcash-screenshot-zone{background:rgba(232,160,48,.06);border:2px dashed rgba(232,160,48,.4);
+  border-radius:8px;padding:.9rem;margin-bottom:.85rem;text-align:center;}
+.gcash-screenshot-zone .sz-title{font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:.3rem;}
+.gcash-screenshot-zone .sz-hint{font-size:.73rem;color:var(--smoke);margin-bottom:.6rem;}
+.gcash-screenshot-preview{max-width:100%;max-height:120px;object-fit:cover;border-radius:6px;
+  margin-bottom:.5rem;display:none;}
+.gcash-screenshot-preview.show{display:block;margin:0 auto .5rem;}
+.gcash-attach-btn{background:rgba(0,112,186,.2);border:1px solid rgba(0,112,186,.4);color:#5ab8ff;
+  font-size:.85rem;font-weight:700;padding:.55rem 1.1rem;border-radius:var(--radius);
+  cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:background .15s;}
+.gcash-attach-btn:hover{background:rgba(0,112,186,.38);}
+.gcash-screenshot-name{font-size:.75rem;color:#5aca6e;margin-top:.35rem;display:none;}
+.gcash-screenshot-name.show{display:block;}
+.gcash-open-app-btn{width:100%;padding:1rem;background:var(--gcash);color:#fff;
+  font-size:1.02rem;font-weight:800;border:none;cursor:pointer;border-radius:8px;
+  margin-bottom:.55rem;display:flex;align-items:center;justify-content:center;
+  gap:.5rem;letter-spacing:.02em;box-shadow:0 4px 16px rgba(0,112,186,.4);transition:background .15s;}
+.gcash-open-app-btn:hover{background:#005a99;}
+.gcash-confirm-pay-btn{width:100%;padding:.9rem;background:rgba(45,122,58,.2);color:#5aca6e;
+  font-size:.95rem;font-weight:700;border:1px solid rgba(45,122,58,.4);cursor:pointer;
+  border-radius:8px;margin-bottom:.5rem;transition:all .2s;}
+.gcash-confirm-pay-btn:disabled{opacity:.38;cursor:not-allowed;}
+.gcash-confirm-pay-btn.ready{background:rgba(45,122,58,.45);border-color:#5aca6e;
+  box-shadow:0 0 12px rgba(90,202,110,.25);}
+.gcash-cancel-pay{display:block;text-align:center;font-size:.82rem;color:var(--smoke);
+  cursor:pointer;text-decoration:underline;padding:.35rem;}
+
+/* ── MENU AVAILABILITY ── */
+.menu-item.unavailable{opacity:.45;pointer-events:none;position:relative;}
+.menu-item.unavailable::after{content:'SOLD OUT';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(168,32,32,.85);color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.2em;padding:.3rem .8rem;border-radius:3px;}
+.avail-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.12em;padding:.15rem .5rem;border-radius:2px;margin-left:.4rem;vertical-align:middle;}
+.avail-badge.sold-out{background:rgba(168,32,32,.2);color:#e05;border:1px solid rgba(168,32,32,.4);}
+
+/* ── STEAK DONENESS SELECTOR ── */
+.doneness-sel{font-size:.75rem;padding:.35rem .55rem;background:#1a0e08;border:1px solid rgba(232,160,48,.5);color:var(--gold);cursor:pointer;width:100%;border-radius:var(--radius);margin-top:.3rem;font-weight:600;}
+.doneness-sel option{background:#1a0e08;color:var(--cream);}
+
+
+/* ── SALES PANEL ── */
+.sales-modal .modal-box{max-width:640px;}
+.sales-stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:1.5rem;}
+.sales-stat{background:rgba(200,65,10,.08);border:1px solid rgba(200,65,10,.15);padding:.9rem;text-align:center;border-radius:var(--radius);}
+.sales-stat .n{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);}
+.sales-stat .l{font-size:.75rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);text-transform:uppercase;}
+.sales-list{display:flex;flex-direction:column;gap:.5rem;max-height:300px;overflow-y:auto;}
+.sales-order-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.8rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);font-size:.88rem;gap:.5rem;border-radius:var(--radius);}
+.sales-order-row .sol{color:var(--cream);font-weight:600;flex:1;}
+.sales-order-row .sor{text-align:right;}
+.sales-order-row .amt{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--gold);}
+.sales-order-row .meta{font-size:.75rem;color:var(--smoke);}
+.sales-badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.12em;padding:.1rem .5rem;margin-left:.4rem;border-radius:2px;}
+.badge-pending{background:rgba(232,160,48,.15);color:var(--gold);border:1px solid rgba(232,160,48,.3);}
+.badge-done{background:rgba(45,122,58,.15);color:#5aca6e;border:1px solid rgba(45,122,58,.3);}
+.badge-takeout{background:rgba(200,65,10,.15);color:#ff7a45;border:1px solid rgba(200,65,10,.3);}
+
+/* ── RESERVATION MODAL ── */
+.advance-order-section{border:1px solid rgba(200,65,10,.2);padding:1rem;margin-top:1rem;border-radius:var(--radius);}
+.advance-order-section h4{font-size:.8rem;font-weight:700;letter-spacing:.2em;color:var(--gold);margin-bottom:.7rem;}
+.adv-item-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;}
+.adv-item-row select,.adv-item-row input{background:#1a0e08;border:1px solid rgba(200,65,10,.3);color:var(--cream);padding:.4rem .6rem;font-size:.85rem;outline:none;flex:1;border-radius:var(--radius);}
+.adv-item-row button{padding:.4rem .7rem;background:rgba(200,65,10,.3);border:1px solid rgba(200,65,10,.4);color:var(--cream);cursor:pointer;font-size:.85rem;border-radius:var(--radius);}
+.adv-item-row button:hover{background:var(--ember);}
+#advOrderList{margin-bottom:.5rem;}
+
+/* ── FEATURES ── */
+#features{max-width:1100px;margin:0 auto;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-top:2.5rem;}
+.feat-item{display:flex;flex-direction:column;gap:.7rem;}
+.feat-icon{width:52px;height:52px;border:1px solid rgba(232,160,48,.3);display:grid;place-items:center;font-size:1.5rem;background:rgba(232,160,48,.05);border-radius:var(--radius);}
+.feat-title{font-size:1.05rem;font-weight:700;}
+.feat-desc{font-size:.9rem;line-height:1.7;color:rgba(245,237,224,.5);}
+
+/* ── VISIT ── */
+#visit{text-align:center;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(200,65,10,.1) 0%,transparent 70%);}
+.visit-inner{max-width:800px;margin:0 auto;}
+.contact-cards{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin:2.5rem 0;}
+.contact-card{background:rgba(30,18,10,.8);border:1px solid rgba(200,65,10,.18);padding:1.8rem 2rem;min-width:190px;transition:border-color .25s,transform .25s;cursor:default;border-radius:var(--radius);}
+.contact-card:hover{border-color:var(--gold);transform:translateY(-4px);}
+.cc-icon{font-size:2rem;display:block;margin-bottom:.6rem;}
+.cc-lbl{font-size:.75rem;font-weight:700;letter-spacing:.25em;color:var(--smoke);margin-bottom:.3rem;}
+.cc-val{font-size:1.05rem;font-weight:600;color:var(--cream);}
+.cc-val a{color:inherit;text-decoration:none;}
+.cc-val a:hover{color:var(--gold);}
+.map-link{display:inline-flex;align-items:center;gap:.5rem;font-size:.95rem;color:var(--gold);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s;}
+.map-link:hover{border-color:var(--gold);}
+
+/* ── FOOTER ── */
+footer{background:#080503;padding:2.5rem 1.5rem;text-align:center;border-top:1px solid rgba(200,65,10,.12);}
+.footer-logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;}
+.footer-logo span{color:var(--ember);font-style:italic;}
+.footer-sub{font-size:.85rem;font-style:italic;color:rgba(245,237,224,.35);margin:.3rem 0 .8rem;}
+.footer-copy{font-size:.8rem;color:var(--smoke);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;font-size:.95rem;font-weight:700;padding:.85rem 2rem;z-index:600;opacity:0;transition:all .4s;pointer-events:none;border-radius:var(--radius);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.extras-note{font-size:.8rem;color:var(--smoke);text-align:center;margin-bottom:1rem;font-style:italic;}
+
+/* ── SYNC STATUS ── */
+.sync-indicator{position:fixed;bottom:1.5rem;right:1.5rem;background:#130b04;border:1px solid rgba(200,65,10,.25);padding:.4rem .8rem;font-size:.72rem;font-weight:700;color:var(--smoke);z-index:150;border-radius:20px;display:flex;align-items:center;gap:.4rem;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#5aca6e;}
+.sync-dot.offline{background:#e05a5a;}
+
+/* Responsive helpers */
+@media(max-width:480px){
+  .items-grid{grid-template-columns:1fr;}
+  .menu-item{flex-direction:column;}
+  .mi-right{flex-direction:row;flex-wrap:wrap;width:100%;justify-content:space-between;min-width:unset;}
+  .add-cart-btn{width:auto;flex:1;}
+  .ty-inner{padding:1.2rem 1rem;}
+  .tst-steps{gap:.2rem;}
+  .tst-step-label{font-size:.65rem;}
+}
+
+/* ── PWA INSTALL BANNER ── */
+.install-banner{position:fixed;bottom:1.5rem;right:1rem;z-index:9000;background:#130b04;border:1px solid rgba(232,160,48,.45);border-radius:12px;padding:1rem 1.1rem;display:none;flex-direction:column;gap:.55rem;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.install-banner.show{display:flex;animation:pwa-fadeup .4s ease;}
+@keyframes pwa-fadeup{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.install-banner-icon{font-size:2rem;text-align:center;}
+.install-banner-title{font-size:.95rem;font-weight:700;color:var(--cream);text-align:center;}
+.install-banner-sub{font-size:.78rem;color:var(--smoke);line-height:1.45;text-align:center;}
+.install-banner-btns{display:flex;gap:.5rem;margin-top:.2rem;}
+.install-btn{flex:1;padding:.55rem .6rem;font-size:.82rem;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:all .15s;}
+.install-btn.primary{background:var(--ember);color:#fff;}
+.install-btn.primary:hover{background:#a83408;}
+.install-btn.dismiss{background:rgba(255,255,255,.07);color:var(--smoke);}
+.install-btn.dismiss:hover{color:var(--cream);}
+.ios-install-hint{font-size:.75rem;color:var(--gold);line-height:1.5;border-top:1px solid rgba(232,160,48,.15);padding-top:.5rem;margin-top:.2rem;text-align:center;display:none;}
+.ios-install-hint.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- SYNC INDICATOR -->
+<div class="sync-indicator" id="syncIndicator">
+  <div class="sync-dot" id="syncDot"></div>
+  <span id="syncLabel">Connecting…</span>
+</div>
+
+<!-- ORDER STATUS BAR (shows when customer has an active order) -->
+<div class="order-status-bar" id="orderStatusBar">
+  <div class="osb-inner">
+    <span class="osb-label">YOUR ORDER</span>
+    <span class="osb-id" id="osbOrderId"></span>
+    <div class="osb-steps" id="osbSteps"></div>
+    <button class="osb-track-btn" onclick="openThankYouPage()">Track →</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">De' <span>Iñigo</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#features">Experience</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon-btn" onclick="openModal('reservationModal')">📅 <span class="lbl">Reserve</span></button>
+    <button class="nav-icon-btn" id="msgNavBtn" onclick="openModal('messageModal')">💬 <span class="lbl">Message</span></button>
+    <button class="cart-btn" onclick="toggleCart()">🛒 <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</nav>
+
+<!-- OPEN BANNER -->
+<div class="open-banner" id="openBanner"><div class="blink-dot"></div><span id="bannerText">Mon–Sat: 11AM–10:15PM · Sun: 2PM–10:15PM</span><div class="blink-dot"></div></div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="embers" id="embers"></div>
+  <div class="hero-content reveal">
+    <div class="hero-badge">General Santos City · Philippines</div>
+    <p class="hero-sub-top">One Stop</p>
+    <h1 class="hero-name">De' <span>Iñigo</span></h1>
+    <p class="hero-tagline">Sizzling at Pulutan</p>
+    <div class="hero-ctas">
+      <a href="#menu" class="btn-fire">Order Now</a>
+      <a href="#visit" class="btn-ghost">Find Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p class="sec-label">Our Story</p>
+      <h2 class="sec-title">Sizzling <em>Flavors,</em><br>Endless Warmth</h2>
+      <p>De' Iñigo is General Santos City's beloved one-stop destination for bold, fire-kissed steaks, sizzling plates, and the best pulutan in GenSan — crafted with passion every single day.</p>
+      <p>Whether you're dining in or gathering with barkada, we make every meal an occasion. Open Mon–Sat 11AM–10:15PM, Sunday 2PM–10:15PM.</p>
+      <div class="stats">
+        <div class="stat"><div class="stat-n">🕙</div><div class="stat-l">Mon–Sat 11AM–10:15PM</div></div>
+        <div class="stat"><div class="stat-n">🥩</div><div class="stat-l">Premium Cuts</div></div>
+      </div>
+    </div>
+    <div class="plate-wrap reveal">
+      <div class="plate-circle">
+        <div class="plate-ring"></div>
+        <div class="plate-ring"></div>
+        🥩
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Premium Steaks</span><span class="acc">✦</span><span>Sizzling Plates</span><span class="acc">✦</span><span>Mon–Sat Open 11AM</span><span class="acc">✦</span><span>Sunday 2PM</span><span class="acc">✦</span><span>GenSan's Finest</span><span class="acc">✦</span><span>Food Trays Available</span><span class="acc">✦</span>
+    <span>Premium Steaks</span><span class="acc">✦</span><span>Sizzling Plates</span><span class="acc">✦</span><span>Mon–Sat Open 11AM</span><span class="acc">✦</span><span>Sunday 2PM</span><span class="acc">✦</span><span>GenSan's Finest</span><span class="acc">✦</span><span>Food Trays Available</span><span class="acc">✦</span>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-wrap">
+    <div class="menu-head reveal">
+      <p class="sec-label">What We Serve</p>
+      <h2 class="sec-title">Our <em>Menu</em></h2>
+      <p style="font-size:1rem;color:rgba(245,237,224,.55);margin-top:.5rem;">Dine-in · Take-out · Food Trays for Events</p>
+    </div>
+    <div class="order-type-bar">
+      <button class="order-type-btn active" id="typeDinein" onclick="switchOrderType('dinein')">🍽️ Dine-in</button>
+      <button class="order-type-btn" id="typeTakeout" onclick="switchOrderType('takeout')">🥡 Take-out / Delivery</button>
+    </div>
+    <div id="takeoutInfoBar" style="display:none;background:rgba(200,65,10,.08);border:1px solid rgba(200,65,10,.25);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.9rem;color:rgba(245,237,224,.7);line-height:1.7;border-radius:var(--radius);">
+      📦 <strong style="color:var(--gold);">Take-out boxes</strong> will be added automatically per item (₱10–₱15 each). Fill in your details at checkout.
+    </div>
+    <div class="type-switch">
+      <button class="type-btn active" id="typeMain" onclick="switchMenuType('main')">🍽️ Main Menu</button>
+      <button class="type-btn" id="typeTrays" onclick="switchMenuType('trays')">🥘 Food Trays</button>
+    </div>
+    <div id="mainSection">
+      <div class="cat-tabs" id="mainTabs"></div>
+      <div id="mainPanels"></div>
+    </div>
+    <div id="traysSection" style="display:none;">
+      <p style="text-align:center;font-size:.9rem;color:var(--smoke);margin-bottom:1.5rem;">Tray sizes: <strong style="color:var(--gold);">Small (5–7 pax) · Medium (10–15 pax) · Large (20–30 pax)</strong></p>
+      <div class="cat-tabs" id="trayTabs"></div>
+      <div id="trayPanels"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal" style="max-width:500px;margin-bottom:2.5rem;">
+    <p class="sec-label">The Experience</p>
+    <h2 class="sec-title">More Than<br>Just a <em>Meal</em></h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-item reveal"><div class="feat-icon">🕙</div><div class="feat-title">Mon–Sat 11AM–10:15PM</div><p class="feat-desc">Open for lunch and dinner, Monday through Saturday. Perfect for any occasion.</p></div>
+    <div class="feat-item reveal" style="transition-delay:.08s"><div class="feat-icon">🌙</div><div class="feat-title">Sunday 2PM–10:15PM</div><p class="feat-desc">Sunday afternoon and evening dining — relax and enjoy the flavors of GenSan.</p></div>
+    <div class="feat-item reveal" style="transition-delay:.16s"><div class="feat-icon">📍</div><div class="feat-title">Prime Location</div><p class="feat-desc">Along Laurel North, General Santos City — easy to find, impossible to forget.</p></div>
+    <div class="feat-item reveal" style="transition-delay:.24s"><div class="feat-icon">🤝</div><div class="feat-title">Warm Hospitality</div><p class="feat-desc">Filipino warmth in every interaction. We treat every guest like family.</p></div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="visit">
+  <div class="visit-inner">
+    <div class="reveal">
+      <p class="sec-label">Come Dine With Us</p>
+      <h2 class="sec-title">Find <em>Us</em> in GenSan</h2>
+      <p style="font-size:1rem;color:rgba(245,237,224,.6);margin-top:.8rem;">Walk-ins welcome. Reservations available for groups.</p>
+    </div>
+    <div class="contact-cards reveal">
+      <div class="contact-card"><span class="cc-icon">📞</span><div class="cc-lbl">Call / GCash</div><div class="cc-val"><a href="tel:09914517715">0991 451 7715</a></div></div>
+      <div class="contact-card"><span class="cc-icon">📍</span><div class="cc-lbl">Address</div><div class="cc-val">Laurel North 9500,<br>General Santos City</div></div>
+      <div class="contact-card"><span class="cc-icon">🕐</span><div class="cc-lbl">Hours</div><div class="cc-val">Mon–Sat: 11AM–10:15PM<br>Sun: 2PM–10:15PM</div></div>
+    </div>
+    <a class="map-link reveal" href="https://www.google.com/maps/search/Laurel+North+9500+General+Santos+City+Philippines" target="_blank">↗ Get Directions on Map</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">De' <span>Iñigo</span></div>
+  <p class="footer-sub">One Stop Sizzling at Pulutan</p>
+  <p class="footer-copy">© 2025 De' Iñigo · Laurel North, General Santos City, Philippines 9500 · 0991 451 7715</p>
+</footer>
+
+<!-- ══════════════ CART DRAWER ══════════════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3 id="cartTitle">🛒 Your Order</h3>
+    <button class="close-cart" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty"><span>🍽️</span>Your cart is empty.<br>Add items from the menu!</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">₱0</span></div>
+    <div class="cart-total-row" id="boxFeeRow" style="display:none;"><span>Take-out Boxes</span><span id="cartBoxFee">₱0</span></div>
+    <div class="cart-total-grand"><span>Total</span><span id="cartTotal">₱0</span></div>
+    <div class="pay-label">YOUR NAME</div>
+    <div class="field-row single"><input class="name-field" id="customerName" type="text" placeholder="Enter your name…"/></div>
+    <div id="takeoutCartFields" style="display:none;">
+      <div class="takeout-fields">
+        <h4>📦 DELIVERY DETAILS</h4>
+        <div class="field-row single"><input class="name-field" id="contactNumber" type="tel" placeholder="Contact number…"/></div>
+        <div class="field-row single"><input class="name-field" id="deliveryAddress" type="text" placeholder="Address / Landmark for delivery…"/></div>
+      </div>
+    </div>
+    <div class="pay-label">SPECIAL REQUEST</div>
+    <textarea class="special-req-area" id="specialRequest" placeholder="Any special instructions, allergies, or notes…"></textarea>
+    <div class="pay-label">PAYMENT METHOD</div>
+    <div class="pay-opts">
+      <button class="pay-opt active" id="payCash" onclick="selectPay('cash')">💵 Cash</button>
+      <button class="pay-opt" id="payGcash" onclick="selectPay('gcash')">📱 GCash</button>
+    </div>
+    <span id="gcashAmt" style="display:none;">₱0</span>
+    <button class="place-order-btn" id="placeOrderBtn" onclick="showOrderReview()">Review &amp; Place Order →</button>
+  </div>
+</div>
+
+<!-- ══════════════ MESSAGE MODAL ══════════════ -->
+<div class="modal-overlay" id="messageModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-head">
+      <h3>💬 Message De' Iñigo</h3>
+      <button class="modal-close" onclick="closeModal('messageModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="msg-meta-row">
+        <input class="msg-name-field" id="msgNameInput" type="text" placeholder="Your name (optional)…"/>
+        <span style="font-size:.78rem;color:var(--smoke);">Messages go to staff</span>
+      </div>
+      <div class="msg-thread" id="msgThread"></div>
+      <div class="msg-input-row">
+        <button class="msg-attach-btn" onclick="document.getElementById('msgFileInput').click()" title="Attach file/photo">📎</button>
+        <input type="file" id="msgFileInput" class="msg-attach-input" accept="image/*,application/pdf,.doc,.docx" onchange="handleMsgFileAttach(this)"/>
+        <input type="text" id="msgInput" placeholder="Type your message…" onkeydown="if(event.key==='Enter')sendMessage()"/>
+        <button class="msg-send" onclick="sendMessage()">Send</button>
+      </div>
+      <p style="font-size:.75rem;color:var(--smoke);margin-top:.7rem;text-align:center;">Messages are visible to restaurant staff.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SALES MODAL ══════════════ -->
+<div class="modal-overlay sales-modal" id="salesModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-head">
+      <h3>📊 Today's Sales</h3>
+      <button class="modal-close" onclick="closeModal('salesModal')">✕</button>
+    </div>
+    <div class="modal-body" id="salesBody">
+      <p style="color:var(--smoke);font-size:.9rem;">Loading...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RESERVATION MODAL ══════════════ -->
+<div class="modal-overlay" id="reservationModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-head">
+      <h3>📅 Reserve a Table</h3>
+      <button class="modal-close" onclick="closeModal('reservationModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>YOUR NAME</label><input type="text" id="resName" placeholder="Full name…"/></div>
+      <div class="form-group"><label>CONTACT NUMBER</label><input type="tel" id="resContact" placeholder="09XXXXXXXXX"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;">
+        <div class="form-group"><label>DATE</label><input type="date" id="resDate"/></div>
+        <div class="form-group"><label>TIME</label><input type="time" id="resTime" min="11:00" max="22:00"/></div>
+      </div>
+      <div class="form-group"><label>NUMBER OF PAX</label><input type="number" id="resPax" min="1" max="200" placeholder="e.g. 10"/></div>
+      <div class="form-group"><label>NOTES / OCCASION</label><textarea id="resNotes" placeholder="Birthday, anniversary, any special setup…"></textarea></div>
+
+      <!-- FOOD MENU IN RESERVATION -->
+      <div class="advance-order-section">
+        <h4>🍽️ PRE-ORDER FOOD (OPTIONAL)</h4>
+        <p style="font-size:.8rem;color:var(--smoke);margin-bottom:.8rem;">Browse the menu and pre-order dishes for your reservation. Staff will prepare these for your arrival.</p>
+
+        <!-- Type switch: Main / Trays -->
+        <div style="display:flex;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap;">
+          <button class="res-menu-tab active" id="resTypeMain" onclick="switchResMenuType('main')">🍽️ À la Carte</button>
+          <button class="res-menu-tab" id="resTypeTrays" onclick="switchResMenuType('trays')">🥘 Food Trays</button>
+        </div>
+
+        <!-- Main menu panel -->
+        <div id="resMainMenu">
+          <div class="res-menu-tabs" id="resMainTabs"></div>
+          <div style="border:1px solid rgba(200,65,10,.15);border-radius:var(--radius);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#100a06;" id="resMainPanel"></div>
+        </div>
+
+        <!-- Tray menu panel -->
+        <div id="resTrayMenu" style="display:none;">
+          <p style="font-size:.78rem;color:var(--smoke);margin-bottom:.6rem;">S = 5–7 pax · M = 10–15 pax · L = 20–30 pax</p>
+          <div class="res-menu-tabs" id="resTrayTabs"></div>
+          <div style="border:1px solid rgba(200,65,10,.15);border-radius:var(--radius);max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#100a06;" id="resTrayPanel"></div>
+        </div>
+
+        <!-- Selected items -->
+        <div style="margin-top:.8rem;">
+          <div style="font-size:.75rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);margin-bottom:.4rem;">YOUR PRE-ORDERS</div>
+          <div id="advOrderList" class="res-adv-list"></div>
+          <p id="advEmptyHint" style="font-size:.8rem;color:var(--smoke);text-align:center;padding:.5rem 0;">No items added yet. Use the menu above to add.</p>
+        </div>
+      </div>
+
+      <button class="modal-submit" onclick="submitReservation()">📅 Confirm Reservation</button>
+      <button onclick="openResMessageModal()" style="width:100%;padding:.85rem;margin-top:.5rem;background:rgba(232,160,48,.1);border:1px solid rgba(232,160,48,.3);color:var(--gold);cursor:pointer;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;">💬 Message Staff About Reservation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ORDER REVIEW MODAL ══════════════ -->
+<div class="modal-overlay" id="orderReviewModal">
+  <div class="modal-box" style="max-width:500px;">
+    <div class="modal-head">
+      <h3>📋 Review Your Order</h3>
+      <button class="modal-close" onclick="closeModal('orderReviewModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="reviewItemsList" class="review-items"></div>
+      <div class="review-totals">
+        <div class="review-total-row"><span>Subtotal</span><span id="reviewSubtotal">₱0</span></div>
+        <div class="review-total-row" id="reviewBoxFeeRow" style="display:none;"><span>Take-out Boxes</span><span id="reviewBoxFee">₱0</span></div>
+        <div class="review-total-grand"><span>TOTAL</span><span id="reviewTotal">₱0</span></div>
+      </div>
+      <div id="reviewDetailsSection" class="review-detail-row">
+        <div class="review-detail-label">Customer</div>
+        <div id="reviewCustomerName">—</div>
+        <div class="review-detail-label" style="margin-top:.4rem;">Order Type</div>
+        <div id="reviewOrderType">—</div>
+        <div class="review-detail-label" style="margin-top:.4rem;">Payment</div>
+        <div id="reviewPayment">—</div>
+        <div id="reviewSpecialReqWrap" style="display:none;">
+          <div class="review-detail-label" style="margin-top:.4rem;">Special Request</div>
+          <div id="reviewSpecialReq">—</div>
+        </div>
+        <div id="reviewDeliveryWrap" style="display:none;">
+          <div class="review-detail-label" style="margin-top:.4rem;">Contact / Address</div>
+          <div id="reviewDelivery">—</div>
+        </div>
+      </div>
+      <button class="modal-submit" id="reviewConfirmBtn" onclick="confirmReviewAndOrder()">✅ Confirm &amp; Place Order</button>
+      <button onclick="closeModal('orderReviewModal')" style="width:100%;padding:.8rem;background:transparent;color:var(--smoke);border:1px solid rgba(200,65,10,.2);cursor:pointer;border-radius:var(--radius);margin-top:.5rem;font-family:'DM Sans',sans-serif;font-size:.95rem;">← Edit Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ GCASH IN-PAGE PANEL ══════════════ -->
+<!-- Backdrop (dimmed bg when panel is fully open) -->
+<div class="gcash-backdrop" id="gcashBackdrop" onclick="toggleGcashMinimize()"></div>
+
+<!-- Minimized floating tab shown when panel is minimized -->
+<div class="gcash-mini-tab" id="gcashMiniTab" onclick="gcashExpandPanel()">
+  📱 GCash Payment — <span class="gcash-mini-amt" id="gcashMiniAmt">₱0</span>
+  &nbsp;▲ Tap to expand
+</div>
+
+<!-- Full panel (slides up from bottom) -->
+<div class="gcash-panel-wrap" id="gcashPanel">
+  <div class="gcash-panel">
+    <!-- Header: tap to minimize / expand -->
+    <div class="gcash-panel-head" onclick="toggleGcashMinimize()">
+      <div class="gcash-panel-title">📱 GCash Payment</div>
+      <div class="gcash-panel-btns" onclick="event.stopPropagation()">
+        <button class="gcash-panel-btn" onclick="toggleGcashMinimize()" title="Minimize" id="gcashMinBtn">—</button>
+        <button class="gcash-panel-btn" onclick="exitGcashPanel()" title="Done / Exit">✕</button>
+      </div>
+    </div>
+    <div class="gcash-panel-body" id="gcashPanelBody">
+
+      <!-- Amount -->
+      <div class="gcash-amt-display">
+        <div class="amt-label">Amount to Pay</div>
+        <div class="amt-value" id="gcashPanelAmt">₱0</div>
+      </div>
+
+      <!-- GCash number -->
+      <div class="gcash-num-box">
+        <div class="num-lbl">Send to GCash Number</div>
+        <div class="num-val">0991 451 7715</div>
+        <div class="num-name">De' Iñigo</div>
+      </div>
+
+      <!-- Step 1: Open GCash -->
+      <button class="gcash-open-app-btn" onclick="openGcashApp()">
+        📱 Open GCash &amp; Send Payment
+      </button>
+
+      <!-- Step 2: Attach screenshot -->
+      <div class="gcash-screenshot-zone">
+        <div class="sz-title">📸 Attach Payment Screenshot</div>
+        <div class="sz-hint">Screenshot your successful GCash payment — staff needs it to verify</div>
+        <img class="gcash-screenshot-preview" id="gcashScreenshotPreview" alt="Payment screenshot"/>
+        <input type="file" id="gcashScreenshotInput" accept="image/*" style="display:none;" onchange="handleGcashScreenshot(this)"/>
+        <button class="gcash-attach-btn" onclick="document.getElementById('gcashScreenshotInput').click()">
+          📎 Add Screenshot / Photo
+        </button>
+        <div class="gcash-screenshot-name" id="gcashScreenshotName"></div>
+      </div>
+
+      <!-- Step 3: Confirm -->
+      <button class="gcash-confirm-pay-btn" id="gcashConfirmBtn" onclick="confirmGcashPayment()" disabled>
+        ✓ I've Sent the Payment
+      </button>
+      <span class="gcash-cancel-pay" onclick="cancelGcashFlow()">Cancel &amp; pay with cash instead</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ THANK YOU PAGE ══════════════ -->
+<div class="ty-overlay" id="tyOverlay">
+  <div class="ty-inner">
+    <div class="ty-header">
+      <div class="ty-checkmark">✓</div>
+      <h1 class="ty-title">Thank <em>You!</em></h1>
+      <p class="ty-subtitle">Your order has been received and is being prepared.</p>
+      <div class="ty-order-id" id="tyOrderId">ORDER #—</div>
+    </div>
+
+    <!-- Payment Status -->
+    <div class="ty-payment-status pending" id="tyPaymentStatus">
+      <div class="ps-dot"></div>
+      <span id="tyPaymentText">💵 Payment: Cash on Pickup/Delivery</span>
+    </div>
+
+    <!-- Status Tracker -->
+    <div class="ty-status-tracker">
+      <div class="tst-title">ORDER STATUS — LIVE TRACKING</div>
+      <div class="tst-steps" id="tystSteps">
+        <div class="tst-step active" id="tstPending">
+          <div class="tst-step-circle">📋</div>
+          <div class="tst-step-label">Received</div>
+        </div>
+        <div class="tst-step" id="tstPreparing">
+          <div class="tst-step-circle">👨‍🍳</div>
+          <div class="tst-step-label">Preparing</div>
+        </div>
+        <div class="tst-step" id="tstReady">
+          <div class="tst-step-circle">🔔</div>
+          <div class="tst-step-label">Ready</div>
+        </div>
+        <div class="tst-step" id="tstDone">
+          <div class="tst-step-circle">✅</div>
+          <div class="tst-step-label">Done</div>
+        </div>
+      </div>
+      <div class="tst-eta" id="tystEta">⏱️ Estimated time: 15–25 minutes</div>
+    </div>
+
+    <!-- Message Staff -->
+    <div class="ty-msg-section">
+      <div style="font-size:.78rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);margin-bottom:.8rem;">💬 MESSAGE STAFF</div>
+      <div class="ty-msg-thread" id="tyMsgThread"></div>
+      <div class="ty-msg-input-row">
+        <button class="msg-attach-btn" onclick="document.getElementById('tyMsgFileInput').click()">📎</button>
+        <input type="file" id="tyMsgFileInput" class="msg-attach-input" accept="image/*,.pdf" onchange="handleTyFileAttach(this)"/>
+        <input class="ty-msg-input" id="tyMsgInput" type="text" placeholder="Message the staff…" onkeydown="if(event.key==='Enter')sendTyMessage()"/>
+        <button class="msg-send" onclick="sendTyMessage()">Send</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="ty-actions">
+      <a class="ty-btn home" href="#" onclick="closeThankYouPage();return false;">🏠 Return to Home</a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  FIREBASE CONFIG
+//  Replace with your own Firebase project keys from https://console.firebase.google.com
+// ═══════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCREYCM6hXczJ86TD_X0NPgkP5p8q7hB04",
+  authDomain: "de-inigo-firebase.firebaseapp.com",
+  databaseURL: "https://de-inigo-firebase-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "de-inigo-firebase",
+  storageBucket: "de-inigo-firebase.firebasestorage.app",
+  messagingSenderId: "204019246585",
+  appId: "1:204019246585:web:af36241878c0fdcbc04928",
+  measurementId: "G-6TCM6XCC2Y"
+};
+
+// ═══════════════════════════════════════════
+//  FIREBASE INIT + FALLBACK TO LOCALSTORAGE
+// ═══════════════════════════════════════════
+let db = null;
+let isFirebaseConnected = false;
+
+function initFirebase(){
+  if(db) return;
+  try {
+    if(typeof firebase === 'undefined') throw new Error('Firebase SDK not loaded');
+    var app = (firebase.apps && firebase.apps.length > 0) ? firebase.apps[0] : firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database(app);
+    db.ref('.info/connected').on('value', function(snap){
+      isFirebaseConnected = snap.val() === true;
+      var dot = document.getElementById('syncDot');
+      var lbl = document.getElementById('syncLabel');
+      if(!dot || !lbl) return;
+      if(isFirebaseConnected){
+        dot.classList.remove('offline');
+        lbl.textContent = 'Live Sync ✓';
+        subscribeToOrders();
+        subscribeToMessages();
+      } else {
+        dot.classList.add('offline');
+        lbl.textContent = 'Reconnecting…';
+        startLocalPolling();
+      }
+    });
+  } catch(e){
+    console.error('Firebase init error:', e.message);
+    var dot = document.getElementById('syncDot');
+    var lbl = document.getElementById('syncLabel');
+    if(dot) dot.classList.add('offline');
+    if(lbl) lbl.textContent = 'Local Mode';
+    startLocalPolling();
+  }
+}
+
+// ── DB helpers with localStorage fallback ──
+function dbSet(path, data){
+  if(db && isFirebaseConnected){
+    return db.ref(path).set(data);
+  } else {
+    // localStorage fallback: store under simple key
+    const key = 'deinigo_' + path.split('/')[0];
+    const existing = JSON.parse(localStorage.getItem(key) || 'null');
+    const parts = path.split('/');
+    if(parts.length === 2 && parts[0] === 'orders'){
+      const arr = existing || [];
+      const idx = arr.findIndex(o => o.id === data.id);
+      if(idx >= 0) arr[idx] = data; else arr.unshift(data);
+      localStorage.setItem(key, JSON.stringify(arr));
+    } else if(parts.length === 2 && parts[0] === 'messages'){
+      const arr = existing || [];
+      arr.push(data);
+      localStorage.setItem(key, JSON.stringify(arr));
+    } else {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+    return Promise.resolve();
+  }
+}
+
+function dbGetOrders(cb){
+  if(db && isFirebaseConnected){
+    db.ref('orders').once('value').then(snap => {
+      const val = snap.val() || {};
+      cb(Object.values(val).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
+    });
+  } else {
+    const arr = JSON.parse(localStorage.getItem('deinigo_orders') || '[]');
+    cb(arr);
+  }
+}
+
+function dbGetMessages(orderId, cb){
+  if(db && isFirebaseConnected){
+    db.ref('messages').orderByChild('orderId').equalTo(orderId).once('value').then(snap => {
+      const val = snap.val() || {};
+      cb(Object.values(val).sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp)));
+    });
+  } else {
+    const arr = JSON.parse(localStorage.getItem('deinigo_messages') || '[]');
+    cb(arr.filter(m => !orderId || m.orderId === orderId || !m.orderId));
+  }
+}
+
+var _ordersSubscribed = false;
+var _menuSubscribed = false;
+
+function subscribeToOrders(){
+  if(!db) return;
+  if(!_ordersSubscribed){
+    _ordersSubscribed = true;
+    db.ref('orders').on('value', function(snap){
+      if(!currentOrderId) return;
+      var order = (snap.val() || {})[currentOrderId];
+      if(!order) return;
+      currentOrderData = order;
+      updateTyStatus(order.status);
+      updateTyPaymentStatus(order);
+      renderOsbSteps(order.status);
+      if(order.status === 'Preparing') showToast('👨‍🍳 Your order is being prepared!');
+      if(order.status === 'Ready')     showToast('🔔 Your order is ready! Please come to the counter.');
+      if(order.status === 'Done')      showToast('✅ Order completed. Thank you!');
+      if(order.payment === 'gcash' && order.paymentStatus === 'Paid') showToast('✅ GCash payment verified by staff!');
+    });
+  }
+  if(!_menuSubscribed){
+    _menuSubscribed = true;
+    db.ref('menu_availability').on('value', function(snap){
+      menuAvailability = snap.val() || {};
+      localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
+      applyMenuAvailability();
+    });
+  }
+}
+
+var _msgSubscribedOrderId = null;
+
+function subscribeToMessages(){
+  if(!db || !currentOrderId) return;
+  if(typeof _msgSubscribedOrderId !== 'undefined' && _msgSubscribedOrderId === currentOrderId) return;
+  _msgSubscribedOrderId = currentOrderId;
+  db.ref('messages').orderByChild('orderId').equalTo(currentOrderId).on('value', function(snap){
+    var val = snap.val() || {};
+    var msgs = Object.values(val).sort(function(a,b){ return new Date(a.timestamp)-new Date(b.timestamp); });
+    var staffMsgs = msgs.filter(function(m){ return m.sender==='restaurant'; });
+    if(staffMsgs.length > lastStaffMsgCount && lastStaffMsgCount > 0){
+      showToast("📩 New message from De'Iñigo staff!");
+      document.getElementById('msgNavBtn').style.outline = '2px solid var(--gold)';
+    }
+    lastStaffMsgCount = staffMsgs.length;
+    if(document.getElementById('tyOverlay').classList.contains('visible')){
+      renderTyMessages(msgs);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════
+//  SOUP & RICE BOXES
+// ═══════════════════════════════════════════
+const SOUP_IDS = ['Pork Sinigang','Shrimp Sinigang','Tuna Belly Sinigang','Tinolang Manok','Tuna Tinola','Pork Nilaga'];
+const RICE_FULL_IDS = ['Rice (Full)'];
+const NO_BOX_IDS = ['Mango Float','Leche Flan','Calamansi','Chili'];
+function boxCost(name){ 
+  if(NO_BOX_IDS.includes(name)) return 0;
+  return SOUP_IDS.includes(name)||RICE_FULL_IDS.includes(name) ? 15 : 10; 
+}
+
+// ═══════════════════════════════════════════
+//  MENU DATA
+// ═══════════════════════════════════════════
+const MAIN_MENU = {
+  "Pork 🐷": [
+    {name:"Pork Chop",icon:"🥩",badge:"Solo only",price:{solo:149}},
+    {name:"Sisig",icon:"🔥",badge:"Best Seller",price:{solo:109,full:249}},
+    {name:"Kare-Kare",icon:"🍲",price:{solo:149,full:249}},
+    {name:"Sinuglaw",icon:"🥗",price:{full:199}},
+    {name:"Pork Bistek",icon:"🥩",price:{solo:159,full:249}},
+    {name:"Crispy Pata",icon:"🍖",badge:"For Sharing",price:{full:700}},
+    {name:"Liempo (w/ Atsara)",icon:"🍖",price:{solo:159,full:289}},
+    {name:"Lechon Kawali (w/ Atsara)",icon:"🍖",price:{solo:159,full:289}},
+    {name:"Chicharong Bulaklak",icon:"🍗",price:{full:199}},
+    {name:"Pork Adobo",icon:"🍲",price:{full:249}},
+  ],
+  "Beef 🐄": [
+    {name:"T-Bone / Prime Rib Steak",icon:"🥩",badge:"House Special",price:{solo:299,full:319}},
+    {name:"Beef Broccoli",icon:"🥦",price:{solo:159,full:299}},
+    {name:"Beef Kare-Kare",icon:"🍲",price:{solo:159,full:299}},
+    {name:"Beef Steak",icon:"🥩",price:{solo:149,full:289}},
+    {name:"Beef Stroganoff",icon:"🍝",price:{solo:159,full:299}},
+    {name:"Garlic Pepper Beef",icon:"🌶️",price:{solo:159,full:299}},
+    {name:"Burger Steak",icon:"🍔",price:{solo:159}},
+  ],
+  "Seafoods 🦐": [
+    {name:"Tuna Kinilaw",icon:"🐟",badge:"15–20 min",price:{full:199}},
+    {name:"Garlic Tuna Belly",icon:"🐠",price:{solo:160,full:299}},
+    {name:"Adobong Pusit",icon:"🦑",price:{full:269}},
+    {name:"Sizzling Squid",icon:"🦑",badge:"Sizzling",price:{full:269}},
+    {name:"Garlic Buttered Shrimp",icon:"🦐",price:{full:219}},
+    {name:"Calamares (w/ Garlic Mayo)",icon:"🍤",price:{full:269}},
+    {name:"Deep Fried Tilapia",icon:"🐟",price:{full:199}},
+  ],
+  "Chicken 🍗": [
+    {name:"North's Chicken",icon:"🍗",badge:"Signature",price:{half:250,full:420}},
+    {name:"De' Iñigo's Inasal",icon:"🍗",badge:"Must Try",price:{solo:160,half:250,full:420}},
+    {name:"Garlic Chicken",icon:"🍗",price:{solo:140,half:230,full:420}},
+    {name:"Parmesan Buttered Chicken",icon:"🧀",price:{solo:140,half:230,full:420}},
+    {name:"Chicken in Spicy BBQ",icon:"🌶️",price:{solo:140,half:230,full:420}},
+    {name:"Chicken Adobo",icon:"🍗",price:{solo:279,full:429}},
+  ],
+  "Soup 🍵": [
+    {name:"Pork Sinigang",icon:"🍲",price:{full:259}},
+    {name:"Shrimp Sinigang",icon:"🦐",price:{full:259}},
+    {name:"Tuna Belly Sinigang",icon:"🐟",price:{full:299}},
+    {name:"Egg Drop Soup",icon:"🥚",badge:"1 person",price:{solo:79}},
+    {name:"Mushroom Soup",icon:"🍄",badge:"1 person",price:{solo:79}},
+    {name:"Tinolang Manok",icon:"🍗",price:{full:259}},
+    {name:"Tuna Tinola",icon:"🐟",price:{full:299}},
+    {name:"Pork Nilaga",icon:"🍖",price:{full:299}},
+  ],
+  "Veggies 🥬": [
+    {name:"Kangkong w/ Oyster Sauce",icon:"🥬",price:{solo:79}},
+    {name:"Ensaladang Talong",icon:"🍆",price:{solo:79}},
+    {name:"Buttered Veggies",icon:"🥦",price:{solo:179}},
+    {name:"Pancit Canton",icon:"🍜",badge:"25 min",price:{full:250}},
+    {name:"Sotanghon Guisado",icon:"🍜",badge:"25 min",price:{full:250}},
+  ],
+  "Snacks 🍟": [
+    {name:"Mangga w/ Bagoong",icon:"🥭",price:{solo:79}},
+    {name:"Burger w/ Fries",icon:"🍔",price:{solo:99}},
+    {name:"Lasagna",icon:"🍝",price:{solo:149}},
+    {name:"Nachos",icon:"🌮",price:{solo:149}},
+    {name:"Sizzling Potato",icon:"🥔",badge:"Sizzling",price:{solo:139}},
+    {name:"Cheesy Fries",icon:"🍟",price:{solo:129}},
+  ],
+  "Drinks 🥤": [
+    {name:"Coke Mismo",icon:"🥤",price:{solo:30}},
+    {name:"Iced Tea Pitcher",icon:"🧊",price:{full:90}},
+    {name:"Blue Lemonade Pitcher",icon:"💙",price:{full:90}},
+    {name:"Cucumber Lemonade Pitcher",icon:"🍋",price:{full:90}},
+    {name:"Four Seasons (Can)",icon:"🥫",price:{solo:60}},
+    {name:"Pineapple (Can)",icon:"🍍",price:{solo:60}},
+    {name:"Coke Zero",icon:"🥤",price:{solo:60}},
+    {name:"San Mig Light",icon:"🍺",price:{solo:75,full:450}},
+  ],
+  "Milkshakes 🥤": [
+    {name:"Rocky Road",icon:"🍫",price:{solo:90}},
+    {name:"Cookies & Cream",icon:"🍪",price:{solo:90}},
+    {name:"Caramel Macchiato",icon:"☕",price:{solo:90}},
+    {name:"Black Forest",icon:"🍒",price:{solo:90}},
+  ],
+  "Desserts 🍮": [
+    {name:"Mango Float",icon:"🥭",price:{solo:99}},
+    {name:"Leche Flan",icon:"🍮",price:{solo:99}},
+  ],
+  "Extras 🧂": [
+    {name:"Rice (Solo)",icon:"🍚",price:{solo:20}},
+    {name:"Rice (Full)",icon:"🍚",price:{full:120}},
+    {name:"Calamansi",icon:"🍋",price:{free:true},badge:"Complimentary"},
+    {name:"Chili",icon:"🌶️",price:{free:true},badge:"Complimentary"},
+    {name:"Bagoong",icon:"🥄",price:{solo:10}},
+    {name:"Mang Tomas",icon:"🥄",price:{solo:10}},
+    {name:"Garlic Mayo",icon:"🥄",price:{solo:10}},
+    {name:"Garlic Sauce",icon:"🥄",price:{solo:10}},
+    {name:"Banana Ketchup",icon:"🥄",price:{solo:10}},
+    {name:"Hot Sauce",icon:"🔥",price:{solo:10}},
+    {name:"Suka",icon:"🍶",price:{solo:5}},
+  ],
+};
+
+const TRAY_MENU = {
+  "Pork 🐷": [
+    {name:"Humba",tray:{small:550,medium:1000,large:1900}},
+    {name:"Caldereta",tray:{small:650,medium:1100,large:2000}},
+    {name:"Sisig",tray:{small:550,medium:1000,large:1900}},
+    {name:"Menudo",tray:{small:550,medium:1000,large:1900}},
+    {name:"Liempo",tray:{small:550,medium:1000,large:1900}},
+    {name:"Bicol Express",tray:{small:550,medium:1100,large:1900}},
+    {name:"Pork Kare-Kare",tray:{small:550,medium:1000,large:1900}},
+    {name:"Crispy Pata",tray:{small:550,medium:1000,large:2000}},
+  ],
+  "Beef 🐄": [
+    {name:"Caldereta",tray:{small:600,medium:1100,large:2000}},
+    {name:"Beef Steak",tray:{small:600,medium:1100,large:2000}},
+    {name:"Beef w/ Broccoli",tray:{small:600,medium:1100,large:2000}},
+    {name:"Garlic Pepper Beef",tray:{small:600,medium:1100,large:2000}},
+  ],
+  "Chicken 🍗": [
+    {name:"Garlic Parmesan",tray:{small:500,medium:900,large:1800}},
+    {name:"Chicken Curry",tray:{small:500,medium:900,large:1800}},
+    {name:"Chicken Adobo",tray:{small:500,medium:900,large:1800}},
+    {name:"North's Chicken",tray:{small:500,medium:900,large:1800}},
+  ],
+  "Noodles & Veggies 🍜": [
+    {name:"Mixed Veggies",tray:{small:400,medium:800,large:1500}},
+    {name:"Chopsuey",tray:{small:400,medium:800,large:1500}},
+    {name:"Sotanghon Guisado",tray:{small:400,medium:800,large:1500}},
+    {name:"Pancit Canton",tray:{small:400,medium:800,large:1500}},
+    {name:"Spaghetti",tray:{small:500,medium:900,large:1800}},
+    {name:"Carbonara",tray:{small:500,medium:900,large:1800}},
+  ],
+  "Seafoods 🦐": [
+    {name:"Garlic Buttered Shrimp",tray:{small:500,medium:900,large:1800}},
+    {name:"Tuna Kinilaw",tray:{small:400,medium:800,large:1600}},
+    {name:"Sinuglaw",tray:{small:500,medium:900,large:1800}},
+    {name:"Mixed Seafoods",tray:{small:600,medium:1000,large:2000}},
+  ],
+};
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let cart = [];
+let payMethod = 'cash';
+let orderType = 'dinein';
+let currentOrderId = sessionStorage.getItem('deinigo_currentOrder') || null;
+let currentOrderData = null;
+let lastStaffMsgCount = 0;
+let pendingOrderData = null; // holds order before gcash confirmation
+let msgAttachmentPending = null;
+let tyMsgAttachmentPending = null;
+let advItems = [];
+let menuAvailability = {}; // synced from Firebase menu_availability
+
+const STEAK_ITEMS = ['T-Bone / Prime Rib Steak']; // Only T-Bone/Prime Rib gets doneness selector
+const DONENESS_OPTIONS = ['Rare','Medium Rare','Medium','Medium Well','Well Done'];
+
+// ═══════════════════════════════════════════
+//  PRICE HELPERS
+// ═══════════════════════════════════════════
+function getLowestPrice(price){
+  if(price.free) return 0;
+  return price.solo||price.half||price.full||0;
+}
+function getPriceLabel(price){
+  if(price.free) return 'Complimentary';
+  const p=[];
+  if(price.solo!==undefined) p.push(`Solo ₱${price.solo}`);
+  if(price.half!==undefined) p.push(`Half ₱${price.half}`);
+  if(price.full!==undefined) p.push(`Full ₱${price.full}`);
+  return p.join(' · ');
+}
+function buildSizeOptions(price){
+  if(price.free) return `<option value="0">Free</option>`;
+  const opts=[];
+  if(price.solo!==undefined) opts.push(`<option value="${price.solo}">Solo — ₱${price.solo}</option>`);
+  if(price.half!==undefined) opts.push(`<option value="${price.half}">Half — ₱${price.half}</option>`);
+  if(price.full!==undefined) opts.push(`<option value="${price.full}">Full — ₱${price.full}</option>`);
+  return opts.join('');
+}
+
+// ═══════════════════════════════════════════
+//  BUILD MENUS
+// ═══════════════════════════════════════════
+function buildMainMenu(){
+  const tabsEl=document.getElementById('mainTabs');
+  const panelsEl=document.getElementById('mainPanels');
+  tabsEl.innerHTML=''; panelsEl.innerHTML='';
+  Object.keys(MAIN_MENU).forEach((cat,i)=>{
+    const tb=document.createElement('button');
+    tb.className='cat-tab'+(i===0?' active':'');
+    tb.textContent=cat;
+    tb.onclick=()=>switchMainCat(cat);
+    tabsEl.appendChild(tb);
+    const panel=document.createElement('div');
+    panel.className='menu-panel'+(i===0?' active':'');
+    const grid=document.createElement('div');
+    grid.className='items-grid';
+    MAIN_MENU[cat].forEach(item=>{
+      const hasMultiple=Object.keys(item.price).filter(k=>k!=='free').length>1;
+      const lowestPrice=getLowestPrice(item.price);
+      const isFree=item.price.free===true;
+      const isNoQty = ['Calamansi','Chili'].includes(item.name);
+      const isSteak = STEAK_ITEMS.includes(item.name);
+      const itemKey = item.name.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+      const selKey='sel_'+itemKey;
+      const donenessKey='don_'+itemKey;
+      // Check availability
+      const avail = menuAvailability[item.name] !== false;
+      const el=document.createElement('div');
+      el.className='menu-item'+(avail?'':' unavailable');
+      el.id='mitem_'+itemKey;
+      el.innerHTML=`
+        <div class="mi-left">
+          <div class="mi-icon">${item.icon||'🍽️'}</div>
+          <div class="mi-name">${item.name}${!avail?'<span class="avail-badge sold-out">Sold Out</span>':''}</div>
+          <div class="mi-desc">${getPriceLabel(item.price)}</div>
+          ${item.badge?`<span class="mi-badge">${item.badge}</span>`:''}
+        </div>
+        <div class="mi-right">
+          ${hasMultiple?`<select class="size-sel" id="${selKey}">${buildSizeOptions(item.price)}</select>`:`<div class="mi-price">${isFree?'Free':'₱'+lowestPrice}</div>`}
+          ${isSteak?`<select class="doneness-sel" id="${donenessKey}" title="How would you like your steak?">
+            ${DONENESS_OPTIONS.map(d=>`<option value="${d}">${d}</option>`).join('')}
+          </select>`:''}
+          ${!isNoQty?`<div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+            <span class="qty-num">1</span>
+            <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+          </div>`:''}
+          <button class="add-cart-btn" onclick="addMainToCart(this,'${item.name.replace(/'/g,"\\'")}','${selKey}',${hasMultiple},${lowestPrice},${isFree},${isNoQty},'${donenessKey}')">${isFree?'Add (Free)':'Add'}</button>
+        </div>`;
+      grid.appendChild(el);
+    });
+    panel.appendChild(grid);
+    panelsEl.appendChild(panel);
+  });
+}
+
+function applyMenuAvailability(){
+  Object.keys(MAIN_MENU).forEach(cat=>{
+    MAIN_MENU[cat].forEach(item=>{
+      const itemKey = item.name.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+      const el = document.getElementById('mitem_'+itemKey);
+      if(!el) return;
+      const avail = menuAvailability[item.name] !== false;
+      el.classList.toggle('unavailable', !avail);
+      const nameEl = el.querySelector('.mi-name');
+      if(nameEl){
+        nameEl.innerHTML = item.name + (!avail ? '<span class="avail-badge sold-out">Sold Out</span>' : '');
+      }
+      // Handle doneness availability for T-Bone/Prime Rib Steak
+      if(STEAK_ITEMS.includes(item.name)){
+        const donenessKey = 'don_'+itemKey;
+        const donSel = document.getElementById(donenessKey);
+        if(donSel){
+          Array.from(donSel.options).forEach(opt => {
+            const dKey = item.name + '::' + opt.value;
+            const dAvail = menuAvailability[dKey] !== false;
+            opt.disabled = !dAvail;
+            opt.text = dAvail ? opt.value : opt.value + ' (N/A)';
+          });
+          // If currently selected option is unavailable, pick first available
+          if(donSel.selectedOptions[0] && donSel.selectedOptions[0].disabled){
+            const firstAvail = Array.from(donSel.options).find(o => !o.disabled);
+            if(firstAvail) donSel.value = firstAvail.value;
+          }
+        }
+      }
+    });
+  });
+}
+
+function switchMainCat(cat){
+  const cats=Object.keys(MAIN_MENU);
+  const idx=cats.indexOf(cat);
+  document.querySelectorAll('#mainTabs .cat-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('#mainPanels .menu-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function buildTrayMenu(){
+  const tabsEl=document.getElementById('trayTabs');
+  const panelsEl=document.getElementById('trayPanels');
+  Object.keys(TRAY_MENU).forEach((cat,i)=>{
+    const tb=document.createElement('button');
+    tb.className='cat-tab'+(i===0?' active':'');
+    tb.textContent=cat;
+    tb.onclick=()=>switchTrayCat(cat);
+    tabsEl.appendChild(tb);
+    const panel=document.createElement('div');
+    panel.className='menu-panel'+(i===0?' active':'');
+    const grid=document.createElement('div');
+    grid.className='items-grid';
+    TRAY_MENU[cat].forEach(item=>{
+      const el=document.createElement('div');
+      el.className='menu-item';
+      const sid='traySize_'+item.name.replace(/\s/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+      el.innerHTML=`
+        <div class="mi-left">
+          <div class="mi-name">${item.name}</div>
+          <div class="mi-desc" style="margin-top:.3rem;">
+            <span style="color:var(--gold);font-weight:600;">S</span> ₱${item.tray.small} &nbsp;
+            <span style="color:var(--gold);font-weight:600;">M</span> ₱${item.tray.medium} &nbsp;
+            <span style="color:var(--gold);font-weight:600;">L</span> ₱${item.tray.large}
+          </div>
+        </div>
+        <div class="mi-right">
+          <select class="tray-sel" id="${sid}">
+            <option value="${item.tray.small}">Small (5–7) ₱${item.tray.small}</option>
+            <option value="${item.tray.medium}">Medium (10–15) ₱${item.tray.medium}</option>
+            <option value="${item.tray.large}">Large (20–30) ₱${item.tray.large}</option>
+          </select>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(this,-1)">−</button>
+            <span class="qty-num">1</span>
+            <button class="qty-btn" onclick="changeQty(this,1)">+</button>
+          </div>
+          <button class="add-cart-btn" onclick="addTrayToCart(this,'${item.name.replace(/'/g,"\\'")}','${sid}')">Add</button>
+        </div>`;
+      grid.appendChild(el);
+    });
+    panel.appendChild(grid);
+    panelsEl.appendChild(panel);
+  });
+}
+
+function switchTrayCat(cat){
+  const cats=Object.keys(TRAY_MENU);
+  const idx=cats.indexOf(cat);
+  document.querySelectorAll('#trayTabs .cat-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('#trayPanels .menu-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+// ═══════════════════════════════════════════
+//  ORDER TYPE & MENU TYPE SWITCHES
+// ═══════════════════════════════════════════
+function switchOrderType(type){
+  orderType=type;
+  document.getElementById('typeDinein').classList.toggle('active',type==='dinein');
+  document.getElementById('typeTakeout').classList.toggle('active',type==='takeout');
+  document.getElementById('takeoutInfoBar').style.display=type==='takeout'?'block':'none';
+  document.getElementById('cartTitle').textContent=type==='takeout'?'🥡 Take-out Order':'🛒 Your Order';
+  document.getElementById('takeoutCartFields').style.display=type==='takeout'?'block':'none';
+  document.getElementById('boxFeeRow').style.display=type==='takeout'?'flex':'none';
+  updateCart();
+}
+
+function switchMenuType(type){
+  document.getElementById('mainSection').style.display=type==='main'?'block':'none';
+  document.getElementById('traysSection').style.display=type==='trays'?'block':'none';
+  document.getElementById('typeMain').classList.toggle('active',type==='main');
+  document.getElementById('typeTrays').classList.toggle('active',type==='trays');
+}
+
+// ═══════════════════════════════════════════
+//  QTY CONTROLS
+// ═══════════════════════════════════════════
+function changeQty(btn,delta){
+  const ctrl=btn.parentElement;
+  const numEl=ctrl.querySelector('.qty-num');
+  let val=parseInt(numEl.textContent)+delta;
+  if(val<1)val=1; if(val>99)val=99;
+  numEl.textContent=val;
+}
+
+// ═══════════════════════════════════════════
+//  ADD TO CART
+// ═══════════════════════════════════════════
+function addMainToCart(btn,name,selId,hasMultiple,defaultPrice,isFree,isNoQty,donenessId){
+  let price=isFree?0:defaultPrice;
+  let variant='';
+  if(hasMultiple){
+    const sel=document.getElementById(selId);
+    if(sel){ price=parseInt(sel.value); variant=sel.options[sel.selectedIndex].text.split('—')[0].trim(); }
+  }
+  // Steak doneness
+  let doneness='';
+  if(donenessId){
+    const don=document.getElementById(donenessId);
+    if(don) doneness=don.value;
+  }
+  const qty = isNoQty ? 1 : parseInt(btn.closest('.mi-right').querySelector('.qty-ctrl .qty-num').textContent);
+  const matchKey = name+'|'+variant+'|'+doneness;
+  const existing=cart.find(c=>(c.name+'|'+c.variant+'|'+(c.doneness||''))===matchKey);
+  if(existing){existing.qty+=qty;}
+  else{cart.push({name,price,qty,variant,doneness,isFree,id:Date.now()+Math.random()});}
+  if(!isNoQty) btn.closest('.mi-right').querySelector('.qty-ctrl .qty-num').textContent='1';
+  updateCart();
+  showToast(name+(doneness?' ('+doneness+')':'')+(variant?' — '+variant:'')+' added!');
+}
+
+function addTrayToCart(btn,name,selectId){
+  const sel=document.getElementById(selectId);
+  const price=parseInt(sel.value);
+  const variant=sel.options[sel.selectedIndex].text.split('(')[0].trim();
+  const ctrl=btn.closest('.mi-right').querySelector('.qty-ctrl');
+  const qty=parseInt(ctrl.querySelector('.qty-num').textContent);
+  const existing=cart.find(c=>c.name===name&&c.variant===variant);
+  if(existing){existing.qty+=qty;}
+  else{cart.push({name,price,qty,variant,isTray:true,id:Date.now()+Math.random()});}
+  ctrl.querySelector('.qty-num').textContent='1';
+  updateCart();
+  showToast(name+' ('+variant+') added!');
+}
+
+function removeFromCart(id){
+  cart=cart.filter(c=>c.id!==id);
+  updateCart();
+}
+
+function calcBoxFee(){
+  if(orderType!=='takeout') return 0;
+  return cart.reduce((s,c)=>s+(c.isFree?0:boxCost(c.name)*c.qty),0);
+}
+
+function updateCart(){
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const boxFee=calcBoxFee();
+  const total=subtotal+boxFee;
+  document.getElementById('cartCount').textContent=cart.reduce((s,c)=>s+c.qty,0);
+  document.getElementById('cartSubtotal').textContent='₱'+subtotal.toLocaleString();
+  document.getElementById('cartBoxFee').textContent='₱'+boxFee.toLocaleString();
+  document.getElementById('cartTotal').textContent='₱'+total.toLocaleString();
+  document.getElementById('gcashAmt').textContent='₱'+total.toLocaleString();
+  const body=document.getElementById('cartBody');
+  if(cart.length===0){
+    body.innerHTML='<div class="cart-empty"><span>🍽️</span>Your cart is empty.<br>Add items from the menu!</div>';
+    return;
+  }
+  body.innerHTML=cart.map(c=>`
+    <div class="cart-line">
+      <div class="cl-info">
+        <div class="cl-name">${c.name}${c.variant?' <span style="font-size:.75rem;color:var(--smoke);">('+c.variant+')</span>':''}</div>
+        <div class="cl-sub">${c.doneness?'🥩 '+c.doneness+'<br>':''} ${c.isFree?'Free':('₱'+c.price.toLocaleString()+' × '+c.qty)}${orderType==='takeout'&&!c.isFree?' + ₱'+boxCost(c.name)+'/box':''}</div>
+      </div>
+      <div class="cl-price">${c.isFree?'FREE':'₱'+(c.price*c.qty).toLocaleString()}</div>
+      <button class="cl-remove" onclick="removeFromCart(${c.id})">✕</button>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════
+//  CART TOGGLE
+// ═══════════════════════════════════════════
+function toggleCart(){
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartDrawer').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════
+//  PAYMENT
+// ═══════════════════════════════════════════
+function selectPay(method){
+  payMethod=method;
+  document.getElementById('payCash').classList.toggle('active',method==='cash');
+  document.getElementById('payGcash').classList.toggle('active',method==='gcash');
+  // gcashCartInfo was removed (replaced by in-panel flow); update gcashAmt just in case
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const boxFee=calcBoxFee();
+  const total=subtotal+boxFee;
+  const amtEl = document.getElementById('gcashAmt');
+  if(amtEl) amtEl.textContent='₱'+total.toLocaleString();
+}
+
+// ═══════════════════════════════════════════
+//  ORDER REVIEW (step before placing)
+// ═══════════════════════════════════════════
+function showOrderReview(){
+  const name=document.getElementById('customerName').value.trim();
+  if(!name){showToast('Please enter your name!');return;}
+  if(cart.length===0){showToast('Your cart is empty!');return;}
+  if(orderType==='takeout'){
+    const contact=document.getElementById('contactNumber').value.trim();
+    const addr=document.getElementById('deliveryAddress').value.trim();
+    if(!contact){showToast('Please enter your contact number!');return;}
+    if(!addr){showToast('Please enter your delivery address!');return;}
+  }
+  // Populate review modal
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const boxFee=calcBoxFee();
+  const total=subtotal+boxFee;
+
+  document.getElementById('reviewItemsList').innerHTML=cart.map(c=>`
+    <div class="review-item-row">
+      <span class="review-item-name">${c.name}${c.variant?' <span style="color:var(--smoke);font-size:.8rem;">('+c.variant+')</span>':''}</span>
+      <span class="review-item-qty">×${c.qty}</span>
+      <span class="review-item-price">${c.isFree?'FREE':'₱'+(c.price*c.qty).toLocaleString()}</span>
+    </div>`).join('');
+
+  document.getElementById('reviewSubtotal').textContent='₱'+subtotal.toLocaleString();
+  document.getElementById('reviewTotal').textContent='₱'+total.toLocaleString();
+  const bfRow=document.getElementById('reviewBoxFeeRow');
+  if(boxFee>0){bfRow.style.display='flex';document.getElementById('reviewBoxFee').textContent='₱'+boxFee.toLocaleString();}
+  else bfRow.style.display='none';
+  document.getElementById('reviewCustomerName').textContent=name;
+  document.getElementById('reviewOrderType').textContent=orderType==='dinein'?'🍽️ Dine-in':'🥡 Take-out / Delivery';
+  document.getElementById('reviewPayment').textContent=payMethod==='gcash'?'📱 GCash':'💵 Cash';
+  const sr=document.getElementById('specialRequest').value.trim();
+  const srWrap=document.getElementById('reviewSpecialReqWrap');
+  if(sr){srWrap.style.display='block';document.getElementById('reviewSpecialReq').textContent=sr;}else{srWrap.style.display='none';}
+  const dlvWrap=document.getElementById('reviewDeliveryWrap');
+  if(orderType==='takeout'){
+    dlvWrap.style.display='block';
+    document.getElementById('reviewDelivery').textContent=document.getElementById('contactNumber').value.trim()+' · '+document.getElementById('deliveryAddress').value.trim();
+  } else { dlvWrap.style.display='none'; }
+
+  openModal('orderReviewModal');
+}
+
+function confirmReviewAndOrder(){
+  closeModal('orderReviewModal');
+  placeOrder();
+}
+
+// ═══════════════════════════════════════════
+//  PLACE ORDER
+// ═══════════════════════════════════════════
+function placeOrder(){
+  const name=document.getElementById('customerName').value.trim();
+  if(!name){showToast('Please enter your name!');return;}
+  if(cart.length===0){showToast('Your cart is empty!');return;}
+  if(orderType==='takeout'){
+    const contact=document.getElementById('contactNumber').value.trim();
+    const addr=document.getElementById('deliveryAddress').value.trim();
+    if(!contact){showToast('Please enter your contact number!');return;}
+    if(!addr){showToast('Please enter your delivery address!');return;}
+  }
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const boxFee=calcBoxFee();
+  const total=subtotal+boxFee;
+  const orderId='ORD-'+Date.now();
+
+  const orderData={
+    id: orderId,
+    customer: name,
+    contact: orderType==='takeout'?document.getElementById('contactNumber').value.trim():'',
+    address: orderType==='takeout'?document.getElementById('deliveryAddress').value.trim():'',
+    orderType,
+    payment: payMethod,
+    paymentStatus: payMethod==='gcash'?'Pending':'Cash',
+    items: [...cart],
+    subtotal,
+    boxFee,
+    total,
+    specialRequest: document.getElementById('specialRequest').value.trim(),
+    timestamp: new Date().toISOString(),
+    status: 'Pending'
+  };
+
+  if(payMethod === 'gcash'){
+    pendingOrderData = orderData;
+    showGcashFlow(total, orderId);
+    return;
+  }
+
+  submitOrder(orderData);
+}
+
+function submitOrder(orderData){
+  // Save to Firebase / localStorage
+  if(db && isFirebaseConnected){
+    db.ref('orders/'+orderData.id).set(orderData);
+  } else {
+    const orders=JSON.parse(localStorage.getItem('deinigo_orders')||'[]');
+    orders.unshift(orderData);
+    localStorage.setItem('deinigo_orders',JSON.stringify(orders));
+    // Also broadcast via BroadcastChannel for same-browser sync
+    try {
+      const bc = new BroadcastChannel('deinigo_sync');
+      bc.postMessage({type:'new_order', order: orderData});
+      bc.close();
+    } catch(e){}
+  }
+
+  currentOrderId = orderData.id;
+  currentOrderData = orderData;
+  sessionStorage.setItem('deinigo_currentOrder', orderData.id);
+
+  // Clear cart
+  cart=[];
+  updateCart();
+  document.getElementById('customerName').value='';
+  document.getElementById('specialRequest').value='';
+  if(orderType==='takeout'){
+    document.getElementById('contactNumber').value='';
+    document.getElementById('deliveryAddress').value='';
+  }
+  // Close cart only if it's still open (GCash flow may have already closed it)
+  const cartDrawer = document.getElementById('cartDrawer');
+  if(cartDrawer && cartDrawer.classList.contains('open')){
+    toggleCart();
+  }
+
+  // Subscribe to this order's messages
+  subscribeToMessages();
+
+  showOrderStatusBar(orderData);
+  showThankYouPage(orderData);
+}
+
+// ═══════════════════════════════════════════
+//  GCASH IN-PAGE PANEL
+// ═══════════════════════════════════════════
+let gcashScreenshotData = null;
+let gcashMinimized = false;
+
+/* Show the GCash payment panel. Called from placeOrder() when payment=gcash. */
+function showGcashFlow(amount, orderId){
+  const amtStr = '₱' + amount.toLocaleString();
+  document.getElementById('gcashPanelAmt').textContent = amtStr;
+  document.getElementById('gcashMiniAmt').textContent = amtStr;
+
+  // Reset UI state fully
+  gcashScreenshotData = null;
+  gcashMinimized = false;
+  document.getElementById('gcashPanelBody').style.display = '';
+  document.getElementById('gcashMinBtn').textContent = '—';
+  const confirmBtn = document.getElementById('gcashConfirmBtn');
+  confirmBtn.disabled = true;
+  confirmBtn.classList.remove('ready');
+  confirmBtn.textContent = "✓ I've Sent the Payment";
+  const preview = document.getElementById('gcashScreenshotPreview');
+  preview.classList.remove('show');
+  preview.src = '';
+  const nameEl = document.getElementById('gcashScreenshotName');
+  nameEl.classList.remove('show');
+  nameEl.textContent = '';
+  document.getElementById('gcashScreenshotInput').value = '';
+
+  // Show full panel + backdrop; hide mini-tab
+  document.getElementById('gcashPanel').classList.add('open');
+  document.getElementById('gcashBackdrop').classList.add('show');
+  document.getElementById('gcashMiniTab').classList.remove('show');
+
+  // Close cart drawer cleanly
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartOverlay');
+  if(drawer){ drawer.classList.remove('open'); }
+  if(overlay){ overlay.classList.remove('open'); }
+
+  // Auto-launch GCash app after short delay (gives panel time to render)
+  setTimeout(() => openGcashApp(), 700);
+}
+
+/* Toggle between minimized (mini-tab) and full panel */
+function toggleGcashMinimize(){
+  gcashMinimized = !gcashMinimized;
+  if(gcashMinimized){
+    // Collapse to mini-tab
+    document.getElementById('gcashPanel').classList.remove('open');
+    document.getElementById('gcashBackdrop').classList.remove('show');
+    document.getElementById('gcashMiniTab').classList.add('show');
+    document.getElementById('gcashMinBtn').textContent = '▲';
+  } else {
+    gcashExpandPanel();
+  }
+}
+
+/* Expand back to full panel */
+function gcashExpandPanel(){
+  gcashMinimized = false;
+  document.getElementById('gcashPanel').classList.add('open');
+  document.getElementById('gcashBackdrop').classList.add('show');
+  document.getElementById('gcashMiniTab').classList.remove('show');
+  document.getElementById('gcashMinBtn').textContent = '—';
+}
+
+/* Exit panel — only allowed after screenshot is attached */
+function exitGcashPanel(){
+  if(!gcashScreenshotData){
+    showToast('⚠️ Please attach your payment screenshot first!');
+    gcashExpandPanel();
+    return;
+  }
+  document.getElementById('gcashPanel').classList.remove('open');
+  document.getElementById('gcashBackdrop').classList.remove('show');
+  document.getElementById('gcashMiniTab').classList.remove('show');
+}
+
+/* Screenshot file handler */
+function handleGcashScreenshot(input){
+  const file = input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    showToast('⚠️ Please upload an image file (screenshot).');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    gcashScreenshotData = { imageData: e.target.result, fileName: file.name };
+    const preview = document.getElementById('gcashScreenshotPreview');
+    preview.src = e.target.result;
+    preview.classList.add('show');
+    const nameEl = document.getElementById('gcashScreenshotName');
+    nameEl.textContent = '✅ ' + file.name + ' attached';
+    nameEl.classList.add('show');
+    const btn = document.getElementById('gcashConfirmBtn');
+    btn.disabled = false;
+    btn.classList.add('ready');
+    btn.textContent = "✓ I've Sent the Payment";
+    showToast("📸 Screenshot attached! Tap \"I've Sent the Payment\" to complete.");
+    gcashExpandPanel(); // make sure full panel is visible
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Open GCash app with number & amount pre-filled via deep link */
+function openGcashApp(){
+  const amount = pendingOrderData ? pendingOrderData.total : 0;
+  const number = '09914517715';
+  const ua = navigator.userAgent.toLowerCase();
+
+  /*
+   * GCash deep link:
+   *   Android → Android Intent URL (window.location.href so OS intercepts it)
+   *             Sends user directly to GCash Send Money screen with
+   *             recipient number and amount already filled in.
+   *   iOS     → gcash:// custom URL scheme
+   *   Desktop → GCash website
+   *
+   * We do NOT use iframes (unreliable). window.location.href is the
+   * standard way to trigger Android Intents from a browser.
+   */
+  if(/android/.test(ua)){
+    // Android Intent — opens GCash Send Money with pre-filled number + amount
+    // S.browser_fallback_url prevents Play Store redirect if app not installed
+    const intentUrl =
+      'intent://send?to=' + number +
+      '&amount=' + amount +
+      '#Intent' +
+      ';scheme=gcash' +
+      ';package=com.globe.gcash.android' +
+      ';S.browser_fallback_url=https%3A%2F%2Fwww.gcash.com' +
+      ';end';
+    window.location.href = intentUrl;
+  } else if(/iphone|ipad|ipod/.test(ua)){
+    window.location.href = 'gcash://send?to=' + number + '&amount=' + amount;
+  } else {
+    window.open('https://www.gcash.com', '_blank');
+  }
+
+  showToast('📱 Opening GCash — send ₱' + amount.toLocaleString() + ' to 0991 451 7715');
+
+  // Minimize panel after a moment so GCash takes full screen
+  setTimeout(() => {
+    if(!gcashMinimized) toggleGcashMinimize();
+  }, 500);
+}
+
+/* Confirm — submit order + send screenshot proof to staff via Firebase */
+function confirmGcashPayment(){
+  if(!gcashScreenshotData){
+    showToast('⚠️ Please attach your GCash payment screenshot first!');
+    gcashExpandPanel();
+    return;
+  }
+  if(!pendingOrderData) return;
+  pendingOrderData.paymentStatus = 'Sent – Verifying';
+
+  const screenshotMsg = {
+    id: 'MSG-'+Date.now(),
+    sender: 'customer',
+    text: '📸 GCash payment screenshot for Order ' + pendingOrderData.id,
+    name: pendingOrderData.customer,
+    orderId: pendingOrderData.id,
+    timestamp: new Date().toISOString(),
+    imageData: gcashScreenshotData.imageData,
+    fileName: gcashScreenshotData.fileName,
+    isPaymentProof: true
+  };
+  if(db && isFirebaseConnected){
+    db.ref('messages/' + screenshotMsg.id).set(screenshotMsg);
+    db.ref('orders/' + pendingOrderData.id + '/screenshotSent').set(true);
+  } else {
+    const msgs = JSON.parse(localStorage.getItem('deinigo_messages') || '[]');
+    msgs.push(screenshotMsg);
+    localStorage.setItem('deinigo_messages', JSON.stringify(msgs));
+    try { new BroadcastChannel('deinigo_sync').postMessage({type:'new_message', message: screenshotMsg}); } catch(e){}
+  }
+
+  document.getElementById('gcashPanel').classList.remove('open');
+  document.getElementById('gcashBackdrop').classList.remove('show');
+  document.getElementById('gcashMiniTab').classList.remove('show');
+
+  submitOrder(pendingOrderData);
+  pendingOrderData = null;
+  gcashScreenshotData = null;
+  showToast('✅ Order placed! Screenshot sent to staff for verification.');
+}
+
+/* Cancel GCash — switch back to cash */
+function cancelGcashFlow(){
+  document.getElementById('gcashPanel').classList.remove('open');
+  document.getElementById('gcashBackdrop').classList.remove('show');
+  document.getElementById('gcashMiniTab').classList.remove('show');
+  pendingOrderData = null;
+  gcashScreenshotData = null;
+  payMethod = 'cash';
+  selectPay('cash');
+  // Reopen cart drawer
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  showToast('Switched to cash payment.');
+}
+
+// ═══════════════════════════════════════════
+//  ORDER STATUS BAR
+// ═══════════════════════════════════════════
+const STATUS_STEPS = ['Pending','Preparing','Ready','Done'];
+const STATUS_LABELS = {Pending:'Order Received',Preparing:'Preparing',Ready:'Ready!',Done:'Completed'};
+const STATUS_ICONS  = {Pending:'📋',Preparing:'👨‍🍳',Ready:'🔔',Done:'✅'};
+
+function showOrderStatusBar(order){
+  const bar = document.getElementById('orderStatusBar');
+  bar.classList.add('visible');
+  document.getElementById('osbOrderId').textContent = order.id;
+  renderOsbSteps(order.status);
+}
+
+function renderOsbSteps(currentStatus){
+  const steps = document.getElementById('osbSteps');
+  const idx = STATUS_STEPS.indexOf(currentStatus);
+  steps.innerHTML = STATUS_STEPS.map((s,i) => {
+    const state = i < idx ? 'done' : (i === idx ? 'active' : '');
+    return `<div class="osb-step ${state}">
+      <div class="osb-step-dot"></div>
+      <span>${STATUS_LABELS[s]}</span>
+    </div>${i<STATUS_STEPS.length-1?'<span class="osb-sep">›</span>':''}`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+//  THANK YOU PAGE
+// ═══════════════════════════════════════════
+function showThankYouPage(order){
+  currentOrderData = order;
+  document.getElementById('tyOrderId').textContent = 'ORDER ' + order.id;
+  updateTyStatus(order.status || 'Pending');
+  updateTyPaymentStatus(order);
+  loadTyMessages(order.id);
+  document.getElementById('tyOverlay').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function openThankYouPage(){
+  if(!currentOrderId) return;
+  // Fetch latest order data
+  dbGetOrders(orders => {
+    const order = orders.find(o => o.id === currentOrderId);
+    if(order){
+      showThankYouPage(order);
+    }
+  });
+}
+
+function closeThankYouPage(){
+  document.getElementById('tyOverlay').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+function updateTyStatus(status){
+  const steps = ['Pending','Preparing','Ready','Done'];
+  const idx = steps.indexOf(status);
+  steps.forEach((s,i) => {
+    const el = document.getElementById('tst' + s);
+    if(!el) return;
+    el.classList.remove('active','done');
+    if(i < idx) el.classList.add('done');
+    else if(i === idx) el.classList.add('active');
+  });
+  renderOsbSteps(status);
+  const eta = document.getElementById('tystEta');
+  const etaMap = {Pending:'⏱️ Estimated time: 15–25 minutes',Preparing:'👨‍🍳 Your order is being prepared now!',Ready:'🔔 Your order is ready — please proceed!',Done:'✅ Order completed. Thank you!'};
+  if(eta) eta.textContent = etaMap[status] || '';
+}
+
+function updateTyPaymentStatus(order){
+  const el = document.getElementById('tyPaymentStatus');
+  const txt = document.getElementById('tyPaymentText');
+  if(order.payment === 'gcash'){
+    if(order.paymentStatus === 'Paid'){
+      el.className = 'ty-payment-status paid';
+      txt.textContent = '✅ GCash Payment Verified';
+    } else {
+      el.className = 'ty-payment-status pending';
+      txt.textContent = '⏳ GCash Payment: ' + (order.paymentStatus || 'Pending Verification');
+    }
+  } else {
+    el.className = 'ty-payment-status paid';
+    txt.textContent = '💵 Payment: Cash on Pickup/Delivery';
+  }
+}
+
+function checkCurrentOrderStatus(){
+  if(!currentOrderId) return;
+  if(db && isFirebaseConnected){
+    db.ref('orders/' + currentOrderId).once('value').then(function(snap){
+      var order = snap.val();
+      if(order){ currentOrderData=order; updateTyStatus(order.status); updateTyPaymentStatus(order); renderOsbSteps(order.status); }
+    });
+  } else {
+    var orders = JSON.parse(localStorage.getItem('deinigo_orders') || '[]');
+    var order = orders.find(function(o){ return o.id===currentOrderId; });
+    if(order){ currentOrderData=order; updateTyStatus(order.status); updateTyPaymentStatus(order); renderOsbSteps(order.status); }
+  }
+}
+
+// ═══════════════════════════════════════════
+//  MESSAGES
+// ═══════════════════════════════════════════
+function renderMessages(){
+  const thread = document.getElementById('msgThread');
+  if(!thread) return;
+  dbGetMessages(null, msgs => {
+    thread.innerHTML = msgs.slice(-20).map(m => `
+      <div class="msg-bubble ${m.sender==='restaurant'?'restaurant':'customer'}">
+        <div class="sender">${m.sender==='restaurant'?"De' Iñigo Staff":m.name||'You'}</div>
+        ${m.text ? escHtml(m.text) : ''}
+        ${m.imageData ? `<img class="msg-img" src="${m.imageData}" alt="attachment"/>` : ''}
+        ${m.fileName && !m.imageData ? `<a class="msg-file-link" href="${m.fileData}" download="${m.fileName}">📎 ${escHtml(m.fileName)}</a>` : ''}
+      </div>`).join('');
+    thread.scrollTop = thread.scrollHeight;
+  });
+}
+
+function sendMessage(){
+  const inp = document.getElementById('msgInput');
+  const text = inp.value.trim();
+  const name = (document.getElementById('msgNameInput').value.trim()) || 'Customer';
+  if(!text && !msgAttachmentPending) return;
+  const msg = {
+    id: 'MSG-'+Date.now(),
+    sender: 'customer',
+    text: text || '',
+    name,
+    orderId: currentOrderId || 'general',
+    timestamp: new Date().toISOString(),
+    ...(msgAttachmentPending || {})
+  };
+  if(db && isFirebaseConnected){
+    db.ref('messages/' + msg.id).set(msg);
+  } else {
+    const msgs = JSON.parse(localStorage.getItem('deinigo_messages') || '[]');
+    msgs.push(msg);
+    localStorage.setItem('deinigo_messages', JSON.stringify(msgs));
+    try { new BroadcastChannel('deinigo_sync').postMessage({type:'new_message', message: msg}); } catch(e){}
+  }
+  inp.value = '';
+  msgAttachmentPending = null;
+  showToast('Message sent to staff!');
+  renderMessages();
+}
+
+function handleMsgFileAttach(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    if(file.type.startsWith('image/')){
+      msgAttachmentPending = { imageData: e.target.result, fileName: file.name };
+    } else {
+      msgAttachmentPending = { fileData: e.target.result, fileName: file.name };
+    }
+    showToast('📎 ' + file.name + ' ready to send');
+  };
+  reader.readAsDataURL(file);
+}
+
+// TY Page messages
+function loadTyMessages(orderId){
+  dbGetMessages(orderId, msgs => renderTyMessages(msgs));
+}
+
+function renderTyMessages(msgs){
+  const thread = document.getElementById('tyMsgThread');
+  if(!thread) return;
+  thread.innerHTML = msgs.map(m => `
+    <div class="msg-bubble ${m.sender==='restaurant'?'restaurant':'customer'}">
+      <div class="sender">${m.sender==='restaurant'?"De' Iñigo Staff":m.name||'You'}</div>
+      ${m.text ? escHtml(m.text) : ''}
+      ${m.imageData ? `<img class="msg-img" src="${m.imageData}" alt="attachment"/>` : ''}
+    </div>`).join('');
+  thread.scrollTop = thread.scrollHeight;
+}
+
+function sendTyMessage(){
+  const inp = document.getElementById('tyMsgInput');
+  const text = inp.value.trim();
+  if(!text && !tyMsgAttachmentPending) return;
+  const msg = {
+    id: 'MSG-'+Date.now(),
+    sender: 'customer',
+    text: text || '',
+    name: currentOrderData ? currentOrderData.customer : 'Customer',
+    orderId: currentOrderId || 'general',
+    timestamp: new Date().toISOString(),
+    ...(tyMsgAttachmentPending || {})
+  };
+  if(db && isFirebaseConnected){
+    db.ref('messages/'+msg.id).set(msg);
+  } else {
+    const msgs = JSON.parse(localStorage.getItem('deinigo_messages') || '[]');
+    msgs.push(msg);
+    localStorage.setItem('deinigo_messages', JSON.stringify(msgs));
+    try { new BroadcastChannel('deinigo_sync').postMessage({type:'new_message', message: msg}); } catch(e){}
+  }
+  inp.value = '';
+  tyMsgAttachmentPending = null;
+  showToast('Message sent!');
+  loadTyMessages(currentOrderId);
+}
+
+function handleTyFileAttach(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    tyMsgAttachmentPending = file.type.startsWith('image/') ?
+      { imageData: e.target.result, fileName: file.name } :
+      { fileData: e.target.result, fileName: file.name };
+    showToast('📎 ' + file.name + ' ready to send');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='messageModal') renderMessages();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════
+//  RESERVATION FOOD MENU
+// ═══════════════════════════════════════════
+function buildResMenus(){
+  // Main menu tabs
+  const mainTabsEl=document.getElementById('resMainTabs');
+  const mainPanelEl=document.getElementById('resMainPanel');
+  if(!mainTabsEl) return;
+  mainTabsEl.innerHTML='';
+  mainPanelEl.innerHTML='';
+  Object.keys(MAIN_MENU).forEach((cat,i)=>{
+    const tb=document.createElement('button');
+    tb.className='res-menu-tab'+(i===0?' active':'');
+    tb.textContent=cat;
+    tb.onclick=()=>switchResMainCat(cat);
+    mainTabsEl.appendChild(tb);
+    const panel=document.createElement('div');
+    panel.className='res-menu-panel'+(i===0?' active':'');
+    panel.id='resMainPan_'+i;
+    MAIN_MENU[cat].forEach(item=>{
+      if(item.price.free) return;
+      const hasMultiple=Object.keys(item.price).filter(k=>k!=='free').length>1;
+      const selId='resMain_'+item.name.replace(/[^a-zA-Z0-9]/g,'_');
+      const div=document.createElement('div');
+      div.className='res-menu-item';
+      div.innerHTML=`
+        <div class="res-mi-info">
+          <div class="res-mi-name">${item.icon||'🍽️'} ${item.name}</div>
+          <div class="res-mi-price">${getPriceLabel(item.price)}</div>
+        </div>
+        <div class="res-mi-controls">
+          ${hasMultiple?`<select class="res-mi-sel" id="${selId}">${buildSizeOptions(item.price)}</select>`:''}
+          <button class="res-mi-btn" onclick="resQtyChange(this,-1)">−</button>
+          <span class="res-mi-qty">1</span>
+          <button class="res-mi-btn" onclick="resQtyChange(this,1)">+</button>
+          <button class="res-mi-add" onclick="addResItem('${item.name.replace(/'/g,"\\'")}','${selId}',${hasMultiple},this)">Add</button>
+        </div>`;
+      panel.appendChild(div);
+    });
+    mainPanelEl.appendChild(panel);
+  });
+
+  // Tray menu tabs
+  const trayTabsEl=document.getElementById('resTrayTabs');
+  const trayPanelEl=document.getElementById('resTrayPanel');
+  if(!trayTabsEl) return;
+  trayTabsEl.innerHTML='';
+  trayPanelEl.innerHTML='';
+  Object.keys(TRAY_MENU).forEach((cat,i)=>{
+    const tb=document.createElement('button');
+    tb.className='res-menu-tab'+(i===0?' active':'');
+    tb.textContent=cat;
+    tb.onclick=()=>switchResTraysCat(cat);
+    trayTabsEl.appendChild(tb);
+    const panel=document.createElement('div');
+    panel.className='res-menu-panel'+(i===0?' active':'');
+    panel.id='resTrayPan_'+i;
+    TRAY_MENU[cat].forEach(item=>{
+      const selId='resTray_'+item.name.replace(/[^a-zA-Z0-9]/g,'_');
+      const div=document.createElement('div');
+      div.className='res-menu-item';
+      div.innerHTML=`
+        <div class="res-mi-info">
+          <div class="res-mi-name">🥘 ${item.name}</div>
+          <div class="res-mi-price">S ₱${item.tray.small} · M ₱${item.tray.medium} · L ₱${item.tray.large}</div>
+        </div>
+        <div class="res-mi-controls">
+          <select class="res-mi-sel" id="${selId}">
+            <option value="Small|${item.tray.small}">Small ₱${item.tray.small}</option>
+            <option value="Medium|${item.tray.medium}">Medium ₱${item.tray.medium}</option>
+            <option value="Large|${item.tray.large}">Large ₱${item.tray.large}</option>
+          </select>
+          <button class="res-mi-btn" onclick="resQtyChange(this,-1)">−</button>
+          <span class="res-mi-qty">1</span>
+          <button class="res-mi-btn" onclick="resQtyChange(this,1)">+</button>
+          <button class="res-mi-add" onclick="addResTrayItem('${item.name.replace(/'/g,"\\'")}','${selId}',this)">Add</button>
+        </div>`;
+      panel.appendChild(div);
+    });
+    trayPanelEl.appendChild(panel);
+  });
+}
+
+function switchResMenuType(type){
+  document.getElementById('resMainMenu').style.display=type==='main'?'block':'none';
+  document.getElementById('resTrayMenu').style.display=type==='trays'?'block':'none';
+  document.getElementById('resTypeMain').classList.toggle('active',type==='main');
+  document.getElementById('resTypeTrays').classList.toggle('active',type==='trays');
+}
+
+function switchResMainCat(cat){
+  const cats=Object.keys(MAIN_MENU);
+  const idx=cats.indexOf(cat);
+  document.querySelectorAll('#resMainTabs .res-menu-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('#resMainPanel .res-menu-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function switchResTraysCat(cat){
+  const cats=Object.keys(TRAY_MENU);
+  const idx=cats.indexOf(cat);
+  document.querySelectorAll('#resTrayTabs .res-menu-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('#resTrayPanel .res-menu-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function resQtyChange(btn,delta){
+  const ctrl=btn.parentElement;
+  const numEl=ctrl.querySelector('.res-mi-qty');
+  let val=parseInt(numEl.textContent)+delta;
+  if(val<1)val=1; if(val>99)val=99;
+  numEl.textContent=val;
+}
+
+function addResItem(name,selId,hasMultiple,btn){
+  let variant='';
+  let price=0;
+  if(hasMultiple&&selId){
+    const sel=document.getElementById(selId);
+    if(sel){price=parseInt(sel.value);variant=sel.options[sel.selectedIndex].text.split('—')[0].trim();}
+  } else {
+    // Get price from MAIN_MENU
+    const item=Object.values(MAIN_MENU).flat().find(i=>i.name===name);
+    if(item) price=getLowestPrice(item.price);
+  }
+  const qty=parseInt(btn.closest('.res-mi-controls').querySelector('.res-mi-qty').textContent);
+  advItems.push({name,qty,variant,price,type:'main'});
+  renderAdvItems();
+}
+
+function addResTrayItem(name,selId,btn){
+  const sel=document.getElementById(selId);
+  const [size,priceStr]=sel.value.split('|');
+  const qty=parseInt(btn.closest('.res-mi-controls').querySelector('.res-mi-qty').textContent);
+  advItems.push({name,qty,variant:size,price:parseInt(priceStr),type:'tray'});
+  renderAdvItems();
+}
+
+function renderAdvItems(){
+  const hint=document.getElementById('advEmptyHint');
+  const list=document.getElementById('advOrderList');
+  if(!list) return;
+  if(advItems.length===0){
+    list.innerHTML='';
+    if(hint) hint.style.display='block';
+    return;
+  }
+  if(hint) hint.style.display='none';
+  list.innerHTML=advItems.map((it,i)=>`
+    <div class="res-adv-row">
+      <span>${it.name}${it.variant?' ('+it.variant+')':''} × ${it.qty}</span>
+      <button class="res-adv-remove" onclick="removeAdvItem(${i})">✕</button>
+    </div>`).join('');
+}
+
+function removeAdvItem(i){ advItems.splice(i,1); renderAdvItems(); }
+
+// Open message modal pre-filled for reservation inquiry
+function openResMessageModal(){
+  const name=document.getElementById('resName').value.trim();
+  const date=document.getElementById('resDate').value;
+  const pax=document.getElementById('resPax').value;
+  const inp=document.getElementById('msgNameInput');
+  if(inp&&name) inp.value=name;
+  const msgInp=document.getElementById('msgInput');
+  if(msgInp&&date&&pax) msgInp.value=`Hi! I'd like to inquire about my reservation on ${date} for ${pax} pax.`;
+  closeModal('reservationModal');
+  openModal('messageModal');
+}
+
+function buildAdvItemSelect(){
+  // Legacy shim — menus now built via buildResMenus
+  buildResMenus();
+}
+
+function addAdvItem(){
+  // Legacy — now handled via menu buttons
+}
+
+function submitReservation(){
+  const name=document.getElementById('resName').value.trim();
+  const contact=document.getElementById('resContact').value.trim();
+  const date=document.getElementById('resDate').value;
+  const time=document.getElementById('resTime').value;
+  const pax=document.getElementById('resPax').value;
+  if(!name||!contact||!date||!time||!pax){showToast('Please fill in all required fields!');return;}
+  const res={
+    id:'RES-'+Date.now(),
+    name,contact,date,time,pax,
+    notes:document.getElementById('resNotes').value.trim(),
+    advanceOrders:[...advItems],
+    timestamp:new Date().toISOString(),
+    status:'Confirmed'
+  };
+  if(db && isFirebaseConnected){
+    db.ref('reservations/'+res.id).set(res);
+  } else {
+    const reservations=JSON.parse(localStorage.getItem('deinigo_reservations')||'[]');
+    reservations.unshift(res);
+    localStorage.setItem('deinigo_reservations',JSON.stringify(reservations));
+  }
+  advItems=[];
+  renderAdvItems();
+  ['resName','resContact','resDate','resTime','resPax','resNotes'].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.value='';
+  });
+  closeModal('reservationModal');
+  showToast('✅ Reservation confirmed for '+name+'!');
+}
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ═══════════════════════════════════════════
+//  HOURS BANNER
+// ═══════════════════════════════════════════
+function updateBanner(){
+  const now=new Date();
+  const day=now.getDay();
+  const h=now.getHours()*60+now.getMinutes();
+  let isOpen=false;
+  if(day>=1&&day<=6){ isOpen=h>=660&&h<1335; }
+  else if(day===0){ isOpen=h>=840&&h<1335; }
+  const banner=document.getElementById('openBanner');
+  const dot=banner.querySelector('.blink-dot');
+  banner.style.background=isOpen?'var(--ember)':'#5a3010';
+  if(!isOpen&&dot) dot.style.background='rgba(255,255,255,.5)';
+}
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function escHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════
+//  BROADCAST CHANNEL (same-browser cross-tab sync fallback)
+// ═══════════════════════════════════════════
+try {
+  var _bc = new BroadcastChannel('deinigo_sync');
+  _bc.onmessage = function(ev){
+    if(isFirebaseConnected) return;
+    if(ev.data.type === 'order_status_update' && ev.data.orderId === currentOrderId){
+      updateTyStatus(ev.data.status); renderOsbSteps(ev.data.status);
+      showToast('📦 Order status: ' + ev.data.status);
+    }
+    if(ev.data.type === 'gcash_verified' && ev.data.orderId === currentOrderId){
+      if(currentOrderData) currentOrderData.paymentStatus = 'Paid';
+      updateTyPaymentStatus(currentOrderData || {payment:'gcash',paymentStatus:'Paid'});
+      showToast('✅ GCash payment confirmed!');
+    }
+    if(ev.data.type === 'new_message' && ev.data.message && ev.data.message.sender === 'restaurant'){
+      if(document.getElementById('tyOverlay').classList.contains('visible')) renderTyMessages([ev.data.message]);
+      showToast('📩 New message from staff!');
+    }
+  };
+} catch(e){}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+// Load menu availability from localStorage (offline fallback; Firebase overrides on connect)
+menuAvailability = JSON.parse(localStorage.getItem('deinigo_menu_availability') || '{}');
+buildMainMenu();
+buildTrayMenu();
+buildAdvItemSelect();
+updateBanner();
+initFirebase();
+
+// Restore order status bar if we have a tracked order
+if(currentOrderId){
+  dbGetOrders(orders => {
+    const order = orders.find(o => o.id === currentOrderId);
+    if(order && order.status !== 'Done' && order.status !== 'Cancelled'){
+      showOrderStatusBar(order);
+      currentOrderData = order;
+      subscribeToMessages();
+    } else {
+      sessionStorage.removeItem('deinigo_currentOrder');
+      currentOrderId = null;
+    }
+  });
+}
+
+// Poll order status every 10 seconds
+setInterval(() => {
+  if(currentOrderId) checkCurrentOrderStatus();
+}, 10000);
+
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',scrollY>60));
+
+// Embers
+const ec=document.getElementById('embers');
+function spawnEmber(){
+  const d=document.createElement('div');d.className='edot';
+  const s=Math.random()*4+2;
+  d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:0;--drift:${(Math.random()-.5)*120}px;animation-duration:${Math.random()*6+5}s;animation-delay:${Math.random()*3}s;`;
+  ec.appendChild(d);setTimeout(()=>d.remove(),11000);
+}
+setInterval(spawnEmber,450);
+for(let i=0;i<6;i++) spawnEmber();
+
+// Reveal on scroll
+const revEls=document.querySelectorAll('.reveal');
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}}),{threshold:.12});
+revEls.forEach(r=>ro.observe(r));
+
+
+// ═══════════════════════════════════════════
+//  PWA — SERVICE WORKER REGISTRATION
+// ═══════════════════════════════════════════
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+
+  // Inline Service Worker as a Blob — no separate sw.js file needed
+  const swCode = `
+const CACHE = 'deinigo-order-v1';
+const SHELL = [self.location.href];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', e => {
+  // Network-first for Firebase and external APIs (real-time data must be fresh)
+  if(e.request.url.includes('firebase') || e.request.url.includes('googleapis') || e.request.url.includes('gstatic')){
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    return;
+  }
+  // Cache-first for app shell (works offline after first load)
+  e.respondWith(
+    fetch(e.request)
+      .then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, clone));
+        return res;
+      })
+      .catch(() => caches.match(e.request))
+  );
+});
+`;
+
+  const blob = new Blob([swCode], {type:'text/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, {scope: './'}).catch(err => {
+    console.warn('Service Worker registration failed:', err);
+  });
+})();
+
+// ═══════════════════════════════════════════
+//  PWA — INSTALL PROMPT
+// ═══════════════════════════════════════════
+let deferredPrompt = null;
+const INSTALL_DISMISSED_KEY = 'deinigo_order_install_dismissed';
+
+function showInstallBanner(){
+  if(sessionStorage.getItem(INSTALL_DISMISSED_KEY)) return;
+  // Don't show if already running as installed PWA
+  if(window.matchMedia('(display-mode: standalone)').matches) return;
+  if(window.navigator.standalone === true) return;
+  const banner = document.getElementById('installBanner');
+  if(banner) setTimeout(() => banner.classList.add('show'), 4000);
+}
+
+// Android/Chrome — capture the native install prompt
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner();
+});
+
+function triggerInstall(){
+  const banner = document.getElementById('installBanner');
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if(choice.outcome === 'accepted'){
+        if(banner) banner.classList.remove('show');
+        showToast('✅ App installed! Check your home screen.');
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    // iOS — show manual instructions
+    const hint = document.getElementById('iosHint');
+    if(hint) hint.classList.add('show');
+  }
+}
+
+function dismissInstall(){
+  const banner = document.getElementById('installBanner');
+  if(banner) banner.classList.remove('show');
+  sessionStorage.setItem(INSTALL_DISMISSED_KEY, '1');
+}
+
+// iOS — show banner with manual instructions
+(function detectIOS(){
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/.test(ua);
+  const isStandalone = window.navigator.standalone === true;
+  if(isIOS && !isStandalone) showInstallBanner();
+})();
+
+// Already installed — hide banner silently
+window.addEventListener('appinstalled', () => {
+  const banner = document.getElementById('installBanner');
+  if(banner) banner.classList.remove('show');
+  showToast("✅ De' Iñigo app installed!");
+});
+</script>
+
+<!-- PWA INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <div class="install-banner-icon">🍽️</div>
+  <div class="install-banner-title">Install De' Iñigo App</div>
+  <div class="install-banner-sub">Add to your home screen for quick ordering — works even offline!</div>
+  <div class="install-banner-btns">
+    <button class="install-btn primary" onclick="triggerInstall()">📲 Install</button>
+    <button class="install-btn dismiss" onclick="dismissInstall()">Not now</button>
+  </div>
+  <div class="ios-install-hint" id="iosHint">
+    On iPhone/iPad: tap <strong>Share ↑</strong> then<br>
+    <strong>"Add to Home Screen"</strong> 🏠
+  </div>
+</div>
+</body>
+</html>
