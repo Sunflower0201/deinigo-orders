@@ -365,6 +365,18 @@ body{background:#0a0705;color:var(--cream);font-family:'DM Sans',sans-serif;min-
 .topbar-logo-wrap{display:flex;align-items:center;gap:.65rem;}
 .topbar-logo-img{width:46px;height:46px;object-fit:cover;border-radius:50%;border:2px solid rgba(200,65,10,.5);flex-shrink:0;}
 
+
+/* ── FONT SIZE BOOST ── */
+body{font-size:15px;}
+.oc-items{font-size:.95rem;}
+.oc-customer{font-size:1.05rem;}
+.oc-id{font-size:.82rem;}
+.action-btn{font-size:.85rem;}
+.stat-val{font-size:1.8rem;}
+.tab-btn{font-size:.88rem;}
+.filter-btn{font-size:.85rem;}
+.mir-name{font-size:.95rem!important;}
+.mir-price{font-size:.85rem!important;}
 </style>
 </head>
 <body>
@@ -1656,18 +1668,26 @@ function toggleMaximMinimize(){
   document.getElementById('maximPanel').classList.toggle('minimized');
 }
 function launchMaxim(){
-  // Try deep link to Maxim app first, fallback to web
-  const appLink = 'maximapp://';
-  const webLink = 'https://taximaxim.com/en-PH/city/9621';
-  // Attempt app deep link
-  const iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = appLink;
-  document.body.appendChild(iframe);
-  setTimeout(() => { document.body.removeChild(iframe); }, 1500);
-  // After short delay, open web fallback if app didn't open
-  setTimeout(() => { window.open(webLink, '_blank'); }, 500);
-  showFlash('🏍️ Opening Maxim…');
+  var ua = navigator.userAgent.toLowerCase();
+  var webLink = 'https://taximaxim.com/en-PH/city/9621';
+  showFlash('🏍️ Opening Maxim app…');
+  if(/android/.test(ua)){
+    // Android Intent — opens Maxim app directly if installed
+    // Falls back to Play Store if not installed (not the website)
+    var intentUrl = 'intent://taximaxim.com/en-PH/city/9621' +
+      '#Intent' +
+      ';scheme=https' +
+      ';package=com.taxsee.taxsee' +
+      ';S.browser_fallback_url=' + encodeURIComponent(webLink) +
+      ';end';
+    window.location.href = intentUrl;
+  } else if(/iphone|ipad|ipod/.test(ua)){
+    // iOS Universal Link
+    window.location.href = 'taxsee://' ;
+    setTimeout(function(){ window.open(webLink, '_blank'); }, 1200);
+  } else {
+    window.open(webLink, '_blank');
+  }
 }
 function loadMaximFrame(){
   const fr = document.getElementById('maximIframe');
@@ -1685,135 +1705,111 @@ function loadMaximFrame(){
 // Full menu synced from order page — staff toggles availability per item
 // Item keys match the item names used in the main order page for real-time sync
 const MENU_DATA = [
-  { section:'🐷 Pork', items:[
-    {id:'Pork Chop',name:'Pork Chop',price:'₱149'},
-    {id:'Sisig',name:'Sisig',price:'₱109 / ₱249'},
-    {id:'Kare-Kara',name:'Kare-Kara (Pork)',price:'₱149 / ₱249'},
-    {id:'Sinuglaw',name:'Sinuglaw',price:'₱199'},
-    {id:'Pork Bistek',name:'Pork Bistek',price:'₱159 / ₱249'},
-    {id:'Crispy Pata',name:'Crispy Pata',price:'₱700'},
-    {id:'Liempo (w/ Atsara)',name:'Liempo (w/ Atsara)',price:'₱159 / ₱289'},
-    {id:'Lechon Kawali (w/ Atsara)',name:'Lechon Kawali (w/ Atsara)',price:'₱159 / ₱289'},
-    {id:'Chicharong Bulaklak',name:'Chicharong Bulaklak',price:'₱199'},
-    {id:'Pork Adobo',name:'Pork Adobo',price:'₱249'},
+  { section:"Pork 🐷", items:[
+    {id:"Pork Chop",name:"Pork Chop",price:"Solo ₱149"},
+    {id:"Sisig",name:"Sisig",price:"Solo ₱109 / Full ₱249"},
+    {id:"Kare-Kare",name:"Kare-Kare",price:"Solo ₱149 / Full ₱249"},
+    {id:"Sinuglaw",name:"Sinuglaw",price:"Full ₱199"},
+    {id:"Pork Bistek",name:"Pork Bistek",price:"Solo ₱159 / Full ₱249"},
+    {id:"Crispy Pata",name:"Crispy Pata",price:"Full ₱700"},
+    {id:"Liempo (w/ Atsara)",name:"Liempo (w/ Atsara)",price:"Solo ₱159 / Full ₱289"},
+    {id:"Lechon Kawali (w/ Atsara)",name:"Lechon Kawali (w/ Atsara)",price:"Solo ₱159 / Full ₱289"},
+    {id:"Chicharong Bulaklak",name:"Chicharong Bulaklak",price:"Full ₱199"},
+    {id:"Pork Adobo",name:"Pork Adobo",price:"Full ₱249"},
   ]},
-  { section:'🐄 Beef', items:[
-    {id:'T-Bone / Prime Rib Steak',name:'T-Bone / Prime Rib Steak',price:'₱299 / ₱319', hasDoneness:true},
-    {id:'Beef Broccoli',name:'Beef Broccoli',price:'₱159 / ₱299'},
-    {id:'Beef Kare-Kare',name:'Beef Kare-Kare',price:'₱159 / ₱299'},
-    {id:'Beef Steak',name:'Beef Steak',price:'₱149 / ₱289'},
-    {id:'Beef Stroganoff',name:'Beef Stroganoff',price:'₱159 / ₱299'},
-    {id:'Garlic Pepper Beef',name:'Garlic Pepper Beef',price:'₱159 / ₱299'},
-    {id:'Burger Steak',name:'Burger Steak',price:'₱159'},
+  { section:"Beef 🐄", items:[
+    {id:"T-Bone / Prime Rib Steak",name:"T-Bone / Prime Rib Steak",price:"Solo ₱299 / Full ₱319",hasDoneness:true},
+    {id:"Beef Broccoli",name:"Beef Broccoli",price:"Solo ₱159 / Full ₱299"},
+    {id:"Beef Kare-Kare",name:"Beef Kare-Kare",price:"Solo ₱159 / Full ₱299"},
+    {id:"Beef Steak",name:"Beef Steak",price:"Solo ₱149 / Full ₱289"},
+    {id:"Beef Stroganoff",name:"Beef Stroganoff",price:"Solo ₱159 / Full ₱299"},
+    {id:"Garlic Pepper Beef",name:"Garlic Pepper Beef",price:"Solo ₱159 / Full ₱299"},
+    {id:"Burger Steak",name:"Burger Steak",price:"Solo ₱159"},
   ]},
-  { section:'🦐 Seafoods', items:[
-    {id:'Tuna Kinilaw',name:'Tuna Kinilaw',price:'₱199'},
-    {id:'Garlic Tuna Belly',name:'Garlic Tuna Belly',price:'₱160 / ₱299'},
-    {id:'Adobong Pusit',name:'Adobong Pusit',price:'₱269'},
-    {id:'Sizzling Squid',name:'Sizzling Squid',price:'₱269'},
-    {id:'Garlic Buttered Shrimp',name:'Garlic Buttered Shrimp',price:'₱219'},
-    {id:'Calamares (w/ Garlic Mayo)',name:'Calamares (w/ Garlic Mayo)',price:'₱269'},
-    {id:'Deep Fried Tilapia',name:'Deep Fried Tilapia',price:'₱199'},
+  { section:"Seafoods 🦐", items:[
+    {id:"Tuna Kinilaw",name:"Tuna Kinilaw",price:"Full ₱199"},
+    {id:"Garlic Tuna Belly",name:"Garlic Tuna Belly",price:"Solo ₱160 / Full ₱299"},
+    {id:"Adobong Pusit",name:"Adobong Pusit",price:"Full ₱269"},
+    {id:"Sizzling Squid",name:"Sizzling Squid",price:"Full ₱269"},
+    {id:"Garlic Buttered Shrimp",name:"Garlic Buttered Shrimp",price:"Full ₱219"},
+    {id:"Calamares (w/ Garlic Mayo)",name:"Calamares (w/ Garlic Mayo)",price:"Full ₱269"},
+    {id:"Deep Fried Tilapia",name:"Deep Fried Tilapia",price:"Full ₱199"},
   ]},
-  { section:'🍗 Chicken', items:[
-    {id:"North's Chicken",name:"North's Chicken",price:"₱250 / ₱420"},
-    {id:"De' Iñigo's Inasal",name:"De' Iñigo's Inasal",price:"₱160 / ₱250 / ₱420"},
-    {id:'Garlic Chicken',name:'Garlic Chicken',price:'₱140 / ₱230 / ₱420'},
-    {id:'Parmesan Buttered Chicken',name:'Parmesan Buttered Chicken',price:'₱140 / ₱230 / ₱420'},
-    {id:'Chicken in Spicy BBQ',name:'Chicken in Spicy BBQ',price:'₱140 / ₱230 / ₱420'},
-    {id:'Chicken Adobo',name:'Chicken Adobo',price:'₱279 / ₱429'},
+  { section:"Chicken 🍗", items:[
+    {id:"North\'s Chicken",name:"North\'s Chicken",price:"Full ₱420"},
+    {id:"De\' Iñigo\'s Inasal",name:"De\' Iñigo\'s Inasal",price:"Solo ₱160 / Full ₱420"},
+    {id:"Garlic Chicken",name:"Garlic Chicken",price:"Solo ₱140 / Full ₱420"},
+    {id:"Parmesan Buttered Chicken",name:"Parmesan Buttered Chicken",price:"Solo ₱140 / Full ₱420"},
+    {id:"Chicken in Spicy BBQ",name:"Chicken in Spicy BBQ",price:"Solo ₱140 / Full ₱420"},
+    {id:"Chicken Adobo",name:"Chicken Adobo",price:"Solo ₱279 / Full ₱429"},
   ]},
-  { section:'🍵 Soup', items:[
-    {id:'Pork Sinigang',name:'Pork Sinigang',price:'₱259'},
-    {id:'Shrimp Sinigang',name:'Shrimp Sinigang',price:'₱259'},
-    {id:'Tuna Belly Sinigang',name:'Tuna Belly Sinigang',price:'₱299'},
-    {id:'Egg Drop Soup',name:'Egg Drop Soup',price:'₱79'},
-    {id:'Mushroom Soup',name:'Mushroom Soup',price:'₱79'},
-    {id:'Tinolang Manok',name:'Tinolang Manok',price:'₱259'},
-    {id:'Tuna Tinola',name:'Tuna Tinola',price:'₱299'},
-    {id:'Pork Nilaga',name:'Pork Nilaga',price:'₱299'},
+  { section:"Soup 🍵", items:[
+    {id:"Pork Sinigang",name:"Pork Sinigang",price:"Full ₱259"},
+    {id:"Shrimp Sinigang",name:"Shrimp Sinigang",price:"Full ₱259"},
+    {id:"Tuna Belly Sinigang",name:"Tuna Belly Sinigang",price:"Full ₱299"},
+    {id:"Egg Drop Soup",name:"Egg Drop Soup",price:"Solo ₱79"},
+    {id:"Mushroom Soup",name:"Mushroom Soup",price:"Solo ₱79"},
+    {id:"Tinolang Manok",name:"Tinolang Manok",price:"Full ₱259"},
+    {id:"Tuna Tinola",name:"Tuna Tinola",price:"Full ₱299"},
+    {id:"Pork Nilaga",name:"Pork Nilaga",price:"Full ₱299"},
   ]},
-  { section:'🥬 Veggies', items:[
-    {id:'Kangkong w/ Oyster Sauce',name:'Kangkong w/ Oyster Sauce',price:'₱79'},
-    {id:'Ensaladang Talong',name:'Ensaladang Talong',price:'₱79'},
-    {id:'Buttered Veggies',name:'Buttered Veggies',price:'₱179'},
-    {id:'Pancit Canton',name:'Pancit Canton',price:'₱250'},
-    {id:'Sotanghon Guisado',name:'Sotanghon Guisado',price:'₱250'},
+  { section:"Veggies 🥬", items:[
+    {id:"Kangkong w/ Oyster Sauce",name:"Kangkong w/ Oyster Sauce",price:"Solo ₱79"},
+    {id:"Ensaladang Talong",name:"Ensaladang Talong",price:"Solo ₱79"},
+    {id:"Buttered Veggies",name:"Buttered Veggies",price:"Solo ₱179"},
+    {id:"Pancit Canton",name:"Pancit Canton",price:"Full ₱250"},
+    {id:"Sotanghon Guisado",name:"Sotanghon Guisado",price:"Full ₱250"},
   ]},
-  { section:'🍟 Snacks', items:[
-    {id:'Mangga w/ Bagoong',name:'Mangga w/ Bagoong',price:'₱79'},
-    {id:'Burger w/ Fries',name:'Burger w/ Fries',price:'₱99'},
-    {id:'Lasagna',name:'Lasagna',price:'₱149'},
-    {id:'Nachos',name:'Nachos',price:'₱149'},
-    {id:'Sizzling Potato',name:'Sizzling Potato',price:'₱139'},
-    {id:'Cheesy Fries',name:'Cheesy Fries',price:'₱129'},
+  { section:"Snacks 🍟", items:[
+    {id:"Mangga w/ Bagoong",name:"Mangga w/ Bagoong",price:"Solo ₱79"},
+    {id:"Burger w/ Fries",name:"Burger w/ Fries",price:"Solo ₱99"},
+    {id:"Lasagna",name:"Lasagna",price:"Solo ₱149"},
+    {id:"Nachos",name:"Nachos",price:"Solo ₱149"},
+    {id:"Sizzling Potato",name:"Sizzling Potato",price:"Solo ₱139"},
+    {id:"Cheesy Fries",name:"Cheesy Fries",price:"Solo ₱129"},
   ]},
-  { section:'🥤 Drinks', items:[
-    {id:'Coke Mismo',name:'Coke Mismo',price:'₱30'},
-    {id:'Iced Tea Pitcher',name:'Iced Tea Pitcher',price:'₱90'},
-    {id:'Blue Lemonade Pitcher',name:'Blue Lemonade Pitcher',price:'₱90'},
-    {id:'Cucumber Lemonade Pitcher',name:'Cucumber Lemonade Pitcher',price:'₱90'},
-    {id:'Four Seasons (Can)',name:'Four Seasons (Can)',price:'₱60'},
-    {id:'Pineapple (Can)',name:'Pineapple (Can)',price:'₱60'},
-    {id:'Coke Zero',name:'Coke Zero',price:'₱60'},
-    {id:'San Mig Light',name:'San Mig Light',price:'₱75 / ₱450'},
+  { section:"Drinks 🥤", items:[
+    {id:"Coke Mismo",name:"Coke Mismo",price:"Solo ₱30"},
+    {id:"Iced Tea Pitcher",name:"Iced Tea Pitcher",price:"Full ₱90"},
+    {id:"Blue Lemonade Pitcher",name:"Blue Lemonade Pitcher",price:"Full ₱90"},
+    {id:"Cucumber Lemonade Pitcher",name:"Cucumber Lemonade Pitcher",price:"Full ₱90"},
+    {id:"Four Seasons (Can)",name:"Four Seasons (Can)",price:"Solo ₱60"},
+    {id:"Pineapple (Can)",name:"Pineapple (Can)",price:"Solo ₱60"},
+    {id:"Coke Zero",name:"Coke Zero",price:"Solo ₱60"},
+    {id:"San Mig Light",name:"San Mig Light",price:"Solo ₱75 / Full ₱450"},
   ]},
-  { section:'🥤 Milkshakes', items:[
-    {id:'Rocky Road',name:'Rocky Road',price:'₱90'},
-    {id:'Cookies & Cream',name:'Cookies & Cream',price:'₱90'},
-    {id:'Caramel Macchiato',name:'Caramel Macchiato',price:'₱90'},
-    {id:'Black Forest',name:'Black Forest',price:'₱90'},
+  { section:"Milkshakes 🥤", items:[
+    {id:"Rocky Road",name:"Rocky Road",price:"Solo ₱90"},
+    {id:"Cookies & Cream",name:"Cookies & Cream",price:"Solo ₱90"},
+    {id:"Caramel Macchiato",name:"Caramel Macchiato",price:"Solo ₱90"},
+    {id:"Black Forest",name:"Black Forest",price:"Solo ₱90"},
   ]},
-  { section:'🍮 Desserts', items:[
-    {id:'Mango Float',name:'Mango Float',price:'₱99'},
-    {id:'Leche Flan',name:'Leche Flan',price:'₱99'},
+  { section:"Desserts 🍮", items:[
+    {id:"Mango Float",name:"Mango Float",price:"Solo ₱99"},
+    {id:"Leche Flan",name:"Leche Flan",price:"Solo ₱99"},
   ]},
-  { section:'🧂 Extras', items:[
-    {id:'Rice (Solo)',name:'Rice (Solo)',price:'₱20'},
-    {id:'Rice (Full)',name:'Rice (Full)',price:'₱120'},
-    {id:'Bagoong',name:'Bagoong',price:'₱10'},
-    {id:'Mang Tomas',name:'Mang Tomas',price:'₱10'},
-    {id:'Garlic Mayo',name:'Garlic Mayo',price:'₱10'},
-    {id:'Garlic Sauce',name:'Garlic Sauce',price:'₱10'},
-    {id:'Banana Ketchup',name:'Banana Ketchup',price:'₱10'},
-    {id:'Hot Sauce',name:'Hot Sauce',price:'₱10'},
-    {id:'Suka',name:'Suka',price:'₱5'},
+  { section:"Extras 🧂", items:[
+    {id:"Rice (Solo)",name:"Rice (Solo)",price:"Solo ₱20"},
+    {id:"Rice (Full)",name:"Rice (Full)",price:"Full ₱120"},
+    {id:"Calamansi",name:"Calamansi",price:"₱—"},
+    {id:"Chili",name:"Chili",price:"₱—"},
+    {id:"Bagoong",name:"Bagoong",price:"Solo ₱10"},
+    {id:"Mang Tomas",name:"Mang Tomas",price:"Solo ₱10"},
+    {id:"Garlic Mayo",name:"Garlic Mayo",price:"Solo ₱10"},
+    {id:"Garlic Sauce",name:"Garlic Sauce",price:"Solo ₱10"},
+    {id:"Banana Ketchup",name:"Banana Ketchup",price:"Solo ₱10"},
+    {id:"Hot Sauce",name:"Hot Sauce",price:"Solo ₱10"},
+    {id:"Suka",name:"Suka",price:"Solo ₱5"},
   ]},
-  { section:'🥘 Food Trays — Pork', items:[
-    {id:'Humba',name:'Humba (Tray)',price:'S₱550/M₱1000/L₱1900'},
-    {id:'Caldereta',name:'Caldereta (Tray)',price:'S₱650/M₱1100/L₱2000'},
-    {id:'Sisig Tray',name:'Sisig (Tray)',price:'S₱550/M₱1000/L₱1900'},
-    {id:'Menudo',name:'Menudo (Tray)',price:'S₱550/M₱1000/L₱1900'},
-    {id:'Liempo Tray',name:'Liempo (Tray)',price:'S₱550/M₱1000/L₱1900'},
-    {id:'Bicol Express',name:'Bicol Express (Tray)',price:'S₱550/M₱1100/L₱1900'},
-    {id:'Pork Kare-Kare',name:'Pork Kare-Kare (Tray)',price:'S₱550/M₱1000/L₱1900'},
-    {id:'Crispy Pata Tray',name:'Crispy Pata (Tray)',price:'S₱550/M₱1000/L₱2000'},
+  { section:"🥘 Food Trays — Pork 🐷", items:[
   ]},
-  { section:'🥘 Food Trays — Beef', items:[
-    {id:'Caldereta Beef',name:'Caldereta Beef (Tray)',price:'S₱600/M₱1100/L₱2000'},
-    {id:'Beef Steak Tray',name:'Beef Steak (Tray)',price:'S₱600/M₱1100/L₱2000'},
-    {id:'Beef w/ Broccoli',name:'Beef w/ Broccoli (Tray)',price:'S₱600/M₱1100/L₱2000'},
-    {id:'Garlic Pepper Beef Tray',name:'Garlic Pepper Beef (Tray)',price:'S₱600/M₱1100/L₱2000'},
+  { section:"🥘 Food Trays — Beef 🐄", items:[
   ]},
-  { section:'🥘 Food Trays — Chicken', items:[
-    {id:'Garlic Parmesan',name:'Garlic Parmesan (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'Chicken Curry',name:'Chicken Curry (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'Chicken Adobo Tray',name:'Chicken Adobo (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:"North's Chicken Tray",name:"North's Chicken (Tray)",price:"S₱500/M₱900/L₱1800"},
+  { section:"🥘 Food Trays — Chicken 🍗", items:[
   ]},
-  { section:'🥘 Food Trays — Noodles & Veggies', items:[
-    {id:'Mixed Veggies',name:'Mixed Veggies (Tray)',price:'S₱400/M₱800/L₱1500'},
-    {id:'Chopsuey',name:'Chopsuey (Tray)',price:'S₱400/M₱800/L₱1500'},
-    {id:'Sotanghon Guisado Tray',name:'Sotanghon Guisado (Tray)',price:'S₱400/M₱800/L₱1500'},
-    {id:'Pancit Canton Tray',name:'Pancit Canton (Tray)',price:'S₱400/M₱800/L₱1500'},
-    {id:'Spaghetti',name:'Spaghetti (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'Carbonara',name:'Carbonara (Tray)',price:'S₱500/M₱900/L₱1800'},
+  { section:"🥘 Food Trays — Noodles & Veggies 🍜", items:[
   ]},
-  { section:'🥘 Food Trays — Seafoods', items:[
-    {id:'Garlic Buttered Shrimp Tray',name:'Garlic Buttered Shrimp (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'Tuna Kinilaw Tray',name:'Tuna Kinilaw (Tray)',price:'S₱400/M₱800/L₱1600'},
-    {id:'Sinuglaw Tray',name:'Sinuglaw (Tray)',price:'S₱500/M₱900/L₱1800'},
-    {id:'Mixed Seafoods',name:'Mixed Seafoods (Tray)',price:'S₱600/M₱1000/L₱2000'},
+  { section:"🥘 Food Trays — Seafoods 🦐", items:[
   ]},
 ];
 
@@ -1886,11 +1882,21 @@ function onMenuToggle(checkbox){
 }
 function toggleMenuItem(itemId, isAvailable){
   menuAvailability[itemId] = isAvailable;
-  const row = document.getElementById('mir-'+itemId);
+  var safeId = itemId.replace(/[^a-zA-Z0-9]/g,'_');
+  var row = document.getElementById('mir-' + safeId);
   if(row){
     row.classList.toggle('unavailable', !isAvailable);
-    const lbl = row.querySelector('.toggle-text');
+    var lbl = row.querySelector('.toggle-text');
     if(lbl) lbl.textContent = isAvailable ? 'Available' : 'Unavailable';
+  }
+  if(db && isFirebaseConnected){
+    var fbKey = itemId.replace(/[^a-zA-Z0-9_]/g,'_');
+    db.ref('menu_availability/' + fbKey).set(isAvailable).then(function(){
+      var note = document.getElementById('menuSyncNote');
+      if(note){ note.textContent='✅ Synced'; setTimeout(function(){ note.textContent=''; },2000); }
+    }).catch(function(){ db.ref('menu_availability').set(menuAvailability); });
+  } else {
+    localStorage.setItem('deinigo_menu_availability', JSON.stringify(menuAvailability));
   }
 }
 
