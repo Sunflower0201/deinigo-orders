@@ -479,14 +479,50 @@ footer{background:#080503;padding:2.5rem 1.5rem;text-align:center;border-top:1px
 .sync-dot.offline{background:#e05a5a;}
 
 /* Responsive helpers */
-@media(max-width:480px){
-  .items-grid{grid-template-columns:1fr;}
-  .menu-item{flex-direction:column;}
-  .mi-right{flex-direction:row;flex-wrap:wrap;width:100%;justify-content:space-between;min-width:unset;}
-  .add-cart-btn{width:auto;flex:1;}
-  .ty-inner{padding:1.2rem 1rem;}
-  .tst-steps{gap:.2rem;}
-  .tst-step-label{font-size:.65rem;}
+@media(max-width:600px){
+  /* Menu grid — single column cards */
+  .items-grid{grid-template-columns:1fr!important;}
+  .menu-item{flex-direction:row;padding:1.1rem!important;gap:.8rem;}
+  .mi-icon{font-size:2rem;flex-shrink:0;}
+  .mi-name{font-size:1.05rem!important;}
+  .mi-price{font-size:.92rem!important;}
+  .mi-right{flex-direction:column;align-items:flex-end;min-width:100px;}
+  .add-cart-btn{width:100%;margin-top:.4rem;}
+  .price-select{font-size:.9rem!important;width:100%;}
+
+  /* Category tabs — scrollable row */
+  .cat-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:.4rem;padding-bottom:.4rem;}
+  .cat-tabs::-webkit-scrollbar{height:3px;}
+  .cat-tab{flex-shrink:0;font-size:.9rem!important;padding:.55rem 1rem!important;}
+
+  /* Order type buttons */
+  .order-type-bar{gap:.5rem;}
+  .order-type-btn{font-size:.88rem!important;padding:.6rem .8rem!important;}
+
+  /* Menu type tabs */
+  .menu-type-tabs{gap:.4rem;}
+  .menu-type-tab{font-size:.88rem!important;padding:.55rem 1rem!important;}
+
+  /* Cart */
+  .cart-inner{padding:1rem!important;}
+  .cart-item-name{font-size:.95rem!important;}
+  .place-order-btn{font-size:1rem!important;}
+
+  /* Thank you page */
+  .ty-inner{padding:1.4rem 1rem 5rem!important;}
+  .tst-steps{gap:0;}
+  .tst-step-circle{width:36px!important;height:36px!important;font-size:1rem!important;}
+  .tst-step-label{font-size:.75rem!important;}
+  .ty-title{font-size:1.8rem!important;}
+
+  /* Navbar */
+  .nav-links{display:none;}
+  .nav-profile-btn span{display:none;}
+  .nav-right{gap:.4rem!important;}
+
+  /* Hero */
+  .hero-content{padding:0 1rem;}
+  .hero-logo-img{width:140px!important;}
 }
 
 /* ── BRAND LOGO ── */
@@ -520,6 +556,128 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;}
 }
+
+/* ════════════════════════════════════
+   CUSTOMER ACCOUNT & ORDER HISTORY
+   ════════════════════════════════════ */
+.acct-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:8000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .25s;}
+.acct-modal-overlay.open{opacity:1;pointer-events:all;}
+.acct-modal{background:#130b04;border:1px solid rgba(200,65,10,.35);border-radius:16px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.acct-header{background:linear-gradient(135deg,#1e0f05,#2a1208);padding:1.4rem 1.4rem 1rem;border-bottom:1px solid rgba(200,65,10,.2);}
+.acct-header h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--cream);margin-bottom:.25rem;}
+.acct-header p{font-size:.85rem;color:var(--smoke);}
+.acct-close{float:right;background:none;border:none;color:var(--smoke);font-size:1.3rem;cursor:pointer;margin-top:-1.8rem;}
+.acct-body{padding:1.3rem 1.4rem;}
+.acct-field{margin-bottom:1rem;}
+.acct-field label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--smoke);margin-bottom:.45rem;text-transform:uppercase;}
+.acct-field input{width:100%;background:#0e0a07;border:1px solid rgba(200,65,10,.25);border-radius:8px;padding:.75rem 1rem;color:var(--cream);font-size:1rem;font-family:inherit;-webkit-appearance:none;}
+.acct-field input:focus{outline:none;border-color:var(--ember);}
+.acct-save-btn{width:100%;padding:.9rem;background:var(--ember);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:.5rem;letter-spacing:.04em;}
+.acct-save-btn:hover{background:#a83408;}
+.acct-divider{text-align:center;color:var(--smoke);font-size:.82rem;margin:1rem 0;position:relative;}
+.acct-divider::before,.acct-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:rgba(200,65,10,.15);}
+.acct-divider::before{left:0;} .acct-divider::after{right:0;}
+
+/* Profile pill in navbar */
+.nav-profile-btn{display:flex;align-items:center;gap:.45rem;background:rgba(200,65,10,.12);border:1px solid rgba(200,65,10,.25);border-radius:50px;padding:.4rem .85rem;color:var(--cream);font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.nav-profile-btn:hover{background:rgba(200,65,10,.22);}
+.nav-profile-avatar{width:26px;height:26px;border-radius:50%;background:var(--ember);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;}
+
+/* Order history in account modal */
+.order-hist-item{background:#0e0a07;border:1px solid rgba(200,65,10,.15);border-radius:10px;padding:1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s;}
+.order-hist-item:hover{border-color:rgba(200,65,10,.4);}
+.ohi-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;}
+.ohi-id{font-size:.78rem;color:var(--smoke);}
+.ohi-date{font-size:.75rem;color:var(--smoke);}
+.ohi-total{font-size:1.1rem;font-weight:800;color:var(--gold);}
+.ohi-status{font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:50px;}
+.ohi-status.done{background:rgba(45,122,58,.2);color:#5aca6e;}
+.ohi-status.pending{background:rgba(200,65,10,.15);color:var(--ember);}
+.ohi-items{font-size:.82rem;color:var(--smoke);line-height:1.6;}
+.no-history{text-align:center;padding:2rem;color:var(--smoke);font-size:.9rem;}
+
+/* ════════════════════════════════════
+   FONT SIZE IMPROVEMENTS
+   ════════════════════════════════════ */
+:root{--fbase:18px;}
+body{font-size:var(--fbase);}
+
+/* Category tabs */
+.cat-tab{font-size:1rem!important;font-weight:700!important;padding:.65rem 1.4rem!important;}
+.order-type-btn{font-size:.95rem!important;padding:.7rem 1.4rem!important;}
+.menu-type-tab{font-size:.95rem!important;}
+
+/* Food item names & details */
+.mi-name{font-size:1.12rem!important;font-weight:800!important;line-height:1.3;}
+.mi-price{font-size:.95rem!important;font-weight:700!important;}
+.mi-badge{font-size:.75rem!important;}
+.mi-desc{font-size:.85rem!important;}
+.price-select{font-size:.95rem!important;padding:.5rem .7rem!important;}
+
+/* Cart */
+.cart-item-name{font-size:1rem!important;font-weight:700!important;}
+.cart-item-price{font-size:.95rem!important;}
+.place-order-btn{font-size:1.05rem!important;padding:1rem!important;}
+
+/* Nav */
+.nav-logo{font-size:1.3rem!important;}
+.nav-links a{font-size:.95rem!important;}
+
+/* Thank you page */
+.ty-title{font-size:2rem!important;}
+.tst-step-label{font-size:.82rem!important;}
+.tst-step-circle{font-size:1.5rem!important;}
+.ty-order-id{font-size:1rem!important;}
+
+/* Mobile enhancements */
+@media(max-width:600px){
+  .cat-tab{font-size:.92rem!important;padding:.6rem 1rem!important;}
+  .mi-name{font-size:1.05rem!important;}
+  .items-grid{grid-template-columns:1fr!important;}
+  .menu-item{padding:1.2rem!important;}
+  .nav-links{display:none;}
+  .hero-name{font-size:clamp(2.8rem,12vw,6rem)!important;}
+  .ty-inner{padding:1.5rem 1.2rem!important;}
+  .acct-modal{border-radius:16px 16px 0 0;max-height:92vh;}
+}
+
+/* ════════════════════════════════════
+   IMPROVED THANK YOU / TRACKING PAGE
+   ════════════════════════════════════ */
+.ty-overlay{position:fixed;inset:0;background:#0e0a07;z-index:7000;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;transition:opacity .3s;}
+.ty-overlay.visible{opacity:1;pointer-events:all;}
+.ty-inner{max-width:520px;margin:0 auto;padding:2rem 1.4rem 5rem;}
+.ty-header{text-align:center;padding:2rem 0 1.5rem;border-bottom:1px solid rgba(200,65,10,.15);margin-bottom:1.5rem;}
+.ty-checkmark{width:64px;height:64px;border-radius:50%;background:rgba(45,122,58,.2);border:2px solid #5aca6e;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1rem;color:#5aca6e;}
+.ty-title{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--cream);margin-bottom:.4rem;}
+.ty-title em{color:var(--gold);font-style:italic;}
+.ty-subtitle{font-size:1rem;color:var(--smoke);margin-bottom:.8rem;}
+.ty-order-id{font-size:.95rem;font-weight:700;color:var(--ember);background:rgba(200,65,10,.1);padding:.4rem .9rem;border-radius:50px;display:inline-block;}
+
+/* Status tracker */
+.ty-status-tracker{background:#100a06;border:1px solid rgba(200,65,10,.2);border-radius:12px;padding:1.2rem;margin-bottom:1.2rem;}
+.tst-title{font-size:.75rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);margin-bottom:1.1rem;text-transform:uppercase;}
+.tst-steps{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+.tst-steps::before{content:'';position:absolute;top:20px;left:10%;right:10%;height:2px;background:rgba(200,65,10,.15);z-index:0;}
+.tst-step{flex:1;text-align:center;position:relative;z-index:1;}
+.tst-step-circle{width:42px;height:42px;border-radius:50%;background:#1a0f07;border:2px solid rgba(200,65,10,.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin:0 auto .5rem;transition:all .3s;}
+.tst-step.active .tst-step-circle{border-color:var(--ember);background:rgba(200,65,10,.15);box-shadow:0 0 12px rgba(200,65,10,.3);}
+.tst-step.done .tst-step-circle{border-color:#5aca6e;background:rgba(45,122,58,.15);}
+.tst-step-label{font-size:.8rem;font-weight:600;color:var(--smoke);}
+.tst-step.active .tst-step-label,.tst-step.done .tst-step-label{color:var(--cream);}
+.tst-eta{font-size:.85rem;color:var(--smoke);margin-top:.8rem;text-align:center;}
+
+/* Back to home button */
+.ty-home-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;background:var(--ember);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:1rem;letter-spacing:.04em;text-decoration:none;}
+.ty-home-btn:hover{background:#a83408;}
+.ty-new-order-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:.85rem;background:transparent;color:var(--gold);border:1px solid rgba(232,160,48,.35);border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:.6rem;text-decoration:none;}
+
+/* Order summary in TY page */
+.ty-order-summary{background:#100a06;border:1px solid rgba(200,65,10,.2);border-radius:12px;padding:1.1rem;margin-bottom:1.2rem;}
+.ty-summary-title{font-size:.75rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);margin-bottom:.8rem;text-transform:uppercase;}
+.ty-summary-item{display:flex;justify-content:space-between;font-size:.92rem;padding:.35rem 0;border-bottom:1px solid rgba(200,65,10,.08);}
+.ty-summary-item:last-child{border-bottom:none;}
+.ty-summary-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:800;color:var(--gold);padding-top:.6rem;margin-top:.4rem;border-top:1px solid rgba(200,65,10,.2);}
 </style>
 </head>
 <body>
@@ -551,6 +709,7 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
   <div class="nav-right">
     <button class="nav-icon-btn" onclick="openModal('reservationModal')">📅 <span class="lbl">Reserve</span></button>
     <button class="nav-icon-btn" id="msgNavBtn" onclick="openModal('messageModal')">💬 <span class="lbl">Message</span></button>
+    <button class="nav-profile-btn" id="navProfileBtn" onclick="openAcctModal()" title="My Account"><div class="nav-profile-avatar" id="navProfileAvatar">👤</div><span id="navProfileName">Account</span></button>
     <button class="cart-btn" onclick="toggleCart()">🛒 <span class="cart-count" id="cartCount">0</span></button>
   </div></div>
 </nav>
@@ -903,10 +1062,12 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
 <!-- ══════════════ THANK YOU PAGE ══════════════ -->
 <div class="ty-overlay" id="tyOverlay">
   <div class="ty-inner">
+
+    <!-- Header -->
     <div class="ty-header">
       <div class="ty-checkmark">✓</div>
       <h1 class="ty-title">Thank <em>You!</em></h1>
-      <p class="ty-subtitle">Your order has been received and is being prepared.</p>
+      <p class="ty-subtitle">Your order has been received!</p>
       <div class="ty-order-id" id="tyOrderId">ORDER #—</div>
     </div>
 
@@ -916,9 +1077,9 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
       <span id="tyPaymentText">💵 Payment: Cash on Pickup/Delivery</span>
     </div>
 
-    <!-- Status Tracker -->
+    <!-- Live Status Tracker -->
     <div class="ty-status-tracker">
-      <div class="tst-title">ORDER STATUS — LIVE TRACKING</div>
+      <div class="tst-title">📡 Live Order Tracking</div>
       <div class="tst-steps" id="tystSteps">
         <div class="tst-step active" id="tstPending">
           <div class="tst-step-circle">📋</div>
@@ -930,7 +1091,7 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
         </div>
         <div class="tst-step" id="tstReady">
           <div class="tst-step-circle">🔔</div>
-          <div class="tst-step-label">Ready</div>
+          <div class="tst-step-label">Ready!</div>
         </div>
         <div class="tst-step" id="tstDone">
           <div class="tst-step-circle">✅</div>
@@ -940,9 +1101,19 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
       <div class="tst-eta" id="tystEta">⏱️ Estimated time: 15–25 minutes</div>
     </div>
 
+    <!-- Order Summary -->
+    <div class="ty-order-summary" id="tyOrderSummary">
+      <div class="ty-summary-title">🧾 Order Summary</div>
+      <div id="tyOrderItems"></div>
+      <div class="ty-summary-total">
+        <span>Total</span>
+        <span id="tyOrderTotal">₱0</span>
+      </div>
+    </div>
+
     <!-- Message Staff -->
     <div class="ty-msg-section">
-      <div style="font-size:.88rem;font-weight:700;letter-spacing:.2em;color:var(--smoke);margin-bottom:.8rem;">💬 MESSAGE STAFF</div>
+      <div style="font-size:.88rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);margin-bottom:.8rem;text-transform:uppercase;">💬 Message Staff</div>
       <div class="ty-msg-thread" id="tyMsgThread"></div>
       <div class="ty-msg-input-row">
         <button class="msg-attach-btn" onclick="document.getElementById('tyMsgFileInput').click()">📎</button>
@@ -953,9 +1124,11 @@ input,select,textarea{font-size:16px!important;} /* prevent iOS zoom on focus */
     </div>
 
     <!-- Actions -->
-    <div class="ty-actions">
-      <a class="ty-btn home" href="#" onclick="closeThankYouPage();return false;">🏠 Return to Home</a>
+    <div class="ty-actions" style="margin-top:1.2rem;">
+      <button class="ty-home-btn" onclick="closeThankYouPage()">🏠 Back to Home</button>
+      <button class="ty-new-order-btn" onclick="closeThankYouPage();scrollToMenu()">🍽️ Place Another Order</button>
     </div>
+
   </div>
 </div>
 
@@ -1563,6 +1736,7 @@ function updateCart(){
 //  CART TOGGLE
 // ═══════════════════════════════════════════
 function toggleCart(){
+  prefillAccountFields();
   document.getElementById('cartOverlay').classList.toggle('open');
   document.getElementById('cartDrawer').classList.toggle('open');
 }
@@ -1588,6 +1762,15 @@ function selectPay(method){
 function showOrderReview(){
   const name=document.getElementById('customerName').value.trim();
   if(!name){showToast('Please enter your name!');return;}
+  // Auto-save name to account for future orders
+  if(name && (!currentAccount || !currentAccount.name)){
+    currentAccount = currentAccount || {};
+    currentAccount.name = name;
+    var ph = document.getElementById('contactNumber');
+    if(ph && ph.value) currentAccount.phone = ph.value.trim();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(currentAccount));
+    updateNavProfile();
+  }
   if(cart.length===0){showToast('Your cart is empty!');return;}
   if(orderType==='takeout'){
     const contact=document.getElementById('contactNumber').value.trim();
@@ -1638,6 +1821,15 @@ function confirmReviewAndOrder(){
 function placeOrder(){
   const name=document.getElementById('customerName').value.trim();
   if(!name){showToast('Please enter your name!');return;}
+  // Auto-save name to account for future orders
+  if(name && (!currentAccount || !currentAccount.name)){
+    currentAccount = currentAccount || {};
+    currentAccount.name = name;
+    var ph = document.getElementById('contactNumber');
+    if(ph && ph.value) currentAccount.phone = ph.value.trim();
+    localStorage.setItem(ACCT_KEY, JSON.stringify(currentAccount));
+    updateNavProfile();
+  }
   if(cart.length===0){showToast('Your cart is empty!');return;}
   if(orderType==='takeout'){
     const contact=document.getElementById('contactNumber').value.trim();
@@ -1958,8 +2150,19 @@ function showThankYouPage(order){
   updateTyStatus(order.status || 'Pending');
   updateTyPaymentStatus(order);
   loadTyMessages(order.id);
+  // Populate order summary
+  var itemsEl = document.getElementById('tyOrderItems');
+  if(itemsEl && order.items){
+    itemsEl.innerHTML = order.items.map(function(it){
+      return '<div class="ty-summary-item"><span>'+escHtml(it.name+(it.doneness?' ('+it.doneness+')':''))+(it.qty>1?' x'+it.qty:'')+'</span><span style="color:var(--gold);">₱'+(it.price*it.qty).toLocaleString()+'</span></div>';
+    }).join('');
+  }
+  var totalEl = document.getElementById('tyOrderTotal');
+  if(totalEl) totalEl.textContent = '₱'+(order.total||0).toLocaleString();
   document.getElementById('tyOverlay').classList.add('visible');
   document.body.style.overflow = 'hidden';
+  // Save order to account history
+  saveOrderToHistory(order);
 }
 
 function openThankYouPage(){
@@ -1974,6 +2177,21 @@ function openThankYouPage(){
 }
 
 function closeThankYouPage(){
+  document.getElementById('tyOverlay').classList.remove('visible');
+  document.body.style.overflow = '';
+  currentOrderId = null;
+  currentOrderData = null;
+  // Scroll to top / hero
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Reset cart display
+  cart = [];
+  renderCart();
+  updateCartBadge();
+}
+
+function scrollToMenu(){
+  var menuEl = document.getElementById('menu');
+  if(menuEl) menuEl.scrollIntoView({behavior:'smooth'});
   document.getElementById('tyOverlay').classList.remove('visible');
   document.body.style.overflow = '';
 }
@@ -2428,6 +2646,7 @@ buildTrayMenu();
 buildAdvItemSelect();
 updateBanner();
 initFirebase();
+loadAccount();
 
 // Restore order status bar if we have a tracked order
 if(currentOrderId){
@@ -2467,6 +2686,259 @@ for(let i=0;i<3;i++) spawnEmber();
 const revEls=document.querySelectorAll('.reveal');
 const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}}),{threshold:.1,rootMargin:"0px 0px -40px 0px"});
 revEls.forEach(r=>ro.observe(r));
+
+// ═══════════════════════════════════════════
+//  CUSTOMER ACCOUNT SYSTEM
+//  Browser-local — no password, identified by
+//  name + phone stored in localStorage
+// ═══════════════════════════════════════════
+var currentAccount = null;
+var ACCT_KEY = 'deinigo_customer_account';
+var HIST_KEY = 'deinigo_order_history';
+
+function loadAccount(){
+  try {
+    var stored = localStorage.getItem(ACCT_KEY);
+    if(stored){
+      currentAccount = JSON.parse(stored);
+      updateNavProfile();
+      // Pre-fill name in cart form
+      prefillAccountFields();
+    }
+  } catch(e){ currentAccount = null; }
+}
+
+function saveAccount(){
+  var name = document.getElementById('acctName').value.trim();
+  var phone = document.getElementById('acctPhone').value.trim();
+  if(!name){ showToast('Please enter your name!'); return; }
+  currentAccount = {
+    name: name,
+    phone: phone,
+    joinedAt: currentAccount ? currentAccount.joinedAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  localStorage.setItem(ACCT_KEY, JSON.stringify(currentAccount));
+  updateNavProfile();
+  prefillAccountFields();
+  showAcctProfileView();
+  showToast('✅ Account saved! Welcome, ' + name + '!');
+  // Sync to Firebase if connected
+  if(db && isFirebaseConnected && currentAccount){
+    var deviceId = getDeviceId();
+    db.ref('customers/' + deviceId).set(currentAccount);
+  }
+}
+
+function editAccount(){
+  document.getElementById('acctSignupForm').style.display = 'block';
+  document.getElementById('acctProfileView').style.display = 'none';
+  if(currentAccount){
+    document.getElementById('acctName').value = currentAccount.name || '';
+    document.getElementById('acctPhone').value = currentAccount.phone || '';
+  }
+  document.getElementById('acctModalTitle').textContent = '✏️ Edit Profile';
+}
+
+function logoutAccount(){
+  if(!confirm('Sign out? Your order history stays saved on this device.')) return;
+  currentAccount = null;
+  localStorage.removeItem(ACCT_KEY);
+  updateNavProfile();
+  document.getElementById('acctSignupForm').style.display = 'block';
+  document.getElementById('acctProfileView').style.display = 'none';
+  document.getElementById('acctName').value = '';
+  document.getElementById('acctPhone').value = '';
+  document.getElementById('acctModalTitle').textContent = '👤 My Account';
+  showToast('Signed out.');
+}
+
+function updateNavProfile(){
+  var btn = document.getElementById('navProfileBtn');
+  var avatar = document.getElementById('navProfileAvatar');
+  var nameEl = document.getElementById('navProfileName');
+  if(!btn || !avatar || !nameEl) return;
+  if(currentAccount && currentAccount.name){
+    avatar.textContent = currentAccount.name.charAt(0).toUpperCase();
+    nameEl.textContent = currentAccount.name.split(' ')[0];
+    btn.style.borderColor = 'rgba(200,65,10,.5)';
+  } else {
+    avatar.textContent = '👤';
+    nameEl.textContent = 'Account';
+    btn.style.borderColor = '';
+  }
+}
+
+function prefillAccountFields(){
+  if(!currentAccount) return;
+  // Pre-fill cart name field
+  var nameInput = document.getElementById('customerName');
+  if(nameInput && !nameInput.value) nameInput.value = currentAccount.name || '';
+  var phoneInput = document.getElementById('contactNumber');
+  if(phoneInput && !phoneInput.value) phoneInput.value = currentAccount.phone || '';
+}
+
+function openAcctModal(){
+  document.getElementById('acctModal').classList.add('open');
+  if(currentAccount){
+    showAcctProfileView();
+  } else {
+    document.getElementById('acctSignupForm').style.display = 'block';
+    document.getElementById('acctProfileView').style.display = 'none';
+    document.getElementById('acctModalTitle').textContent = '👤 My Account';
+    document.getElementById('acctModalSub').textContent = 'Save your info for faster ordering';
+  }
+}
+
+function closeAcctModal(){
+  document.getElementById('acctModal').classList.remove('open');
+}
+
+function showAcctProfileView(){
+  document.getElementById('acctSignupForm').style.display = 'none';
+  document.getElementById('acctProfileView').style.display = 'block';
+  document.getElementById('acctModalTitle').textContent = '👤 ' + (currentAccount.name || 'My Account');
+  document.getElementById('acctModalSub').textContent = 'Welcome back!';
+  // Avatar
+  var avatarBig = document.getElementById('acctAvatarBig');
+  if(avatarBig) avatarBig.textContent = currentAccount.name.charAt(0).toUpperCase();
+  var dispName = document.getElementById('acctDisplayName');
+  if(dispName) dispName.textContent = currentAccount.name;
+  var dispPhone = document.getElementById('acctDisplayPhone');
+  if(dispPhone) dispPhone.textContent = currentAccount.phone || 'No phone saved';
+  // Load order history
+  renderOrderHistory();
+}
+
+function saveOrderToHistory(order){
+  if(!order) return;
+  try {
+    var hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    // Avoid duplicates
+    if(!hist.find(function(o){ return o.id === order.id; })){
+      hist.unshift({
+        id: order.id,
+        date: order.timestamp || new Date().toISOString(),
+        items: order.items || [],
+        total: order.total || 0,
+        status: order.status || 'Pending',
+        payment: order.payment || 'cash'
+      });
+      // Keep last 30 orders
+      if(hist.length > 30) hist = hist.slice(0, 30);
+      localStorage.setItem(HIST_KEY, JSON.stringify(hist));
+    }
+  } catch(e){}
+}
+
+function renderOrderHistory(){
+  var el = document.getElementById('acctOrderHistory');
+  if(!el) return;
+  try {
+    var hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    if(hist.length === 0){
+      el.innerHTML = '<div class="no-history">No orders yet.<br>Your order history will appear here after you place your first order! 🍽️</div>';
+      return;
+    }
+    el.innerHTML = hist.map(function(o){
+      var date = new Date(o.date);
+      var dateStr = date.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
+      var itemStr = (o.items||[]).slice(0,3).map(function(i){ return i.name; }).join(', ');
+      if((o.items||[]).length > 3) itemStr += ' +' + (o.items.length-3) + ' more';
+      var statusClass = o.status === 'Done' ? 'done' : 'pending';
+      return '<div class="order-hist-item" onclick="viewHistoryOrder(&quot;'+o.id+'&quot;)">'
+        + '<div class="ohi-header">'
+        + '<span class="ohi-id">'+ o.id.replace('ORD-','#') +'</span>'
+        + '<span class="ohi-date">'+ dateStr +'</span>'
+        + '</div>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem;">'
+        + '<span class="ohi-total">₱'+(o.total||0).toLocaleString()+'</span>'
+        + '<span class="ohi-status '+statusClass+'">'+ (o.status||'Pending') +'</span>'
+        + '</div>'
+        + '<div class="ohi-items">'+ escHtml(itemStr) +'</div>'
+        + '</div>';
+    }).join('');
+  } catch(e){ el.innerHTML = '<div class="no-history">Could not load history.</div>'; }
+}
+
+function viewHistoryOrder(orderId){
+  // Check if it's the current active order
+  if(orderId === currentOrderId && currentOrderData){
+    closeAcctModal();
+    showThankYouPage(currentOrderData);
+    return;
+  }
+  // Load from history
+  try {
+    var hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+    var order = hist.find(function(o){ return o.id === orderId; });
+    if(order){
+      closeAcctModal();
+      // Show a read-only version
+      currentOrderData = order;
+      showThankYouPage(order);
+    }
+  } catch(e){}
+}
+
+// Device ID — persistent anonymous identifier
+function getDeviceId(){
+  var id = localStorage.getItem('deinigo_device_id');
+  if(!id){
+    id = 'dev-' + Date.now() + '-' + Math.random().toString(36).substr(2,9);
+    localStorage.setItem('deinigo_device_id', id);
+  }
+  return id;
+}
+
+// Close account modal on backdrop click
+document.getElementById('acctModal').addEventListener('click', function(e){
+  if(e.target === this) closeAcctModal();
+});
+
 </script>
+
+<!-- ══════════ CUSTOMER ACCOUNT MODAL ══════════ -->
+<div class="acct-modal-overlay" id="acctModal">
+  <div class="acct-modal">
+    <div class="acct-header">
+      <button class="acct-close" onclick="closeAcctModal()">✕</button>
+      <h2 id="acctModalTitle">👤 My Account</h2>
+      <p id="acctModalSub">Save your info for faster ordering</p>
+    </div>
+    <div class="acct-body">
+
+      <!-- Guest / new user form -->
+      <div id="acctSignupForm">
+        <div class="acct-field">
+          <label>Your Name</label>
+          <input id="acctName" type="text" placeholder="e.g. Juan Dela Cruz" autocomplete="name"/>
+        </div>
+        <div class="acct-field">
+          <label>Phone Number (optional)</label>
+          <input id="acctPhone" type="tel" placeholder="09XX XXX XXXX" autocomplete="tel"/>
+        </div>
+        <button class="acct-save-btn" onclick="saveAccount()">✓ Save & Continue</button>
+      </div>
+
+      <!-- Logged-in view -->
+      <div id="acctProfileView" style="display:none;">
+        <div style="text-align:center;margin-bottom:1.2rem;">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--ember);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;color:#fff;margin:0 auto .7rem;" id="acctAvatarBig">?</div>
+          <div style="font-size:1.2rem;font-weight:800;color:var(--cream);" id="acctDisplayName">—</div>
+          <div style="font-size:.85rem;color:var(--smoke);" id="acctDisplayPhone"></div>
+        </div>
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:.15em;color:var(--smoke);margin-bottom:.8rem;text-transform:uppercase;">📦 Order History</div>
+        <div id="acctOrderHistory"></div>
+        <div style="margin-top:1.2rem;display:flex;gap:.7rem;">
+          <button onclick="editAccount()" style="flex:1;padding:.7rem;background:rgba(200,65,10,.12);border:1px solid rgba(200,65,10,.25);border-radius:8px;color:var(--cream);font-size:.88rem;font-weight:700;cursor:pointer;">✏️ Edit Profile</button>
+          <button onclick="logoutAccount()" style="flex:1;padding:.7rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--smoke);font-size:.88rem;font-weight:700;cursor:pointer;">🚪 Sign Out</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
