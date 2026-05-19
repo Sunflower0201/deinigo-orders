@@ -377,6 +377,35 @@ body{font-size:15px;}
 .filter-btn{font-size:.85rem;}
 .mir-name{font-size:.95rem!important;}
 .mir-price{font-size:.85rem!important;}
+
+/* ════════════════════════════════════
+   FONT SIZE BOOST — ORDERS APP
+   ════════════════════════════════════ */
+body{font-size:15px!important;}
+.oc-customer{font-size:1.1rem!important;font-weight:800!important;}
+.oc-item-name{font-size:.98rem!important;font-weight:600!important;}
+.oc-id{font-size:.82rem!important;}
+.oc-price{font-size:.95rem!important;font-weight:700!important;}
+.action-btn{font-size:.9rem!important;padding:.5rem .7rem!important;}
+.stat-val{font-size:1.9rem!important;font-weight:800!important;}
+.stat-label{font-size:.78rem!important;}
+.tab-btn{font-size:.9rem!important;font-weight:700!important;}
+.filter-btn{font-size:.88rem!important;}
+.topbar-logo{font-size:1.15rem!important;font-weight:800!important;}
+.mir-name{font-size:1rem!important;font-weight:700!important;}
+.mir-price{font-size:.88rem!important;}
+.section-title{font-size:1.1rem!important;}
+
+/* Mobile improvements */
+@media(max-width:600px){
+  .stats-bar{grid-template-columns:repeat(2,1fr)!important;}
+  .order-grid{grid-template-columns:1fr!important;}
+  .tab-bar{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap!important;}
+  .tab-btn{flex-shrink:0;font-size:.85rem!important;}
+  .topbar{padding:.7rem .9rem!important;}
+  .oc-customer{font-size:1rem!important;}
+  .action-btn{font-size:.82rem!important;padding:.45rem .55rem!important;}
+}
 </style>
 </head>
 <body>
@@ -970,7 +999,7 @@ function renderOrderCard(o){
     <div class="oc-head">
       <div>
         <div class="oc-id">${o.id}</div>
-        <div class="oc-customer">${escHtml(o.customer||'Unknown')}</div>
+        <div class="oc-customer">${escHtml(o.customer||'Unknown')}${o.contact?'<span style="font-size:.78rem;color:var(--smoke);display:block;">📞 '+escHtml(o.contact)+'</span>':''}</div>
         <div class="oc-meta">${new Date(o.timestamp).toLocaleTimeString()}</div>
         <div class="oc-timer${urgent?' urgent':''}">${timeSince(o.timestamp)}${urgent?' ⚠️ Waiting long':''}</div>
         <div class="oc-badges">
